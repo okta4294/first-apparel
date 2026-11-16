@@ -16,13 +16,28 @@
 # next.js
 /.next/
 /out/
+/.turbo/
 
 # production
 /build
 
-# misc
+# misc & OS
 .DS_Store
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
 *.pem
+
+# scratch & temporary
+/scratch
+temp/
+tmp/
+
+# editors
+.vscode/
+.idea/
+*.swp
+*.swo
 
 # debug
 npm-debug.log*
@@ -32,6 +47,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -39,3 +55,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+DESIGN.md
+product_requirements_document_prd.md
+AGENTS.md
