@@ -66,6 +66,7 @@ export default async function HomePage() {
     "Halo Admin First Apparel, saya ingin berkonsultasi mengenai pemesanan custom jersey.";
   let instagramUrl: string | null = null;
   let logoUrl: string | null = null;
+  let storeSizeChartUrl: string | null = null;
   let storeDescription =
     "Konveksi spesialis jersey olahraga custom & apparel tim profesional di Bandung. Bebas custom desain, bahan dryfit premium, dan melayani kirim ke seluruh Indonesia.";
 
@@ -87,6 +88,7 @@ export default async function HomePage() {
       defaultWaText = s.defaultWaText || defaultWaText;
       instagramUrl = s.instagramUrl;
       logoUrl = s.logoUrl || null;
+      storeSizeChartUrl = s.sizeChartUrl || null;
       storeDescription = s.storeDescription || storeDescription;
     }
 
@@ -163,6 +165,7 @@ export default async function HomePage() {
       {/* Pop-up Promo Otomatis (Jika Diaktifkan Admin) */}
       <PromoPopup promo={popupPromo} waNumber={whatsappNumber} />
 
+      <main className="flex-1">
       {/* 2. Hero Section */}
       <section className="relative overflow-hidden py-16 lg:py-24 border-b border-[#27272A]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -356,6 +359,8 @@ export default async function HomePage() {
                       <img
                         src={item.imageUrl}
                         alt={item.title}
+                        width={400}
+                        height={300}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     ) : (
@@ -404,15 +409,15 @@ export default async function HomePage() {
                           <span className="text-xl sm:text-2xl font-black tracking-tight text-[#FAFAFA] tabular-nums whitespace-nowrap">
                             {item.priceInfo ? item.priceInfo.replace(/mulai\s*/i, "").replace(/\/.*$/, "").trim() : "Hubungi Kami"}
                           </span>
-                          <span className="text-xs font-semibold text-[#71717A] whitespace-nowrap">/ pcs</span>
+                          <span className="text-xs font-semibold text-[#A1A1AA] whitespace-nowrap">/ pcs</span>
                         </div>
                       </div>
 
-                      {item.sizeChartUrl && (
+                      {(storeSizeChartUrl || item.sizeChartUrl) && (
                         <div className="mb-2.5">
                           <SizeChartTrigger
                             title={item.title}
-                            sizeChartUrl={item.sizeChartUrl}
+                            sizeChartUrl={(storeSizeChartUrl || item.sizeChartUrl)!}
                           />
                         </div>
                       )}
@@ -454,6 +459,8 @@ export default async function HomePage() {
                     <img
                       src={partner.logoUrl}
                       alt={partner.name}
+                      width={130}
+                      height={44}
                       className="max-h-11 max-w-[130px] object-contain opacity-85 group-hover:opacity-100 transition-opacity shrink-0"
                     />
                   ) : (
@@ -465,7 +472,7 @@ export default async function HomePage() {
                     {partner.name}
                   </span>
                   {partner.category && partner.category !== "MITRA LAINNYA" && (
-                    <span className="text-[10px] text-[#71717A] line-clamp-1">
+                    <span className="text-[10px] text-[#A1A1AA] line-clamp-1">
                       {partner.category}
                     </span>
                   )}
@@ -601,12 +608,14 @@ export default async function HomePage() {
                     <img
                       src={b.thumbnailUrl}
                       alt={b.title}
+                      width={400}
+                      height={250}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   </Link>
                   <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
                     <div className="space-y-2">
-                      <p className="text-[11px] text-[#71717A]">
+                      <p className="text-[11px] text-[#A1A1AA]">
                         {new Intl.DateTimeFormat("id-ID", {
                           day: "numeric",
                           month: "long",
@@ -665,6 +674,7 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+      </main>
 
       {/* 8. Footer Desktop & Mobile (PRD Seksi 4.1 Poin 7) */}
       <footer className="pt-16 pb-12 bg-[#09090B] text-xs text-[#A1A1AA]">
@@ -675,7 +685,7 @@ export default async function HomePage() {
               <div className="flex items-center gap-3">
                 {logoUrl ? (
                   <div className="w-8 h-8 rounded-lg bg-[#181920] border border-[#27272A] flex items-center justify-center p-1 overflow-hidden shrink-0">
-                    <img src={logoUrl} alt={storeName} className="max-w-full max-h-full object-contain" />
+                    <img src={logoUrl} alt={storeName} width={32} height={32} className="max-w-full max-h-full object-contain" />
                   </div>
                 ) : (
                   <div className="w-7 h-7 rounded-lg bg-[#84CC16] flex items-center justify-center font-black text-[#09090B] text-sm shrink-0">
@@ -686,7 +696,7 @@ export default async function HomePage() {
                   {storeName.toUpperCase()}
                 </span>
               </div>
-              <p className="leading-relaxed text-[#71717A]">
+              <p className="leading-relaxed text-[#A1A1AA]">
                 {storeDescription}
               </p>
             </div>
@@ -748,7 +758,7 @@ export default async function HomePage() {
             {/* C4: Kontak & Workshop Fisik */}
             <div>
               <h3 className="font-bold text-sm text-[#FAFAFA] mb-4">Kontak & Workshop</h3>
-              <ul className="space-y-2.5 text-[#71717A]">
+              <ul className="space-y-2.5 text-[#A1A1AA]">
                 <li>
                   <span className="block text-[#FAFAFA] font-medium mb-0.5">Alamat Workshop:</span>
                   <span>{storeAddress}</span>

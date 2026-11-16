@@ -27,6 +27,7 @@ export interface CatalogItem {
 interface KatalogClientProps {
   items: CatalogItem[];
   waNumber: string;
+  storeSizeChartUrl?: string | null;
 }
 
 function getCatalogImages(item: CatalogItem): CatalogImageItem[] {
@@ -44,7 +45,7 @@ function getCatalogImages(item: CatalogItem): CatalogImageItem[] {
   return [];
 }
 
-export function KatalogClient({ items, waNumber }: KatalogClientProps) {
+export function KatalogClient({ items, waNumber, storeSizeChartUrl }: KatalogClientProps) {
   const [selectedCategory, setSelectedCategory] = useState("SEMUA");
   const [searchQuery, setSearchQuery] = useState("");
   // Track selected active image per catalog card (card id -> image url)
@@ -200,8 +201,10 @@ export function KatalogClient({ items, waNumber }: KatalogClientProps) {
       {/* Grid Katalog Jersey */}
       {filteredItems.length === 0 ? (
         <div className="py-20 text-center bg-[#121318] border border-[#27272A] rounded-2xl p-8 space-y-3">
-          <div className="w-16 h-16 mx-auto rounded-2xl bg-[#181920] border border-[#27272A] flex items-center justify-center text-2xl text-[#84CC16]">
-            🔍
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-[#181920] border border-[#27272A] flex items-center justify-center text-[#84CC16]">
+            <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
           </div>
           <h3 className="text-base font-bold text-[#FAFAFA]">Model Jersey Tidak Ditemukan</h3>
           <p className="text-xs text-[#71717A] max-w-sm mx-auto">
@@ -356,11 +359,11 @@ export function KatalogClient({ items, waNumber }: KatalogClientProps) {
                       </div>
                     </div>
 
-                    {/* Tombol Panduan Ukuran (Size Chart) Jika Ada */}
-                    {item.sizeChartUrl && (
+                    {/* Tombol Panduan Ukuran (Size Chart) */}
+                    {(storeSizeChartUrl || item.sizeChartUrl) && (
                       <SizeChartTrigger
                         title={item.title}
-                        sizeChartUrl={item.sizeChartUrl}
+                        sizeChartUrl={(storeSizeChartUrl || item.sizeChartUrl)!}
                       />
                     )}
 
@@ -527,10 +530,10 @@ export function KatalogClient({ items, waNumber }: KatalogClientProps) {
                 </div>
 
                 <div className="flex items-center gap-2.5">
-                  {item.sizeChartUrl && (
+                  {(storeSizeChartUrl || item.sizeChartUrl) && (
                     <SizeChartTrigger
                       title={item.title}
-                      sizeChartUrl={item.sizeChartUrl}
+                      sizeChartUrl={(storeSizeChartUrl || item.sizeChartUrl)!}
                     />
                   )}
                   <a

@@ -98,9 +98,9 @@ Format: No | Nama Punggung | Nomor | Size | Kain
     <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-6 sm:p-8 hover:border-[#84CC16]/40 transition-all">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-5 border-b border-[#27272A]">
         <div>
-          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-[#84CC16]/10 text-[#84CC16] text-[11px] font-bold tracking-wider uppercase mb-1.5">
-            <span aria-hidden="true">⚡</span> Salin Cepat Format Order
-          </div>
+          <span className="text-[11px] font-bold tracking-wider uppercase text-[#84CC16] block mb-1">
+            Salin Cepat Format Order
+          </span>
           <h3 className="text-lg sm:text-xl font-bold text-[#FAFAFA]">{active.title}</h3>
           <p className="text-xs text-[#A1A1AA] mt-0.5">{active.description}</p>
         </div>

@@ -96,10 +96,9 @@ export function PromoPopup({ promo, waNumber }: PromoPopupProps) {
         {/* Konten Pop-up */}
         <div className="p-6 sm:p-8 text-center space-y-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#84CC16]/10 border border-[#84CC16]/30 text-[#84CC16] text-[11px] font-bold uppercase tracking-widest mb-3">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#84CC16] animate-pulse" />
+            <span className="text-[#84CC16] text-[11px] font-bold uppercase tracking-widest block mb-2">
               {promo.label}
-            </div>
+            </span>
 
             <h3 className="text-xl sm:text-2xl font-black tracking-tight text-[#FAFAFA] leading-snug">
               {promo.title}

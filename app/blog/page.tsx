@@ -73,9 +73,6 @@ export default async function BlogPage() {
       {/* 2. Hero Header Blog */}
       <section className="relative py-16 sm:py-20 border-b border-[#27272A] bg-gradient-to-b from-[#121318] to-[#09090B] overflow-hidden">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <span className="inline-block px-3 py-1 rounded-full bg-[#84CC16]/10 border border-[#84CC16]/30 text-[#84CC16] text-xs font-bold uppercase tracking-widest mb-4">
-            BLOG &amp; PANDUAN JERSEY
-          </span>
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-[#FAFAFA] uppercase">
             Tips, Wawasan &amp; Inspirasi Desain
           </h1>

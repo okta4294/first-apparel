@@ -112,10 +112,6 @@ export default async function CaraPesanPage() {
       {/* 2. Hero Section */}
       <section className="relative py-16 sm:py-24 border-b border-[#27272A] bg-gradient-to-b from-[#121318] to-[#09090B] overflow-hidden">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#84CC16]/10 border border-[#84CC16]/30 text-[#84CC16] text-xs font-bold uppercase tracking-widest mb-5">
-            <span className="w-2 h-2 rounded-full bg-[#84CC16] animate-pulse" />
-            PANDUAN LENGKAP ORDER JERSEY RESMI
-          </div>
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[#FAFAFA] uppercase">
             Alur Pemesanan Mudah &amp; Cepat
           </h1>
@@ -146,8 +142,10 @@ export default async function CaraPesanPage() {
           {/* Jalur Cepat Express & Desain Siap Cetak */}
           <div className="mt-8 p-3.5 sm:p-4 rounded-2xl bg-[#141418] border border-[#27272A] max-w-xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs shadow-sm">
             <div className="flex items-center gap-2.5 text-left">
-              <span className="w-8 h-8 rounded-lg bg-[#84CC16]/10 text-[#84CC16] flex items-center justify-center font-bold text-base shrink-0">
-                ⚡
+              <span className="w-8 h-8 rounded-lg bg-[#84CC16]/10 text-[#84CC16] flex items-center justify-center shrink-0">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
               </span>
               <div>
                 <span className="font-bold text-[#FAFAFA] block">Sudah Punya Desain Siap Cetak?</span>

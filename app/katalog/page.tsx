@@ -16,6 +16,7 @@ export default async function KatalogPage() {
   let defaultWaText = "Halo Admin First Apparel, saya ingin berkonsultasi tentang pemesanan jersey kustom.";
   let instagramUrl: string | null = null;
   let logoUrl: string | null = null;
+  let storeSizeChartUrl: string | null = null;
   let storeDescription =
     "Vendor konveksi dan produsen custom jersey olahraga profesional. Melayani pembuatan seragam futsal, sepak bola, esports, running, dan apparel komunitas.";
 
@@ -33,6 +34,7 @@ export default async function KatalogPage() {
       defaultWaText = s.defaultWaText || defaultWaText;
       instagramUrl = s.instagramUrl;
       logoUrl = s.logoUrl || null;
+      storeSizeChartUrl = s.sizeChartUrl || null;
       storeDescription = s.storeDescription || storeDescription;
     }
 
@@ -58,9 +60,6 @@ export default async function KatalogPage() {
       {/* 2. Hero Header Katalog */}
       <section className="relative py-16 border-b border-[#27272A] bg-gradient-to-b from-[#121318] to-[#09090B] overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center max-w-3xl">
-          <span className="inline-block px-3 py-1 rounded-full bg-[#84CC16]/10 border border-[#84CC16]/30 text-[#84CC16] text-xs font-bold uppercase tracking-widest mb-4">
-            KATALOG RESMI FIRST APPAREL
-          </span>
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-[#FAFAFA] uppercase">
             Eksplorasi Desain Jersey Tim Anda
           </h1>
@@ -72,7 +71,7 @@ export default async function KatalogPage() {
 
       {/* 3. Konten Utama Katalog & Filter Interaktif */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <KatalogClient items={catalogList} waNumber={whatsappNumber} />
+        <KatalogClient items={catalogList} waNumber={whatsappNumber} storeSizeChartUrl={storeSizeChartUrl} />
       </main>
 
       {/* 4. Footer */}

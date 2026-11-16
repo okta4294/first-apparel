@@ -85,8 +85,7 @@ export function HeroShowcaseCarousel({
     >
       {/* Header Kartu Sesuai Desain */}
       <div className="flex items-center justify-between pb-4 border-b border-[#27272A] mb-5">
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#84CC16]/10 text-[#84CC16] text-[11px] font-bold tracking-wide">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#84CC16] animate-pulse" />
+        <span className="text-[#84CC16] text-[11px] font-bold tracking-wider uppercase">
           {current.badge || "PREVIEW DESAIN TERPILIH"}
         </span>
       </div>
@@ -114,7 +113,7 @@ export function HeroShowcaseCarousel({
             </span>
 
             {/* Indikator Titik Carousel */}
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-0.5">
               {designs.map((_, idx) => (
                 <button
                   key={idx}
@@ -123,21 +122,25 @@ export function HeroShowcaseCarousel({
                     e.preventDefault();
                     setCurrentIndex(idx);
                   }}
-                  className={`h-1.5 rounded-full transition-all ${
-                    idx === currentIndex
-                      ? "w-6 bg-[#84CC16]"
-                      : "w-1.5 bg-[#3F3F46] hover:bg-[#71717A]"
-                  }`}
+                  className="min-w-[24px] min-h-[24px] flex items-center justify-center p-1 group/dot"
                   aria-label={`Slide ${idx + 1}`}
-                />
+                >
+                  <span
+                    className={`h-1.5 rounded-full transition-all block ${
+                      idx === currentIndex
+                        ? "w-6 bg-[#84CC16]"
+                        : "w-1.5 bg-[#3F3F46] group-hover/dot:bg-[#71717A]"
+                    }`}
+                  />
+                </button>
               ))}
             </div>
           </div>
 
           <div>
-            <h3 className="text-xl sm:text-2xl font-extrabold text-[#FAFAFA] tracking-tight group-hover:text-[#84CC16] transition-colors">
+            <h2 className="text-xl sm:text-2xl font-extrabold text-[#FAFAFA] tracking-tight group-hover:text-[#84CC16] transition-colors">
               {current.title}
-            </h3>
+            </h2>
             <p className="text-xs text-[#A1A1AA] mt-1.5 font-medium">
               {current.fabric}
             </p>

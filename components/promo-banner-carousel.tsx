@@ -119,8 +119,7 @@ export function PromoBannerCarousel({
           {/* 3. Konten Teks Promo & Tombol Klaim di Atas Layer Gambar */}
           <div className="relative z-10 w-full max-w-2xl p-6 sm:p-10 md:p-12 flex flex-col justify-center items-start space-y-3 sm:space-y-4">
             {/* Lencana Diskon / Kategori Promo */}
-            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#84CC16] text-[#09090B] text-xs font-black uppercase tracking-wider shadow-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#09090B] animate-pulse" />
+            <span className="inline-block px-3.5 py-1.5 rounded-full bg-[#84CC16] text-[#09090B] text-xs font-black uppercase tracking-wider shadow-sm">
               {current.badgeText || "PROMO SPESIAL"}
             </span>
 
@@ -173,7 +172,7 @@ export function PromoBannerCarousel({
               </button>
 
               {/* Indikator Titik (Dots) di Bawah Tengah */}
-              <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 bg-[#09090B]/60 px-3 py-1.5 rounded-full border border-white/10 backdrop-blur-sm">
+              <div className="absolute bottom-3 sm:bottom-5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-0.5 bg-[#09090B]/60 px-2 py-0.5 rounded-full border border-white/10 backdrop-blur-sm">
                 {promos.map((item, idx) => (
                   <button
                     key={item.id}
@@ -183,13 +182,17 @@ export function PromoBannerCarousel({
                       e.stopPropagation();
                       setCurrentIndex(idx);
                     }}
-                    className={`h-2 rounded-full transition-all ${
-                      idx === currentIndex
-                        ? "w-6 bg-[#84CC16]"
-                        : "w-2 bg-white/30 hover:bg-white/60"
-                    }`}
+                    className="min-w-[24px] min-h-[24px] flex items-center justify-center p-1 group/dot"
                     aria-label={`Beralih ke promo ${idx + 1}`}
-                  />
+                  >
+                    <span
+                      className={`h-2 rounded-full transition-all block ${
+                        idx === currentIndex
+                          ? "w-6 bg-[#84CC16]"
+                          : "w-2 bg-white/30 group-hover/dot:bg-white/60"
+                      }`}
+                    />
+                  </button>
                 ))}
               </div>
             </>

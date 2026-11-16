@@ -29,7 +29,6 @@ export function SizeChartTrigger({ title, sizeChartUrl }: SizeChartTriggerProps)
           <div className="bg-[#141418] border border-[#27272A] rounded-2xl max-w-2xl w-full p-5 space-y-4 shadow-2xl relative">
             <div className="flex items-center justify-between border-b border-[#27272A] pb-3">
               <div className="flex items-center gap-2">
-                <span className="text-base">📐</span>
                 <h3 className="text-sm font-bold text-[#FAFAFA]">
                   Panduan Ukuran (Size Chart) — {title}
                 </h3>
