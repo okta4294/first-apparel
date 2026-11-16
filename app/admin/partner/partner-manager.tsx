@@ -127,23 +127,13 @@ export function PartnerManager({ initialItems }: PartnerManagerProps) {
       const res = await createPartnerAction(formData);
       setIsSubmitting(false);
 
-      if (res.success) {
+      if (res.success && res.item) {
         setStatusMessage({ type: "success", text: "Partner berafiliasi berhasil ditambahkan!" });
-        setItems((prev) => [
-          ...prev,
-          {
-            id: Date.now(),
-            name,
-            category,
-            logoUrl,
-            logoKey,
-            websiteUrl: websiteUrl || null,
-            sortOrder,
-            isActive,
-            createdAt: new Date(),
-          },
-        ]);
+        setItems((prev) => [...prev, res.item as PartnerItem]);
         resetForm();
+      } else if (res.success) {
+        setStatusMessage({ type: "success", text: "Partner berafiliasi berhasil ditambahkan!" });
+        window.location.reload();
       } else {
         setStatusMessage({ type: "error", text: res.error || "Gagal menambahkan partner." });
       }

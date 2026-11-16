@@ -134,11 +134,13 @@ export function PromoManager({ initialItems }: PromoManagerProps) {
 
       if (res.success) {
         setStatusMessage({ type: "success", text: `Promo "${title}" berhasil diperbarui!` });
+        const realId = res.updatedId || editingItem.id;
         setItems((prev) =>
           prev.map((item) =>
             item.id === editingItem.id
               ? {
                   ...item,
+                  id: realId,
                   label,
                   title,
                   badgeText,
@@ -162,27 +164,13 @@ export function PromoManager({ initialItems }: PromoManagerProps) {
       const res = await createPromoAction(formData);
       setIsSubmitting(false);
 
-      if (res.success) {
+      if (res.success && res.item) {
         setStatusMessage({ type: "success", text: "Program promo berhasil disimpan dan ditayangkan!" });
-        setItems((prev) => [
-          {
-            id: Date.now(),
-            label,
-            title,
-            badgeText,
-            waMessage,
-            imageUrl: imageUrl || null,
-            imageKey: imageKey || null,
-            hasDuration,
-            startDate: startDate ? new Date(startDate) : null,
-            endDate: endDate ? new Date(endDate) : null,
-            isActive,
-            isPopup,
-            createdAt: new Date(),
-          },
-          ...prev,
-        ]);
+        setItems((prev) => [res.item as PromoItem, ...prev]);
         resetForm();
+      } else if (res.success) {
+        setStatusMessage({ type: "success", text: "Program promo berhasil disimpan dan ditayangkan!" });
+        window.location.reload();
       } else {
         setStatusMessage({ type: "error", text: res.error || "Gagal menyimpan promo." });
       }

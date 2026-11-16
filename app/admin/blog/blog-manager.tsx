@@ -129,24 +129,13 @@ export function BlogManager({ initialItems }: BlogManagerProps) {
       const res = await createBlogAction(formData);
       setIsSubmitting(false);
 
-      if (res.success) {
+      if (res.success && res.item) {
         setStatusMessage({ type: "success", text: "Artikel blog berhasil diterbitkan!" });
-        setItems((prev) => [
-          {
-            id: Date.now(),
-            title,
-            slug: slug || title.toLowerCase().replace(/\s+/g, "-"),
-            excerpt,
-            content,
-            thumbnailUrl,
-            thumbnailKey,
-            isPublished,
-            publishedAt: new Date(),
-            updatedAt: new Date(),
-          },
-          ...prev,
-        ]);
+        setItems((prev) => [res.item as BlogItem, ...prev]);
         resetForm();
+      } else if (res.success) {
+        setStatusMessage({ type: "success", text: "Artikel blog berhasil diterbitkan!" });
+        window.location.reload();
       } else {
         setStatusMessage({ type: "error", text: res.error || "Gagal menyimpan artikel." });
       }

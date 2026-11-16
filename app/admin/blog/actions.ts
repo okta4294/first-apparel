@@ -47,23 +47,26 @@ export async function createBlogAction(formData: FormData) {
   }
 
   try {
-    await db.insert(blogs).values({
-      title,
-      slug,
-      excerpt: excerpt || title,
-      content: content || excerpt || title,
-      thumbnailUrl,
-      thumbnailKey,
-      isPublished,
-      publishedAt: new Date(),
-    });
+    const [created] = await db
+      .insert(blogs)
+      .values({
+        title,
+        slug,
+        excerpt: excerpt || title,
+        content: content || excerpt || title,
+        thumbnailUrl,
+        thumbnailKey,
+        isPublished,
+        publishedAt: new Date(),
+      })
+      .returning();
 
     revalidatePath("/");
     revalidatePath("/blog");
     revalidatePath("/admin");
     revalidatePath("/admin/blog");
 
-    return { success: true };
+    return { success: true, item: created };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Gagal menyimpan artikel blog.";
     return { success: false, error: msg };

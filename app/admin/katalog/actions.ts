@@ -47,25 +47,28 @@ export async function createCatalogAction(formData: FormData) {
   }
 
   try {
-    await db.insert(catalogs).values({
-      title,
-      category,
-      fabric,
-      priceInfo,
-      imageUrl,
-      imageKey,
-      images: JSON.stringify(images),
-      sizeChartUrl,
-      sizeChartKey,
-      isFeatured,
-      isActive: true,
-    });
+    const [created] = await db
+      .insert(catalogs)
+      .values({
+        title,
+        category,
+        fabric,
+        priceInfo,
+        imageUrl,
+        imageKey,
+        images: JSON.stringify(images),
+        sizeChartUrl,
+        sizeChartKey,
+        isFeatured,
+        isActive: true,
+      })
+      .returning();
 
     revalidatePath("/");
     revalidatePath("/admin");
     revalidatePath("/admin/katalog");
 
-    return { success: true };
+    return { success: true, item: created };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Gagal menyimpan katalog.";
     return { success: false, error: msg };

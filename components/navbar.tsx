@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface NavbarProps {
   waNumber: string;
@@ -70,8 +71,9 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", logoUrl }: Navba
           </Link>
         </nav>
 
-        {/* Desktop WhatsApp CTA */}
-        <div className="hidden md:flex items-center">
+        {/* Desktop WhatsApp CTA & Theme Switcher */}
+        <div className="hidden md:flex items-center gap-3">
+          <ThemeToggle />
           <a
             href={waHref}
             target="_blank"
@@ -85,27 +87,30 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", logoUrl }: Navba
           </a>
         </div>
 
-        {/* Mobile Hamburger Button */}
-        <button
-          type="button"
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden p-2 rounded-lg text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#141418] transition-colors"
-          aria-label="Toggle menu"
-        >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
+        {/* Mobile Header Actions */}
+        <div className="flex md:hidden items-center gap-1.5">
+          <ThemeToggle />
+          <button
+            type="button"
+            onClick={() => setIsOpen(!isOpen)}
+            className="p-2 rounded-lg text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#141418] transition-colors"
+            aria-label="Toggle menu"
           >
-            {isOpen ? (
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            )}
-          </svg>
-        </button>
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              {isOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* Mobile Drawer Menu */}

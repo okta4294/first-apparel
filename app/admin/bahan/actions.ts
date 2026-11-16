@@ -22,20 +22,23 @@ export async function createFabricAction(formData: FormData) {
   }
 
   try {
-    await db.insert(fabrics).values({
-      name,
-      description,
-      sortOrder,
-      isActive,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
+    const [created] = await db
+      .insert(fabrics)
+      .values({
+        name,
+        description,
+        sortOrder,
+        isActive,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .returning();
 
     revalidatePath("/cara-pesan");
     revalidatePath("/alur-pemesanan");
     revalidatePath("/admin/bahan");
 
-    return { success: true };
+    return { success: true, item: created };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Gagal menambahkan data bahan kain.";
     return { success: false, error: msg };

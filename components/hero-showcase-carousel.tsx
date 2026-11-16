@@ -89,7 +89,6 @@ export function HeroShowcaseCarousel({
           <span className="w-1.5 h-1.5 rounded-full bg-[#84CC16] animate-pulse" />
           {current.badge || "PREVIEW DESAIN TERPILIH"}
         </span>
-        <span className="text-xs text-[#71717A] font-medium">Seri First Apparel Pro</span>
       </div>
 
       {/* Area Carousel Preview Desain yang Bergerak Sendiri */}

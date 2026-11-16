@@ -49,72 +49,74 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  --background: #F8FAFC;
+  --foreground: #0F172A;
+  --card: #FFFFFF;
+  --card-foreground: #0F172A;
+  --popover: #FFFFFF;
+  --popover-foreground: #0F172A;
+  --primary: #65A30D;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F1F5F9;
+  --secondary-foreground: #0F172A;
+  --muted: #F1F5F9;
+  --muted-foreground: #64748B;
+  --accent: #F1F5F9;
+  --accent-foreground: #0F172A;
+  --destructive: #DC2626;
+  --destructive-foreground: #FFFFFF;
+  --border: #E2E8F0;
+  --input: #E2E8F0;
+  --ring: #65A30D;
+  --chart-1: #65A30D;
+  --chart-2: #0284C7;
+  --chart-3: #D97706;
+  --chart-4: #7C3AED;
+  --chart-5: #E11D48;
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #0F172A;
+  --sidebar-primary: #65A30D;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F1F5F9;
+  --sidebar-accent-foreground: #0F172A;
+  --sidebar-border: #E2E8F0;
+  --sidebar-ring: #65A30D;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #09090B;
+  --foreground: #FAFAFA;
+  --card: #141418;
+  --card-foreground: #FAFAFA;
+  --popover: #141418;
+  --popover-foreground: #FAFAFA;
+  --primary: #84CC16;
+  --primary-foreground: #09090B;
+  --secondary: #27272A;
+  --secondary-foreground: #FAFAFA;
+  --muted: #27272A;
+  --muted-foreground: #A1A1AA;
+  --accent: #1F2937;
+  --accent-foreground: #84CC16;
+  --destructive: #EF4444;
+  --destructive-foreground: #FAFAFA;
+  --border: #27272A;
+  --input: #27272A;
+  --ring: #84CC16;
+  --chart-1: #84CC16;
+  --chart-2: #38BDF8;
+  --chart-3: #FBBF24;
+  --chart-4: #A78BFA;
+  --chart-5: #F43F5E;
+  --sidebar: #0C0D11;
+  --sidebar-foreground: #FAFAFA;
+  --sidebar-primary: #84CC16;
+  --sidebar-primary-foreground: #09090B;
+  --sidebar-accent: #181920;
+  --sidebar-accent-foreground: #FAFAFA;
+  --sidebar-border: #18181B;
+  --sidebar-ring: #84CC16;
 }
 
 @layer base {
@@ -126,5 +128,189 @@
   }
   html {
     @apply font-sans;
+  }
+}
+
+/* Navigasi anchor (mis. halaman alur pemesanan) terasa halus tanpa mengganggu
+   pengguna yang mengaktifkan preferensi kurangi gerakan. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* ==========================================================================
+   Sistem Tema Terang (Light Mode - DESIGN.md Section 2.2)
+   Otomatis aktif saat kelas .dark tidak disematkan pada elemen html
+   ========================================================================== */
+
+html:not(.dark) {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+html:not(.dark) {
+  /* Latar belakang halaman & permukaan */
+  & .bg-\[\#09090B\],
+  & [class*="bg-[#09090B]"] {
+    background-color: #F8FAFC !important;
+  }
+  & [class*="bg-[#09090B]/95"] {
+    background-color: rgba(248, 250, 252, 0.95) !important;
+  }
+  & [class*="bg-[#09090B]/80"] {
+    background-color: rgba(248, 250, 252, 0.8) !important;
+  }
+  & .bg-\[\#0C0D11\],
+  & [class*="bg-[#0C0D11]"] {
+    background-color: #F1F5F9 !important;
+  }
+  & .bg-\[\#0A0B0E\],
+  & [class*="bg-[#0A0B0E]"] {
+    background-color: #F8FAFC !important;
+  }
+  & .bg-\[\#101115\],
+  & [class*="bg-[#101115]"] {
+    background-color: #F8FAFC !important;
+  }
+  & .bg-\[\#141418\],
+  & [class*="bg-[#141418]"] {
+    background-color: #FFFFFF !important;
+  }
+  & .bg-\[\#141417\],
+  & [class*="bg-[#141417]"] {
+    background-color: #FFFFFF !important;
+  }
+  & .bg-\[\#121316\],
+  & [class*="bg-[#121316]"] {
+    background-color: #FFFFFF !important;
+  }
+  & .bg-\[\#181920\],
+  & [class*="bg-[#181920]"] {
+    background-color: #F1F5F9 !important;
+  }
+  & .bg-\[\#14151B\],
+  & [class*="bg-[#14151B]"] {
+    background-color: #F1F5F9 !important;
+  }
+  & .bg-\[\#18181B\],
+  & [class*="bg-[#18181B]"] {
+    background-color: #F1F5F9 !important;
+  }
+  & .bg-\[\#18191E\],
+  & [class*="bg-[#18191E]"] {
+    background-color: #F1F5F9 !important;
+  }
+  & .bg-\[\#1A1B22\],
+  & [class*="bg-[#1A1B22]"] {
+    background-color: #F1F5F9 !important;
+  }
+  & .bg-\[\#1F2026\],
+  & [class*="bg-[#1F2026]"] {
+    background-color: #E2E8F0 !important;
+  }
+
+  /* Warna teks utama & sekunder */
+  & .text-\[\#FAFAFA\],
+  & [class*="text-[#FAFAFA]"] {
+    color: #0F172A !important;
+  }
+  & .text-\[\#F4F4F5\],
+  & [class*="text-[#F4F4F5]"] {
+    color: #0F172A !important;
+  }
+  & .text-\[\#E4E4E7\],
+  & [class*="text-[#E4E4E7]"] {
+    color: #1E293B !important;
+  }
+  & .text-\[\#D4D4D8\],
+  & [class*="text-[#D4D4D8]"] {
+    color: #334155 !important;
+  }
+  & .text-\[\#A1A1AA\],
+  & [class*="text-[#A1A1AA]"] {
+    color: #64748B !important;
+  }
+  & .text-\[\#71717A\],
+  & [class*="text-[#71717A]"] {
+    color: #94A3B8 !important;
+  }
+  & .text-\[\#52525B\],
+  & [class*="text-[#52525B]"] {
+    color: #94A3B8 !important;
+  }
+
+  /* Teks hijau Electric Lime disesuaikan ke Hijau Lime Pekat (#65A30D) agar kontras di latar putih */
+  & .text-\[\#84CC16\],
+  & [class*="text-[#84CC16]"] {
+    color: #65A30D !important;
+  }
+  & [class*="bg-[#84CC16]/10"] {
+    background-color: rgba(101, 163, 13, 0.1) !important;
+  }
+  & [class*="border-[#84CC16]/25"],
+  & [class*="border-[#84CC16]/30"] {
+    border-color: rgba(101, 163, 13, 0.25) !important;
+  }
+
+  /* Garis batas (Borders) */
+  & .border-\[\#27272A\],
+  & [class*="border-[#27272A]"] {
+    border-color: #E2E8F0 !important;
+  }
+  & .border-\[\#1F1F23\],
+  & [class*="border-[#1F1F23]"] {
+    border-color: #E2E8F0 !important;
+  }
+  & .border-\[\#18181B\],
+  & [class*="border-[#18181B]"] {
+    border-color: #E2E8F0 !important;
+  }
+  & .border-\[\#1F2026\],
+  & [class*="border-[#1F2026]"] {
+    border-color: #E2E8F0 !important;
+  }
+  & .border-\[\#1A1B22\],
+  & [class*="border-[#1A1B22]"] {
+    border-color: #E2E8F0 !important;
+  }
+  & [class*="divide-[#1F2026]"] > :not([hidden]) ~ :not([hidden]),
+  & [class*="divide-[#27272A]"] > :not([hidden]) ~ :not([hidden]) {
+    border-color: #E2E8F0 !important;
+  }
+
+  /* Kotak formulir di mode terang */
+  & input,
+  & select,
+  & textarea {
+    background-color: #FFFFFF !important;
+    color: #0F172A !important;
+    border-color: #CBD5E1 !important;
+  }
+  & input::placeholder,
+  & textarea::placeholder {
+    color: #94A3B8 !important;
+  }
+  & input:focus,
+  & select:focus,
+  & textarea:focus {
+    border-color: #65A30D !important;
+    outline-color: #65A30D !important;
+  }
+
+  /* Efek elevasi halus kartu di latar terang */
+  & .rounded-2xl.border,
+  & .rounded-xl.border {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Spanduk CTA WhatsApp di latar terang */
+  & [class*="from-[#181A22]"] {
+    background: linear-gradient(to right, #FFFFFF, #F8FAFC, #F1F5F9) !important;
+    border-color: rgba(101, 163, 13, 0.35) !important;
+    box-shadow: 0 10px 30px -10px rgba(101, 163, 13, 0.12) !important;
   }
 }

@@ -85,7 +85,7 @@ export default async function AdminDashboardPage() {
 
           <div className="p-4 rounded-xl bg-[#121316] border border-[#1F2026]">
             <span className="text-[11px] font-medium text-[#71717A] block">Pilihan Bahan</span>
-            <div className="text-2xl font-semibold text-[#84CC16] mt-1.5 mb-0.5 tabular-nums">
+            <div className="text-2xl font-semibold text-[#FAFAFA] mt-1.5 mb-0.5 tabular-nums">
               {totalFabrics}
             </div>
             <span className="text-[10px] text-[#52525B]">Kain dryfit aktif</span>
@@ -127,7 +127,7 @@ export default async function AdminDashboardPage() {
               </div>
               <Link
                 href="/admin/katalog"
-                className="text-xs text-[#84CC16] hover:underline font-medium"
+                className="text-xs text-[#A1A1AA] hover:text-[#FAFAFA] font-medium transition-colors"
               >
                 Kelola Semua →
               </Link>
@@ -157,7 +157,8 @@ export default async function AdminDashboardPage() {
                     </div>
                     <div className="text-right">
                       <span className="text-[#A1A1AA] block">{item.priceInfo || "-"}</span>
-                      <span className={`text-[10px] ${item.isActive ? "text-[#84CC16]" : "text-[#71717A]"}`}>
+                      <span className="inline-flex items-center gap-1.5 text-[10px] text-[#A1A1AA]">
+                        <span className={`w-1.5 h-1.5 rounded-full ${item.isActive ? "bg-[#84CC16]" : "bg-[#52525B]"}`} />
                         {item.isActive ? "Aktif" : "Nonaktif"}
                       </span>
                     </div>

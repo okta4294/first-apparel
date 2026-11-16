@@ -27,6 +27,7 @@ Thumbs.db
 ehthumbs.db
 [Dd]esktop.ini
 *.pem
+AGENTS.md
 
 # scratch & temporary
 /scratch
@@ -59,3 +60,6 @@ next-env.d.ts
 DESIGN.md
 product_requirements_document_prd.md
 AGENTS.md
+PRODUCT.md
+graphify-out/
+.impeccable/

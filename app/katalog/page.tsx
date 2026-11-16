@@ -57,9 +57,6 @@ export default async function KatalogPage() {
 
       {/* 2. Hero Header Katalog */}
       <section className="relative py-16 border-b border-[#27272A] bg-gradient-to-b from-[#121318] to-[#09090B] overflow-hidden">
-        {/* Glow ambient atletik hijau neon */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-48 bg-[#84CC16]/10 blur-[100px] pointer-events-none rounded-full" />
-
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center max-w-3xl">
           <span className="inline-block px-3 py-1 rounded-full bg-[#84CC16]/10 border border-[#84CC16]/30 text-[#84CC16] text-xs font-bold uppercase tracking-widest mb-4">
             KATALOG RESMI FIRST APPAREL
@@ -125,11 +122,6 @@ export default async function KatalogPage() {
                 <li>
                   <Link href="/blog" className="hover:text-[#84CC16] transition-colors">
                     Blog &amp; Panduan
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/admin" className="text-[#52525B] hover:text-[#A1A1AA] transition-colors">
-                    Panel Admin (Login)
                   </Link>
                 </li>
               </ul>

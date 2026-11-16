@@ -186,7 +186,7 @@ export function KatalogClient({ items, waNumber }: KatalogClientProps) {
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
                   isSelected
-                    ? "bg-[#84CC16] text-[#09090B] shadow-[0_0_15px_rgba(132,204,22,0.3)]"
+                    ? "bg-[#84CC16] text-[#09090B] font-bold shadow-sm"
                     : "bg-[#181920] text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#20212B] border border-[#27272A]"
                 }`}
               >
@@ -228,7 +228,7 @@ export function KatalogClient({ items, waNumber }: KatalogClientProps) {
             return (
               <div
                 key={item.id}
-                className="rounded-2xl bg-[#141418] border border-[#27272A] hover:border-[#84CC16]/50 hover:shadow-[0_0_30px_rgba(132,204,22,0.1)] transition-all duration-300 flex flex-col justify-between group overflow-hidden"
+                className="rounded-2xl bg-[#141418] border border-[#27272A] hover:border-[#3F3F46] hover:shadow-lg transition-all duration-300 flex flex-col justify-between group overflow-hidden"
               >
                 <div>
                   {/* Foto Utama & Badge */}
@@ -334,17 +334,25 @@ export function KatalogClient({ items, waNumber }: KatalogClientProps) {
                 {/* Footer Kartu & Tombol Aksi */}
                 <div className="p-5 pt-0">
                   <div className="pt-4 border-t border-[#1F1F23] space-y-3">
-                    <div>
-                      <span className="text-[10px] font-semibold text-[#71717A] tracking-wider uppercase block">
-                        Estimasi Harga Mulai
-                      </span>
-                      <div className="flex items-baseline gap-1 mt-0.5">
-                        <span className="text-xl font-black tracking-tight text-[#FAFAFA] tabular-nums">
+                    <div className="p-3.5 rounded-xl bg-[#0A0B0E] border border-[#1F2026]">
+                      {/* Baris Atas: Label & Lencana Spesifikasi */}
+                      <div className="flex items-center justify-between gap-2 mb-1.5">
+                        <span className="text-[10px] font-bold text-[#84CC16] tracking-widest uppercase">
+                          HARGA MULAI
+                        </span>
+                        <span className="px-2 py-0.5 rounded-md bg-[#181920] border border-[#27272A] text-[10px] font-bold text-[#D4D4D8] uppercase tracking-wider shrink-0">
+                          Full Print
+                        </span>
+                      </div>
+
+                      {/* Baris Bawah: Angka Harga Tanpa Patah Baris */}
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-xl sm:text-2xl font-black tracking-tight text-[#FAFAFA] tabular-nums whitespace-nowrap">
                           {item.priceInfo
                             ? item.priceInfo.replace(/mulai\s*/i, "").replace(/\/.*$/, "").trim()
                             : "Hubungi Kami"}
                         </span>
-                        <span className="text-xs font-bold text-[#84CC16]">/ pcs</span>
+                        <span className="text-xs font-semibold text-[#71717A] whitespace-nowrap">/ pcs</span>
                       </div>
                     </div>
 
@@ -361,7 +369,7 @@ export function KatalogClient({ items, waNumber }: KatalogClientProps) {
                       href={getWaOrderLink(item)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-full bg-[#84CC16] hover:bg-[#9ee238] active:scale-[0.98] text-[#09090B] font-extrabold text-xs tracking-wider uppercase transition-all shadow-[0_0_15px_rgba(132,204,22,0.2)] group-hover:shadow-[0_0_25px_rgba(132,204,22,0.35)]"
+                      className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-[#84CC16] hover:bg-[#9ee238] active:scale-[0.98] text-[#09090B] font-black text-xs tracking-wider uppercase transition-all shadow-[0_0_20px_rgba(132,204,22,0.25)] group-hover:shadow-[0_0_30px_rgba(132,204,22,0.4)]"
                     >
                       <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
                         <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.634.076-1.745-.383-1.423-.588-2.339-2.04-2.41-2.134-.071-.094-.572-.76-.572-1.448 0-.689.361-1.028.49-1.168.129-.14.282-.175.376-.175s.188.005.271.01c.088.005.206-.033.322.247.121.292.412 1.006.448 1.08.036.074.06.16.012.257-.048.097-.072.157-.144.24-.072.083-.153.186-.218.25-.072.072-.148.15-.064.294.084.144.373.616.8 1 .552.497 1.018.652 1.162.724.144.072.228.06.313-.037.085-.097.362-.423.458-.568.096-.145.193-.121.325-.072.133.048.843.398.988.47.145.072.241.108.277.17.036.06.036.357-.108.762z" />

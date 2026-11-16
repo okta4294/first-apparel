@@ -42,21 +42,24 @@ export async function createPartnerAction(formData: FormData) {
   }
 
   try {
-    await db.insert(partners).values({
-      name,
-      category,
-      logoUrl,
-      logoKey,
-      websiteUrl,
-      sortOrder,
-      isActive,
-    });
+    const [created] = await db
+      .insert(partners)
+      .values({
+        name,
+        category,
+        logoUrl,
+        logoKey,
+        websiteUrl,
+        sortOrder,
+        isActive,
+      })
+      .returning();
 
     revalidatePath("/");
     revalidatePath("/admin");
     revalidatePath("/admin/partner");
 
-    return { success: true };
+    return { success: true, item: created };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Gagal menyimpan partner.";
     return { success: false, error: msg };

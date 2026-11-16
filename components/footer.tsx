@@ -74,11 +74,6 @@ export function Footer({
                   Blog &amp; Panduan
                 </Link>
               </li>
-              <li>
-                <Link href="/admin" className="text-[#52525B] hover:text-[#A1A1AA] transition-colors">
-                  Panel Admin (Login)
-                </Link>
-              </li>
             </ul>
           </div>
 

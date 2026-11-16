@@ -236,27 +236,13 @@ export function CatalogManager({ initialItems }: CatalogManagerProps) {
       const res = await createCatalogAction(formData);
       setIsSubmitting(false);
 
-      if (res.success) {
+      if (res.success && res.item) {
         setStatusMessage({ type: "success", text: "Model jersey, galeri foto, dan size chart berhasil disimpan!" });
-        setItems((prev) => [
-          {
-            id: Date.now(),
-            title,
-            category,
-            fabric,
-            priceInfo,
-            imageUrl: images[0]?.url || "",
-            imageKey: images[0]?.key || "",
-            images: JSON.stringify(images),
-            sizeChartUrl: sizeChartUrl || null,
-            sizeChartKey: sizeChartKey || null,
-            isFeatured,
-            isActive: true,
-            createdAt: new Date(),
-          },
-          ...prev,
-        ]);
+        setItems((prev) => [res.item as CatalogItem, ...prev]);
         resetForm();
+      } else if (res.success) {
+        setStatusMessage({ type: "success", text: "Model jersey, galeri foto, dan size chart berhasil disimpan!" });
+        window.location.reload();
       } else {
         setStatusMessage({ type: "error", text: res.error || "Gagal menyimpan produk." });
       }

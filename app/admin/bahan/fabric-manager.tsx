@@ -97,19 +97,12 @@ export function FabricManager({ initialItems }: FabricManagerProps) {
       const res = await createFabricAction(formData);
       setIsSubmitting(false);
 
-      if (res.success) {
-        const newItem: FabricItem = {
-          id: Date.now(),
-          name: name.trim(),
-          description: description.trim(),
-          sortOrder,
-          isActive,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        };
-        setItems((prev) => [...prev, newItem]);
+      if (res.success && res.item) {
+        setItems((prev) => [...prev, res.item as FabricItem]);
         resetForm();
         setStatusMessage({ type: "success", text: "Bahan kain baru berhasil ditambahkan!" });
+      } else if (res.success) {
+        window.location.reload();
       } else {
         setStatusMessage({ type: "error", text: res.error || "Gagal menambahkan bahan kain." });
       }

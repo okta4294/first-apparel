@@ -2,9 +2,34 @@ import Link from "next/link";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { SizeChartDisplay } from "@/components/size-chart-display";
+import { OrderTemplateCard } from "@/components/order-template-card";
 import { db } from "@/lib/db";
 import { siteSettings, fabrics } from "@/lib/db/schema";
 import { eq, asc } from "drizzle-orm";
+
+function getFabricBadge(name: string): string {
+  const lower = name.toLowerCase();
+  if (lower.includes("milano")) return "Paling Populer • Futsal & Sepak Bola";
+  if (lower.includes("brazil")) return "Serat Ringan • Running & Badminton";
+  if (lower.includes("pique") || lower.includes("jarum")) return "Berpori Elegan • Polo & Event";
+  if (lower.includes("serena")) return "Permukaan Licin • Esports & Gaming";
+  return "Teknologi Quick-Dry Aktif";
+}
+
+/**
+ * Fungsi: Daftar tautan navigasi cepat (anchor) di halaman cara pesan.
+ * Cara Kerja: Dipetakan menjadi tautan `#id` yang melompat ke seksi terkait
+ *             tanpa scroll manual panjang, terutama berguna di layar ponsel.
+ * Cara Penggunaan: `quickNavLinks.map(...)` di dalam komponen navigasi cepat.
+ */
+const quickNavLinks = [
+  { href: "#alur-pemesanan", label: "5 Langkah Order" },
+  { href: "#format-order", label: "Format Chat" },
+  { href: "#panduan-ukuran", label: "Tabel Ukuran" },
+  { href: "#panduan-desain", label: "File & Logo" },
+  { href: "#pilihan-bahan", label: "Pilihan Bahan" },
+  { href: "#faq", label: "FAQ" },
+];
 
 export const metadata = {
   title: "Alur & Cara Pemesanan Custom Jersey | First Apparel",
@@ -63,11 +88,29 @@ export default async function CaraPesanPage() {
       {/* 1. Navbar */}
       <Navbar waNumber={whatsappNumber} storeName={storeName} logoUrl={logoUrl} />
 
+      {/* 1.1 Navigasi Cepat Antar Seksi — pengguna tidak perlu menggulir panjang */}
+      <nav
+        aria-label="Navigasi cepat panduan pemesanan"
+        className="sticky top-20 z-40 border-b border-[#27272A] bg-[#09090B]/95 backdrop-blur-md"
+      >
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ul className="flex items-center gap-1.5 overflow-x-auto py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {quickNavLinks.map((link) => (
+              <li key={link.href} className="shrink-0">
+                <a
+                  href={link.href}
+                  className="inline-flex h-11 items-center whitespace-nowrap rounded-full border border-transparent px-3.5 text-xs font-semibold text-[#A1A1AA] transition-colors hover:border-[#27272A] hover:bg-[#141418] hover:text-[#FAFAFA] focus-visible:border-[#84CC16] focus-visible:text-[#84CC16] focus-visible:outline-none"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </nav>
+
       {/* 2. Hero Section */}
       <section className="relative py-16 sm:py-24 border-b border-[#27272A] bg-gradient-to-b from-[#121318] to-[#09090B] overflow-hidden">
-        {/* Glow Ambient Neon */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-64 bg-[#84CC16]/10 blur-[130px] pointer-events-none rounded-full" />
-
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#84CC16]/10 border border-[#84CC16]/30 text-[#84CC16] text-xs font-bold uppercase tracking-widest mb-5">
             <span className="w-2 h-2 rounded-full bg-[#84CC16] animate-pulse" />
@@ -99,11 +142,34 @@ export default async function CaraPesanPage() {
               Lihat Katalog Desain →
             </Link>
           </div>
+
+          {/* Jalur Cepat Express & Desain Siap Cetak */}
+          <div className="mt-8 p-3.5 sm:p-4 rounded-2xl bg-[#141418] border border-[#27272A] max-w-xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs shadow-sm">
+            <div className="flex items-center gap-2.5 text-left">
+              <span className="w-8 h-8 rounded-lg bg-[#84CC16]/10 text-[#84CC16] flex items-center justify-center font-bold text-base shrink-0">
+                ⚡
+              </span>
+              <div>
+                <span className="font-bold text-[#FAFAFA] block">Sudah Punya Desain Siap Cetak?</span>
+                <span className="text-[#A1A1AA] text-[11px] block">Tersedia jalur prioritas express untuk turnamen (3–5 hari kerja)</span>
+              </div>
+            </div>
+            <a
+              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+                `Halo Admin ${storeName}, saya sudah ada file desain siap cetak dan ingin konsultasi jalur express turnamen.`
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#84CC16] font-bold hover:underline whitespace-nowrap text-xs shrink-0 py-1 px-2.5 rounded-lg bg-[#84CC16]/10 hover:bg-[#84CC16]/20 transition-colors"
+            >
+              Kirim File via WA →
+            </a>
+          </div>
         </div>
       </section>
 
       {/* 3. Lima Tahapan Alur Pemesanan Rinci */}
-      <section className="py-20 border-b border-[#27272A] relative">
+      <section id="alur-pemesanan" className="py-20 border-b border-[#27272A] relative scroll-mt-36">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <span className="text-xs font-bold tracking-widest text-[#84CC16] uppercase block mb-2">
@@ -119,8 +185,8 @@ export default async function CaraPesanPage() {
 
           <div className="space-y-6">
             {/* Step 1 */}
-            <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-6 sm:p-8 flex flex-col md:flex-row gap-6 items-start hover:border-[#84CC16]/50 hover:shadow-[0_0_30px_rgba(132,204,22,0.06)] transition-all group">
-              <div className="w-16 h-16 rounded-2xl bg-[#84CC16]/10 border border-[#84CC16]/30 flex items-center justify-center text-[#84CC16] font-black text-2xl shrink-0 shadow-[0_0_20px_rgba(132,204,22,0.15)] group-hover:scale-105 transition-transform">
+            <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-6 sm:p-8 flex flex-col md:flex-row gap-6 items-start hover:border-[#3F3F46] hover:shadow-md transition-all group">
+              <div className="w-16 h-16 rounded-2xl bg-[#84CC16]/10 border border-[#84CC16]/30 flex items-center justify-center text-[#84CC16] font-black text-2xl shrink-0 group-hover:scale-105 transition-transform">
                 01
               </div>
               <div className="flex-1 space-y-2">
@@ -135,6 +201,15 @@ export default async function CaraPesanPage() {
                 <p className="text-sm text-[#A1A1AA] leading-relaxed">
                   Hubungi admin kami melalui WhatsApp. Anda bebas membawa sketsa coretan tangan, foto referensi tim profesional, file desain mentah (Corel/AI/PSD), atau memilih model favorit dari katalog kami. Sampaikan warna utama, logo tim, dan nama sponsor yang ingin dipasang.
                 </p>
+                <div className="pt-1">
+                  <Link
+                    href="/katalog"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#84CC16] hover:underline"
+                  >
+                    <span>Buka Katalog Model Jersey Terpopuler</span>
+                    <span>→</span>
+                  </Link>
+                </div>
                 <div className="pt-2 flex flex-wrap gap-2 text-xs text-[#71717A]">
                   <span className="px-3 py-1 rounded-md bg-[#1C1D24] border border-[#27272A]">✓ Bebas Tentukan Warna</span>
                   <span className="px-3 py-1 rounded-md bg-[#1C1D24] border border-[#27272A]">✓ Pilihan Kerah O-neck / V-neck / Polo</span>
@@ -144,8 +219,8 @@ export default async function CaraPesanPage() {
             </div>
 
             {/* Step 2 */}
-            <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-6 sm:p-8 flex flex-col md:flex-row gap-6 items-start hover:border-[#84CC16]/50 hover:shadow-[0_0_30px_rgba(132,204,22,0.06)] transition-all group">
-              <div className="w-16 h-16 rounded-2xl bg-[#84CC16]/10 border border-[#84CC16]/30 flex items-center justify-center text-[#84CC16] font-black text-2xl shrink-0 shadow-[0_0_20px_rgba(132,204,22,0.15)] group-hover:scale-105 transition-transform">
+            <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-6 sm:p-8 flex flex-col md:flex-row gap-6 items-start hover:border-[#3F3F46] hover:shadow-md transition-all group">
+              <div className="w-16 h-16 rounded-2xl bg-[#84CC16]/10 border border-[#84CC16]/30 flex items-center justify-center text-[#84CC16] font-black text-2xl shrink-0 group-hover:scale-105 transition-transform">
                 02
               </div>
               <div className="flex-1 space-y-2">
@@ -169,33 +244,47 @@ export default async function CaraPesanPage() {
             </div>
 
             {/* Step 3 */}
-            <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-6 sm:p-8 flex flex-col md:flex-row gap-6 items-start hover:border-[#84CC16]/50 hover:shadow-[0_0_30px_rgba(132,204,22,0.06)] transition-all group">
-              <div className="w-16 h-16 rounded-2xl bg-[#84CC16]/10 border border-[#84CC16]/30 flex items-center justify-center text-[#84CC16] font-black text-2xl shrink-0 shadow-[0_0_20px_rgba(132,204,22,0.15)] group-hover:scale-105 transition-transform">
+            <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-6 sm:p-8 flex flex-col md:flex-row gap-6 items-start hover:border-[#3F3F46] hover:shadow-md transition-all group">
+              <div className="w-16 h-16 rounded-2xl bg-[#84CC16]/10 border border-[#84CC16]/30 flex items-center justify-center text-[#84CC16] font-black text-2xl shrink-0 group-hover:scale-105 transition-transform">
                 03
               </div>
-              <div className="flex-1 space-y-2">
+              <div className="flex-1 space-y-3">
                 <div className="flex flex-wrap items-center gap-2">
                   <h3 className="text-xl font-bold text-[#FAFAFA] group-hover:text-[#84CC16] transition-colors">
-                    Rekap Ukuran Pemain, Pilihan Bahan &amp; Pembayaran DP
+                    Rekap Ukuran Pemain &amp; Penguncian Produksi (DP 50%)
                   </h3>
                   <span className="px-2.5 py-0.5 rounded-full bg-[#27272A] text-[11px] font-semibold text-[#84CC16]">
-                    DP 50%
+                    Jadwal Terkunci
                   </span>
                 </div>
                 <p className="text-sm text-[#A1A1AA] leading-relaxed">
-                  Admin membagikan template rekap daftar pemain (Nama Punggung, Nomor, dan Size). Anda juga menentukan jenis kain Dryfit yang diinginkan (Milano, Brazil, Pique, dll.). Setelah data valid, Anda cukup membayar DP 50% untuk mengunci jadwal produksi di workshop kami.
+                  Proses dibagi menjadi 2 tahap sederhana:
                 </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 text-xs text-[#D4D4D8]">
+                  <div className="p-3.5 rounded-xl bg-[#09090B] border border-[#1F2026]">
+                    <span className="font-bold text-[#84CC16] block mb-1">Tahap 3A • Rekap Data Pemain</span>
+                    <span className="text-[#A1A1AA] text-[11px] leading-relaxed block">
+                      Admin mengirimkan template rekap. Anda cukup mengisi Nama Punggung, Nomor, Size baju, dan jenis kain dryfit yang dipilih.
+                    </span>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[#09090B] border border-[#1F2026]">
+                    <span className="font-bold text-[#84CC16] block mb-1">Tahap 3B • DP 50% &amp; Invoice</span>
+                    <span className="text-[#A1A1AA] text-[11px] leading-relaxed block">
+                      Kunci jadwal pengerjaan workshop dengan DP 50% via transfer rekening resmi toko. Tagihan invoice resmi diterbitkan seketika.
+                    </span>
+                  </div>
+                </div>
                 <div className="pt-2 flex flex-wrap gap-2 text-xs text-[#71717A]">
-                  <span className="px-3 py-1 rounded-md bg-[#1C1D24] border border-[#27272A]">✓ Rekap Data Rapi</span>
-                  <span className="px-3 py-1 rounded-md bg-[#1C1D24] border border-[#27272A]">✓ Pilihan Bahan Berstandar Atlet</span>
-                  <span className="px-3 py-1 rounded-md bg-[#1C1D24] border border-[#27272A]">✓ Faktur Tagihan Resmi</span>
+                  <span className="px-3 py-1 rounded-md bg-[#1C1D24] border border-[#27272A]">✓ Rekap Data Rapi &amp; Jelas</span>
+                  <span className="px-3 py-1 rounded-md bg-[#1C1D24] border border-[#27272A]">✓ Pilihan Bahan Standar Atlet</span>
+                  <span className="px-3 py-1 rounded-md bg-[#1C1D24] border border-[#27272A]">✓ Invoice Resmi Rekening Toko</span>
                 </div>
               </div>
             </div>
 
             {/* Step 4 */}
-            <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-6 sm:p-8 flex flex-col md:flex-row gap-6 items-start hover:border-[#84CC16]/50 hover:shadow-[0_0_30px_rgba(132,204,22,0.06)] transition-all group">
-              <div className="w-16 h-16 rounded-2xl bg-[#84CC16]/10 border border-[#84CC16]/30 flex items-center justify-center text-[#84CC16] font-black text-2xl shrink-0 shadow-[0_0_20px_rgba(132,204,22,0.15)] group-hover:scale-105 transition-transform">
+            <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-6 sm:p-8 flex flex-col md:flex-row gap-6 items-start hover:border-[#3F3F46] hover:shadow-md transition-all group">
+              <div className="w-16 h-16 rounded-2xl bg-[#84CC16]/10 border border-[#84CC16]/30 flex items-center justify-center text-[#84CC16] font-black text-2xl shrink-0 group-hover:scale-105 transition-transform">
                 04
               </div>
               <div className="flex-1 space-y-2">
@@ -219,8 +308,8 @@ export default async function CaraPesanPage() {
             </div>
 
             {/* Step 5 */}
-            <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-6 sm:p-8 flex flex-col md:flex-row gap-6 items-start hover:border-[#84CC16]/50 hover:shadow-[0_0_30px_rgba(132,204,22,0.06)] transition-all group">
-              <div className="w-16 h-16 rounded-2xl bg-[#84CC16]/10 border border-[#84CC16]/30 flex items-center justify-center text-[#84CC16] font-black text-2xl shrink-0 shadow-[0_0_20px_rgba(132,204,22,0.15)] group-hover:scale-105 transition-transform">
+            <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-6 sm:p-8 flex flex-col md:flex-row gap-6 items-start hover:border-[#3F3F46] hover:shadow-md transition-all group">
+              <div className="w-16 h-16 rounded-2xl bg-[#84CC16]/10 border border-[#84CC16]/30 flex items-center justify-center text-[#84CC16] font-black text-2xl shrink-0 group-hover:scale-105 transition-transform">
                 05
               </div>
               <div className="flex-1 space-y-2">
@@ -246,8 +335,15 @@ export default async function CaraPesanPage() {
         </div>
       </section>
 
-      {/* 4. Gambar Panduan Size Chart Resmi Toko */}
-      <section className="py-20 border-b border-[#27272A] bg-[#0C0D11]">
+      {/* 3.1 Kotak Salin Cepat Format Pesanan */}
+      <section id="format-order" className="py-12 border-b border-[#27272A] bg-[#0A0B0E] scroll-mt-36">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <OrderTemplateCard waNumber={whatsappNumber} storeName={storeName} />
+        </div>
+      </section>
+
+      {/* 4. Panduan Size Chart & Tabel Ukuran Standar */}
+      <section id="panduan-ukuran" className="py-20 border-b border-[#27272A] bg-[#0C0D11] scroll-mt-36">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <span className="text-xs font-bold tracking-widest text-[#84CC16] uppercase block mb-2">
@@ -257,7 +353,7 @@ export default async function CaraPesanPage() {
               Size Chart Standar {storeName}
             </h2>
             <p className="text-xs sm:text-sm text-[#A1A1AA] mt-2">
-              Gunakan panduan gambar ukuran resmi berikut sebagai acuan penentuan size pemain tim Anda sebelum masuk proses produksi.
+              Cek tabel ukuran angka di bawah ini (selalu tersedia), lalu bandingkan dengan diagram gambar resmi toko bila sudah diunggah admin.
             </p>
           </div>
 
@@ -269,8 +365,216 @@ export default async function CaraPesanPage() {
         </div>
       </section>
 
+      {/* 4.1 Panduan File Desain & Peta Penempatan Logo */}
+      <section id="panduan-desain" className="py-20 border-b border-[#27272A] scroll-mt-36">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="text-xs font-bold tracking-widest text-[#84CC16] uppercase block mb-2">
+              SIAPKAN SEBELUM CHAT ADMIN
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-[#FAFAFA]">
+              Panduan File Desain &amp; Penempatan Logo
+            </h2>
+            <p className="text-sm text-[#A1A1AA] mt-3">
+              Tidak perlu jago desain. Cukup ikuti standar file dan posisi cetak di bawah ini agar hasil jersey tim presisi sejak percetakan pertama.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* A. Spesifikasi File Desain */}
+            <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-6 sm:p-7 flex flex-col">
+              <div className="flex items-start gap-3 mb-5">
+                <span className="w-10 h-10 rounded-xl bg-[#84CC16]/10 border border-[#84CC16]/30 text-[#84CC16] flex items-center justify-center shrink-0">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h6l6 6v12a2 2 0 01-2 2z" />
+                  </svg>
+                </span>
+                <div>
+                  <h3 className="text-base sm:text-lg font-bold text-[#FAFAFA]">
+                    Format File yang Kami Terima
+                  </h3>
+                  <p className="text-xs text-[#A1A1AA] mt-0.5">
+                    Semakin asli file-nya, semakin tajam hasil sublimasinya.
+                  </p>
+                </div>
+              </div>
+
+              <ul className="space-y-2.5 text-xs">
+                <li className="flex items-start gap-3 rounded-xl bg-[#09090B] border border-[#1F2026] p-3.5">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#84CC16]/15 text-[10px] font-black text-[#84CC16]">
+                    1
+                  </span>
+                  <div className="flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-bold text-[#FAFAFA]">File vektor (paling disarankan)</span>
+                      <span className="rounded-full bg-[#84CC16]/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#84CC16]">
+                        Prioritas
+                      </span>
+                    </div>
+                    <p className="mt-1 leading-relaxed text-[#A1A1AA]">
+                      <span className="font-mono text-[#D4D4D8]">.AI</span>,{" "}
+                      <span className="font-mono text-[#D4D4D8]">.EPS</span>,{" "}
+                      <span className="font-mono text-[#D4D4D8]">.PDF</span>,{" "}
+                      <span className="font-mono text-[#D4D4D8]">.CDR</span>, atau{" "}
+                      <span className="font-mono text-[#D4D4D8]">.SVG</span>. Tetap tajam di ukuran cetak berapa pun.
+                    </p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3 rounded-xl bg-[#09090B] border border-[#1F2026] p-3.5">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#84CC16]/15 text-[10px] font-black text-[#84CC16]">
+                    2
+                  </span>
+                  <div className="flex-1">
+                    <span className="font-bold text-[#FAFAFA]">Gambar raster (jika hanya punya ini)</span>
+                    <p className="mt-1 leading-relaxed text-[#A1A1AA]">
+                      <span className="font-mono text-[#D4D4D8]">.PNG</span> latar transparan minimal 300 DPI. Hindari screenshot atau foto logo dari media sosial karena akan pecah saat dicetak.
+                    </p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3 rounded-xl bg-[#09090B] border border-[#1F2026] p-3.5">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#84CC16]/15 text-[10px] font-black text-[#84CC16]">
+                    3
+                  </span>
+                  <div className="flex-1">
+                    <span className="font-bold text-[#FAFAFA]">Font &amp; pengiriman file</span>
+                    <p className="mt-1 leading-relaxed text-[#A1A1AA]">
+                      Sertakan font asli atau ubah teks menjadi <em>outline</em>. File di atas 25 MB cukup dikirim sebagai tautan Google Drive / WeTransfer.
+                    </p>
+                  </div>
+                </li>
+              </ul>
+
+              <div className="mt-auto pt-5">
+                <a
+                  href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+                    `Halo Admin ${storeName}, saya ingin mengirim file desain jersey tim. Berikut tautan file desain kami: `
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#84CC16] hover:underline"
+                >
+                  <span>Kirim file desain Anda sekarang</span>
+                  <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
+
+            {/* B. Peta Penempatan Logo & Nama */}
+            <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-6 sm:p-7 flex flex-col">
+              <div className="flex items-start gap-3 mb-5">
+                <span className="w-10 h-10 rounded-xl bg-[#84CC16]/10 border border-[#84CC16]/30 text-[#84CC16] flex items-center justify-center shrink-0">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 8V6a2 2 0 012-2h2M4 16v2a2 2 0 002 2h2m8-16h2a2 2 0 012 2v2m0 8v2a2 2 0 01-2 2h-2M9 12h6" />
+                  </svg>
+                </span>
+                <div>
+                  <h3 className="text-base sm:text-lg font-bold text-[#FAFAFA]">
+                    Peta Penempatan Logo &amp; Nama
+                  </h3>
+                  <p className="text-xs text-[#A1A1AA] mt-0.5">
+                    Acuan standar produksi kami, bukan sekadar perkiraan.
+                  </p>
+                </div>
+              </div>
+
+              <div className="rounded-xl bg-[#09090B] border border-[#1F2026] p-4">
+                <svg
+                  viewBox="0 0 320 210"
+                  role="img"
+                  aria-labelledby="peta-logo-title"
+                  className="mx-auto h-auto w-full max-w-sm text-[#71717A]"
+                >
+                  <title id="peta-logo-title">
+                    Peta penempatan logo dada, lengan, nama, dan nomor punggung pada jersey
+                  </title>
+
+                  {/* Siluet jersey tampak depan */}
+                  <path
+                    d="M 46 46 L 30 52 L 16 86 L 34 94 L 34 178 Q 80 188 126 178 L 126 94 L 144 86 L 130 52 L 114 46 Q 80 60 46 46 Z"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinejoin="round"
+                  />
+                  <path d="M 80 62 L 80 180" stroke="currentColor" strokeWidth="1" strokeDasharray="3 4" opacity="0.4" />
+
+                  {/* Siluet jersey tampak belakang */}
+                  <path
+                    d="M 206 46 L 190 52 L 176 86 L 194 94 L 194 178 Q 240 188 286 178 L 286 94 L 304 86 L 290 52 L 274 46 Q 240 54 206 46 Z"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinejoin="round"
+                  />
+
+                  {/* Penanda posisi cetak */}
+                  <g fontSize="10" fontWeight="700" textAnchor="middle">
+                    <circle cx="104" cy="82" r="8.5" fill="#84CC16" />
+                    <text x="104" y="85.5" fill="#09090B">1</text>
+
+                    <circle cx="58" cy="82" r="8.5" fill="#84CC16" />
+                    <text x="58" y="85.5" fill="#09090B">2</text>
+
+                    <circle cx="31" cy="72" r="8.5" fill="#84CC16" />
+                    <text x="31" y="75.5" fill="#09090B">3</text>
+
+                    <circle cx="240" cy="96" r="8.5" fill="#84CC16" />
+                    <text x="240" y="99.5" fill="#09090B">4</text>
+
+                    <circle cx="240" cy="140" r="8.5" fill="#84CC16" />
+                    <text x="240" y="143.5" fill="#09090B">5</text>
+                  </g>
+
+                  <g fontSize="8" textAnchor="middle" fill="currentColor" opacity="0.8">
+                    <text x="80" y="200">Tampak Depan</text>
+                    <text x="240" y="200">Tampak Belakang</text>
+                  </g>
+                </svg>
+              </div>
+
+              <ol className="mt-4 space-y-2 text-xs">
+                <li className="flex items-baseline gap-2.5">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#84CC16]/15 text-[10px] font-black text-[#84CC16]">1</span>
+                  <span className="text-[#A1A1AA]">
+                    <strong className="text-[#FAFAFA]">Logo dada kiri</strong> — 8 × 8 cm, sejajar jantung.
+                  </span>
+                </li>
+                <li className="flex items-baseline gap-2.5">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#84CC16]/15 text-[10px] font-black text-[#84CC16]">2</span>
+                  <span className="text-[#A1A1AA]">
+                    <strong className="text-[#FAFAFA]">Logo dada kanan / sponsor</strong> — maksimal 10 × 6 cm.
+                  </span>
+                </li>
+                <li className="flex items-baseline gap-2.5">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#84CC16]/15 text-[10px] font-black text-[#84CC16]">3</span>
+                  <span className="text-[#A1A1AA]">
+                    <strong className="text-[#FAFAFA]">Logo lengan</strong> — 6 × 6 cm, opsional.
+                  </span>
+                </li>
+                <li className="flex items-baseline gap-2.5">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#84CC16]/15 text-[10px] font-black text-[#84CC16]">4</span>
+                  <span className="text-[#A1A1AA]">
+                    <strong className="text-[#FAFAFA]">Nama punggung</strong> — huruf kapital, tinggi ±5 cm.
+                  </span>
+                </li>
+                <li className="flex items-baseline gap-2.5">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#84CC16]/15 text-[10px] font-black text-[#84CC16]">5</span>
+                  <span className="text-[#A1A1AA]">
+                    <strong className="text-[#FAFAFA]">Nomor punggung</strong> — 25 × 20 cm, font tebal.
+                  </span>
+                </li>
+              </ol>
+
+              <p className="mt-auto pt-4 text-[11px] leading-relaxed text-[#71717A]">
+                Ukuran di atas adalah acuan standar. Posisi final akan dikunci pada mockup yang Anda setujui sebelum produksi.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 5. Karakteristik Kain Dryfit Unggulan */}
-      <section className="py-20 border-b border-[#27272A]">
+      <section id="pilihan-bahan" className="py-20 border-b border-[#27272A] scroll-mt-36">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-14">
             <span className="text-xs font-bold tracking-widest text-[#84CC16] uppercase block mb-2">
@@ -296,8 +600,13 @@ export default async function CaraPesanPage() {
                   className="rounded-2xl bg-[#141418] border border-[#27272A] p-6 hover:border-[#84CC16]/40 transition-colors flex flex-col justify-between"
                 >
                   <div>
-                    <div className="w-10 h-10 rounded-xl bg-[#84CC16]/10 text-[#84CC16] flex items-center justify-center font-bold text-sm mb-4">
-                      {String(index + 1).padStart(2, "0")}
+                    <div className="flex items-center justify-between gap-2 mb-4">
+                      <div className="w-10 h-10 rounded-xl bg-[#84CC16]/10 text-[#84CC16] flex items-center justify-center font-bold text-sm">
+                        {String(index + 1).padStart(2, "0")}
+                      </div>
+                      <span className="px-2.5 py-1 rounded-full bg-[#84CC16]/10 border border-[#84CC16]/25 text-[#84CC16] text-[10px] font-bold tracking-tight uppercase">
+                        {getFabricBadge(item.name)}
+                      </span>
                     </div>
                     <h3 className="font-bold text-base text-[#FAFAFA] mb-2">{item.name}</h3>
                     <p className="text-xs text-[#A1A1AA] leading-relaxed">
@@ -312,7 +621,7 @@ export default async function CaraPesanPage() {
       </section>
 
       {/* 6. FAQ Pemesanan */}
-      <section className="py-20 border-b border-[#27272A] bg-[#0C0D11]">
+      <section id="faq" className="py-20 border-b border-[#27272A] bg-[#0C0D11] scroll-mt-36">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <span className="text-xs font-bold tracking-widest text-[#84CC16] uppercase block mb-2">
@@ -359,6 +668,28 @@ export default async function CaraPesanPage() {
                 Kami memberikan garansi 100% ganti baru tanpa biaya tambahan jika terjadi kesalahan produksi dari pihak kami (seperti salah cetak nomor, nama salah ketik dari data rekap, atau cacat jahitan).
               </p>
             </div>
+
+            <div className="rounded-xl bg-[#141418] border border-[#27272A] p-5">
+              <h3 className="font-bold text-sm text-[#FAFAFA] mb-1.5 flex items-center gap-2">
+                <span className="text-[#84CC16]">Q:</span> Format file desain seperti apa yang harus saya siapkan?
+              </h3>
+              <p className="text-xs text-[#A1A1AA] leading-relaxed pl-5">
+                Cukup file vektor (<span className="font-mono">.AI</span>, <span className="font-mono">.EPS</span>, <span className="font-mono">.PDF</span>, <span className="font-mono">.CDR</span>, <span className="font-mono">.SVG</span>) atau PNG transparan minimal 300 DPI. Belum punya file? Kirim saja foto referensi atau sketsa tangan, desainer kami buatkan mockup-nya gratis. Rincian lengkap ada di{" "}
+                <a href="#panduan-desain" className="font-semibold text-[#84CC16] hover:underline">
+                  panduan file desain &amp; penempatan logo
+                </a>
+                .
+              </p>
+            </div>
+
+            <div className="rounded-xl bg-[#141418] border border-[#27272A] p-5">
+              <h3 className="font-bold text-sm text-[#FAFAFA] mb-1.5 flex items-center gap-2">
+                <span className="text-[#84CC16]">Q:</span> Ke rekening mana pembayaran DP dilakukan dan apakah aman?
+              </h3>
+              <p className="text-xs text-[#A1A1AA] leading-relaxed pl-5">
+                DP 50% baru dibayarkan setelah Anda menerima invoice resmi yang mencantumkan nomor rekening atas nama toko/perusahaan. Admin tidak pernah meminta transfer ke rekening pribadi lewat pesan singkat. Jika ragu, konfirmasi ulang nomor rekening melalui WhatsApp resmi yang tertera di halaman ini sebelum mentransfer.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -366,7 +697,7 @@ export default async function CaraPesanPage() {
       {/* 7. Spanduk CTA WhatsApp */}
       <section className="py-16 bg-[#09090B] relative overflow-hidden">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <div className="p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-[#181A22] via-[#14151C] to-[#101116] border border-[#84CC16]/30 shadow-[0_0_50px_rgba(132,204,22,0.1)]">
+          <div className="p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-[#181A22] via-[#14151C] to-[#101116] border border-[#27272A] shadow-xl">
             <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-[#FAFAFA]">
               Siap Wujudkan Jersey Custom Tim Anda?
             </h2>

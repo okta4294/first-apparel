@@ -72,9 +72,6 @@ export default async function BlogPage() {
 
       {/* 2. Hero Header Blog */}
       <section className="relative py-16 sm:py-20 border-b border-[#27272A] bg-gradient-to-b from-[#121318] to-[#09090B] overflow-hidden">
-        {/* Glow Ambient Neon */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[550px] h-56 bg-[#84CC16]/10 blur-[120px] pointer-events-none rounded-full" />
-
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <span className="inline-block px-3 py-1 rounded-full bg-[#84CC16]/10 border border-[#84CC16]/30 text-[#84CC16] text-xs font-bold uppercase tracking-widest mb-4">
             BLOG &amp; PANDUAN JERSEY
@@ -113,7 +110,7 @@ export default async function BlogPage() {
             {blogList.map((item) => (
               <article
                 key={item.id}
-                className="flex flex-col rounded-2xl bg-[#141418] border border-[#27272A] overflow-hidden hover:border-[#84CC16]/50 hover:shadow-[0_0_30px_rgba(132,204,22,0.08)] transition-all group"
+                className="flex flex-col rounded-2xl bg-[#141418] border border-[#27272A] overflow-hidden hover:border-[#3F3F46] hover:shadow-md transition-all group"
               >
                 {/* Thumbnail Gambar */}
                 <Link href={`/blog/${item.slug}`} className="relative block aspect-[16/10] overflow-hidden bg-[#1E1F27]">
