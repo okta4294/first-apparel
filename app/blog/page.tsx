@@ -171,7 +171,7 @@ export default async function BlogPage() {
             Punya Pertanyaan Seputar Bahan &amp; Desain Jersey?
           </h2>
           <p className="text-xs sm:text-sm text-[#A1A1AA] mt-2 mb-6">
-            Tim ahli konveksi kami siap membantu memberikan rekomendasi terbaik secara gratis via WhatsApp.
+            Masih bingung pilih bahan? Tanya langsung ke admin produksi kami via WhatsApp.
           </p>
           <a
             href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(

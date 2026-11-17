@@ -51,13 +51,11 @@ export function KatalogClient({ items, waNumber, storeSizeChartUrl }: KatalogCli
   // Track selected active image per catalog card (card id -> image url)
   const [activeImages, setActiveImages] = useState<Record<number, string>>({});
 
-  // State untuk modal pop-up galeri gambar desain
   const [selectedGalleryItem, setSelectedGalleryItem] = useState<{
     item: CatalogItem;
     activeIndex: number;
   } | null>(null);
 
-  // Navigasi keyboard untuk modal pop-up (Escape, Panah Kiri, Panah Kanan)
   useEffect(() => {
     if (!selectedGalleryItem) return;
 

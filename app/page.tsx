@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 import { HeroShowcaseCarousel } from "@/components/hero-showcase-carousel";
 import { SizeChartTrigger } from "@/components/size-chart-trigger";
 import { PromoPopup } from "@/components/promo-popup";
@@ -173,7 +174,7 @@ export default async function HomePage() {
             {/* Info Kiri */}
             <div className="lg:col-span-7 space-y-6">
               <h1 className="text-3xl sm:text-5xl lg:text-[52px] font-black tracking-[-0.035em] leading-[1.1] [text-wrap:balance] text-[#FAFAFA]">
-                Kustom Jersey Olahraga <span className="text-[#84CC16]">Impian Tim Anda</span>
+                Custom Jersey Olahraga <span className="text-[#84CC16]">Sesuai Desain Tim Anda</span>
               </h1>
 
               <p className="text-sm sm:text-base lg:text-lg text-[#A1A1AA] leading-relaxed max-w-[52ch] [text-wrap:pretty]">
@@ -256,7 +257,7 @@ export default async function HomePage() {
                   </svg>
                 </div>
                 <span className="text-xs font-bold text-[#84CC16] tracking-wider block mb-2">
-                  Bahan Kain Berkualitas
+                  Ringan &amp; Menyerap Keringat
                 </span>
                 <h3 className="text-lg font-bold text-[#FAFAFA] mb-2.5">
                   Dryfit Milano & Brazil Original
@@ -294,10 +295,10 @@ export default async function HomePage() {
                   </svg>
                 </div>
                 <span className="text-xs font-bold text-[#84CC16] tracking-wider block mb-2">
-                  Fleksibel Tanpa Minimal Order
+                  Pesan Satuan atau Partai Besar
                 </span>
                 <h3 className="text-lg font-bold text-[#FAFAFA] mb-2.5">
-                  Bebas Tanpa Minimal Order
+                  Tanpa Minimum Order
                 </h3>
                 <p className="text-sm text-[#A1A1AA] leading-relaxed">
                   Melayani pesanan mulai dari 1 pcs untuk contoh atau kapten, hingga ratusan pcs untuk turnamen dengan harga berjenjang makin hemat.
@@ -377,7 +378,7 @@ export default async function HomePage() {
                     )}
                   </div>
 
-                  {/* Keterangan & Blok Harga Tebal (Bold Pricing Block) */}
+                  {/* Keterangan & Blok Harga */}
                   <div className="p-5 flex-1 flex flex-col justify-between">
                     <div>
                       <h3 className="text-base font-bold text-[#FAFAFA] leading-snug group-hover:text-[#84CC16] transition-colors">
@@ -391,7 +392,7 @@ export default async function HomePage() {
                       </div>
                     </div>
 
-                    {/* Blok Harga Tegas & Menonjol (Bolder Pricing Block) */}
+                    {/* Blok Harga */}
                     <div className="pt-4 mt-5 border-t border-[#1F1F23]">
                       <div className="mb-3.5 p-3.5 rounded-xl bg-[#0A0B0E] border border-[#1F2026]">
                         {/* Baris Atas: Label & Lencana Spesifikasi */}
@@ -439,7 +440,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 5. Seksi Mitra & Partner Berafiliasi (PRD Seksi 4.1 Poin 5) */}
+      {/* 5. Seksi Mitra & Partner */}
       <section className="py-16 border-b border-[#27272A] bg-[#0C0D11]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-10">
@@ -579,7 +580,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 6.5 Preview Blog Edukasi & Panduan (PRD Seksi 4.1 Poin 6) */}
+      {/* 6.5 Preview Blog & Panduan */}
       {latestBlogs.length > 0 && (
         <section className="py-20 border-b border-[#27272A] bg-[#0C0D11]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -654,7 +655,7 @@ export default async function HomePage() {
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8 p-8 sm:p-12 rounded-2xl bg-gradient-to-r from-[#181A22] via-[#14151C] to-[#101116] border border-[#27272A] shadow-xl">
             <div className="max-w-2xl text-center lg:text-left">
               <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#FAFAFA]">
-                Siap Cetak Jersey Impian Tim Anda Sekarang?
+                Siap Produksi Jersey Tim Anda?
               </h2>
               <p className="text-sm sm:text-base text-[#A1A1AA] mt-2 leading-relaxed">
                 Konsultasikan konsep desain gratis dan dapatkan penawaran harga spesial untuk tim atau komunitas Anda langsung di WhatsApp.
@@ -676,141 +677,18 @@ export default async function HomePage() {
       </section>
       </main>
 
-      {/* 8. Footer Desktop & Mobile (PRD Seksi 4.1 Poin 7) */}
-      <footer className="pt-16 pb-12 bg-[#09090B] text-xs text-[#A1A1AA]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-[#1F1F23]">
-            {/* C1: Brand */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                {logoUrl ? (
-                  <div className="w-8 h-8 rounded-lg bg-[#181920] border border-[#27272A] flex items-center justify-center p-1 overflow-hidden shrink-0">
-                    <img src={logoUrl} alt={storeName} width={32} height={32} className="max-w-full max-h-full object-contain" />
-                  </div>
-                ) : (
-                  <div className="w-7 h-7 rounded-lg bg-[#84CC16] flex items-center justify-center font-black text-[#09090B] text-sm shrink-0">
-                    {storeName.slice(0, 2).toUpperCase()}
-                  </div>
-                )}
-                <span className="font-bold text-base tracking-tight text-[#FAFAFA]">
-                  {storeName.toUpperCase()}
-                </span>
-              </div>
-              <p className="leading-relaxed text-[#A1A1AA]">
-                {storeDescription}
-              </p>
-            </div>
-
-            {/* C2: Navigasi */}
-            <div>
-              <h3 className="font-bold text-sm text-[#FAFAFA] mb-4">Navigasi</h3>
-              <ul className="space-y-2.5">
-                <li>
-                  <Link href="/" className="hover:text-[#84CC16] transition-colors">
-                    Beranda
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/katalog" className="hover:text-[#84CC16] transition-colors">
-                    Katalog Jersey
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/cara-pesan" className="hover:text-[#84CC16] transition-colors">
-                    Alur Pemesanan
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/blog" className="hover:text-[#84CC16] transition-colors">
-                    Blog & Panduan
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* C3: Kategori Produk */}
-            <div>
-              <h3 className="font-bold text-sm text-[#FAFAFA] mb-4">Kategori Produk</h3>
-              <ul className="space-y-2.5">
-                <li>
-                  <Link href="/katalog" className="hover:text-[#84CC16] transition-colors">
-                    Jersey Futsal & Bola
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/katalog" className="hover:text-[#84CC16] transition-colors">
-                    Jersey Esports
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/katalog" className="hover:text-[#84CC16] transition-colors">
-                    Jersey Running & Cycling
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/katalog" className="hover:text-[#84CC16] transition-colors">
-                    Jaket & Coach Jacket
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* C4: Kontak & Workshop Fisik */}
-            <div>
-              <h3 className="font-bold text-sm text-[#FAFAFA] mb-4">Kontak & Workshop</h3>
-              <ul className="space-y-2.5 text-[#A1A1AA]">
-                <li>
-                  <span className="block text-[#FAFAFA] font-medium mb-0.5">Alamat Workshop:</span>
-                  <span>{storeAddress}</span>
-                </li>
-                {googleMapsUrl && (
-                  <li>
-                    <a
-                      href={googleMapsUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#84CC16] hover:underline inline-flex items-center gap-1 font-medium"
-                    >
-                      📍 Buka di Google Maps →
-                    </a>
-                  </li>
-                )}
-                <li>
-                  <span className="block text-[#FAFAFA] font-medium mb-0.5">Jam Kerja:</span>
-                  <span>{operatingHours}</span>
-                </li>
-                <li>
-                  <span className="block text-[#FAFAFA] font-medium mb-0.5">WhatsApp Resmi:</span>
-                  <a
-                    href={getWaLink()}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#84CC16] hover:underline"
-                  >
-                    +{whatsappNumber}
-                  </a>
-                </li>
-                {instagramUrl && (
-                  <li>
-                    <a
-                      href={instagramUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#84CC16] hover:underline inline-flex items-center gap-1 font-medium"
-                    >
-                      📸 Ikuti Instagram Kami →
-                    </a>
-                  </li>
-                )}
-              </ul>
-            </div>
-          </div>
-
-          <div className="pt-8 text-center text-[#52525B]">
-            © 2026 {storeName}. All Rights Reserved. Seluruh pemesanan dilayani via WhatsApp Resmi.
-          </div>
-        </div>
-      </footer>
+      {/* 8. Footer */}
+      <Footer
+        storeName={storeName}
+        storeAddress={storeAddress}
+        googleMapsUrl={googleMapsUrl}
+        operatingHours={operatingHours}
+        whatsappNumber={whatsappNumber}
+        defaultWaText={defaultWaText}
+        instagramUrl={instagramUrl}
+        logoUrl={logoUrl}
+        storeDescription={storeDescription}
+      />
     </div>
   );
 }

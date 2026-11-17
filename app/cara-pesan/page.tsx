@@ -174,7 +174,7 @@ export default async function CaraPesanPage() {
               PROSES KERJA WORKSHOP KAMI
             </span>
             <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-[#FAFAFA]">
-              5 Langkah Menuju Jersey Impian
+              5 Langkah Pemesanan Jersey
             </h2>
             <p className="text-sm text-[#A1A1AA] mt-3">
               Setiap langkah dibuat transparan agar Anda mengetahui progres jersey tim secara akurat.
@@ -700,7 +700,7 @@ export default async function CaraPesanPage() {
               Siap Wujudkan Jersey Custom Tim Anda?
             </h2>
             <p className="text-sm sm:text-base text-[#A1A1AA] mt-3 max-w-xl mx-auto">
-              Konsultasikan ide desain Anda sekarang juga. Desainer kami siap membantu memilih warna, font, dan bahan terbaik untuk tim kebanggaan Anda.
+              Konsultasikan ide desain Anda sekarang. Tim desainer kami siap membantu memilih warna, font, dan bahan untuk kebutuhan tim Anda.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <a

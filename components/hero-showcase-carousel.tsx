@@ -60,7 +60,7 @@ export function HeroShowcaseCarousel({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  // Efek geser otomatis (Carousel Auto-slide) setiap 3.5 detik
+  // Geser otomatis setiap 3.5 detik
   useEffect(() => {
     if (isPaused || designs.length <= 1) return;
 
@@ -83,14 +83,12 @@ export function HeroShowcaseCarousel({
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* Header Kartu Sesuai Desain */}
       <div className="flex items-center justify-between pb-4 border-b border-[#27272A] mb-5">
         <span className="text-[#84CC16] text-[11px] font-bold tracking-wider uppercase">
           {current.badge || "PREVIEW DESAIN TERPILIH"}
         </span>
       </div>
 
-      {/* Area Carousel Preview Desain yang Bergerak Sendiri */}
       <a
         href={waHref}
         target="_blank"
@@ -148,7 +146,6 @@ export function HeroShowcaseCarousel({
         </div>
       </a>
 
-      {/* Bagian Bawah Kartu Sesuai Desain */}
       <div className="flex items-center justify-between pt-5 mt-5 border-t border-[#27272A]">
         <span className="text-xs text-[#A1A1AA]">
           Pemesanan langsung via WhatsApp admin
