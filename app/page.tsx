@@ -168,9 +168,9 @@ export default async function HomePage() {
 
       <main className="flex-1">
       {/* 2. Hero Section */}
-      <section className="relative overflow-hidden py-16 lg:py-24 border-b border-[#27272A]">
+      <section className="relative overflow-hidden py-10 sm:py-16 lg:py-24 border-b border-[#27272A]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Info Kiri */}
             <div className="lg:col-span-7 space-y-6">
               <h1 className="text-3xl sm:text-5xl lg:text-[52px] font-black tracking-[-0.035em] leading-[1.1] [text-wrap:balance] text-[#FAFAFA]">

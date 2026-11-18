@@ -90,7 +90,7 @@ export async function updateSettingsAction(formData: FormData) {
       });
     }
 
-    revalidatePath("/");
+    revalidatePath("/", "layout");
     revalidatePath("/katalog");
     revalidatePath("/cara-pesan");
     revalidatePath("/alur-pemesanan");

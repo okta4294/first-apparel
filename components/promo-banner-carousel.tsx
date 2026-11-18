@@ -34,6 +34,9 @@ export function PromoBannerCarousel({
   // Auto-slide setiap 5 detik jika promo lebih dari 1 dan kursor tidak sedang di atas banner
   useEffect(() => {
     if (isPaused || promos.length <= 1) return;
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
 
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % promos.length);
@@ -117,7 +120,7 @@ export function PromoBannerCarousel({
           <div className="absolute inset-0 bg-gradient-to-t from-[#09090B]/95 via-[#09090B]/75 to-[#09090B]/30 sm:bg-gradient-to-r sm:from-[#09090B]/95 sm:via-[#09090B]/80 sm:to-black/30" />
 
           {/* 3. Konten Teks Promo & Tombol Klaim di Atas Layer Gambar */}
-          <div className="relative z-10 w-full max-w-2xl p-6 sm:p-10 md:p-12 flex flex-col justify-center items-start space-y-3 sm:space-y-4">
+          <div className="relative z-10 w-full max-w-2xl p-6 pb-16 sm:p-10 sm:pl-16 md:p-12 md:pl-20 flex flex-col justify-center items-start space-y-3 sm:space-y-4">
             {/* Lencana Diskon / Kategori Promo */}
             <span className="inline-block px-3.5 py-1.5 rounded-full bg-[#84CC16] text-[#09090B] text-xs font-black uppercase tracking-wider shadow-sm">
               {current.badgeText || "PROMO SPESIAL"}
@@ -154,7 +157,7 @@ export function PromoBannerCarousel({
               <button
                 type="button"
                 onClick={handlePrev}
-                className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#09090B]/70 hover:bg-[#84CC16] border border-white/10 hover:border-[#84CC16] text-[#FAFAFA] hover:text-[#09090B] flex items-center justify-center text-lg font-bold transition-all backdrop-blur-sm shadow-lg active:scale-90"
+                className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-[#09090B]/70 hover:bg-[#84CC16] border border-white/10 hover:border-[#84CC16] text-[#FAFAFA] hover:text-[#09090B] items-center justify-center text-lg font-bold transition-all backdrop-blur-sm shadow-lg active:scale-90"
                 aria-label="Promo Sebelumnya"
                 title="Promo Sebelumnya"
               >
@@ -164,7 +167,7 @@ export function PromoBannerCarousel({
               <button
                 type="button"
                 onClick={handleNext}
-                className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#09090B]/70 hover:bg-[#84CC16] border border-white/10 hover:border-[#84CC16] text-[#FAFAFA] hover:text-[#09090B] flex items-center justify-center text-lg font-bold transition-all backdrop-blur-sm shadow-lg active:scale-90"
+                className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-[#09090B]/70 hover:bg-[#84CC16] border border-white/10 hover:border-[#84CC16] text-[#FAFAFA] hover:text-[#09090B] items-center justify-center text-lg font-bold transition-all backdrop-blur-sm shadow-lg active:scale-90"
                 aria-label="Promo Berikutnya"
                 title="Promo Berikutnya"
               >
@@ -182,7 +185,7 @@ export function PromoBannerCarousel({
                       e.stopPropagation();
                       setCurrentIndex(idx);
                     }}
-                    className="min-w-[24px] min-h-[24px] flex items-center justify-center p-1 group/dot"
+                    className="min-w-[32px] min-h-[44px] sm:min-h-[32px] flex items-center justify-center p-1 group/dot"
                     aria-label={`Beralih ke promo ${idx + 1}`}
                   >
                     <span
