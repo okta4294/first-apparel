@@ -155,69 +155,97 @@ html.dark {
 html:not(.dark) {
   /* Latar belakang halaman & permukaan */
   & .bg-\[\#09090B\],
-  & [class*="bg-[#09090B]"] {
+  & [class*="bg-[#09090B]"],
+  & .bg-\[\#0A0B0E\],
+  & [class*="bg-[#0A0B0E]"],
+  & .bg-\[\#101115\],
+  & [class*="bg-[#101115]"],
+  & .bg-\[\#121318\],
+  & [class*="bg-[#121318]"],
+  & .bg-\[\#0E0F14\],
+  & [class*="bg-[#0E0F14]"] {
     background-color: #F8FAFC !important;
   }
   & [class*="bg-[#09090B]/95"] {
     background-color: rgba(248, 250, 252, 0.95) !important;
   }
+  & [class*="bg-[#09090B]/85"] {
+    background-color: rgba(248, 250, 252, 0.88) !important;
+  }
   & [class*="bg-[#09090B]/80"] {
     background-color: rgba(248, 250, 252, 0.8) !important;
   }
+  & [class*="bg-[#09090B]/60"] {
+    background-color: rgba(248, 250, 252, 0.85) !important;
+  }
   & .bg-\[\#0C0D11\],
-  & [class*="bg-[#0C0D11]"] {
+  & [class*="bg-[#0C0D11]"],
+  & .bg-\[\#0D0E12\],
+  & [class*="bg-[#0D0E12]"],
+  & .bg-\[\#181920\],
+  & [class*="bg-[#181920]"],
+  & .bg-\[\#14151B\],
+  & [class*="bg-[#14151B]"],
+  & .bg-\[\#18181B\],
+  & [class*="bg-[#18181B]"],
+  & .bg-\[\#18191E\],
+  & [class*="bg-[#18191E]"],
+  & .bg-\[\#181922\],
+  & [class*="bg-[#181922]"],
+  & .bg-\[\#1A1B22\],
+  & [class*="bg-[#1A1B22]"],
+  & .bg-\[\#1C1D24\],
+  & [class*="bg-[#1C1D24]"],
+  & .bg-\[\#1E1F27\],
+  & [class*="bg-[#1E1F27]"],
+  & .bg-\[\#1E2026\],
+  & [class*="bg-[#1E2026]"],
+  & .bg-\[\#1F1F24\],
+  & [class*="bg-[#1F1F24]"],
+  & .bg-\[\#20212B\],
+  & [class*="bg-[#20212B]"],
+  & .bg-\[\#27272A\],
+  & [class*="bg-[#27272A]"] {
     background-color: #F1F5F9 !important;
   }
-  & .bg-\[\#0A0B0E\],
-  & [class*="bg-[#0A0B0E]"] {
-    background-color: #F8FAFC !important;
-  }
-  & .bg-\[\#101115\],
-  & [class*="bg-[#101115]"] {
-    background-color: #F8FAFC !important;
-  }
   & .bg-\[\#141418\],
-  & [class*="bg-[#141418]"] {
-    background-color: #FFFFFF !important;
-  }
+  & [class*="bg-[#141418]"],
   & .bg-\[\#141417\],
-  & [class*="bg-[#141417]"] {
-    background-color: #FFFFFF !important;
-  }
+  & [class*="bg-[#141417]"],
+  & .bg-\[\#14151C\],
+  & [class*="bg-[#14151C]"],
   & .bg-\[\#121316\],
   & [class*="bg-[#121316]"] {
     background-color: #FFFFFF !important;
-  }
-  & .bg-\[\#181920\],
-  & [class*="bg-[#181920]"] {
-    background-color: #F1F5F9 !important;
-  }
-  & .bg-\[\#14151B\],
-  & [class*="bg-[#14151B]"] {
-    background-color: #F1F5F9 !important;
-  }
-  & .bg-\[\#18181B\],
-  & [class*="bg-[#18181B]"] {
-    background-color: #F1F5F9 !important;
-  }
-  & .bg-\[\#18191E\],
-  & [class*="bg-[#18191E]"] {
-    background-color: #F1F5F9 !important;
-  }
-  & .bg-\[\#1A1B22\],
-  & [class*="bg-[#1A1B22]"] {
-    background-color: #F1F5F9 !important;
   }
   & .bg-\[\#1F2026\],
   & [class*="bg-[#1F2026]"] {
     background-color: #E2E8F0 !important;
   }
-
-  /* Warna teks utama & sekunder */
-  & .text-\[\#FAFAFA\],
-  & [class*="text-[#FAFAFA]"] {
-    color: #0F172A !important;
+  & .bg-\[\#3F3F46\] {
+    background-color: #CBD5E1 !important;
   }
+
+  /* Gradien gelap pada hero section, preview katalog, dan pop-up promo */
+  & [class*="from-[#121318]"] {
+    background-image: linear-gradient(to bottom, #F1F5F9, #F8FAFC) !important;
+  }
+  & [class*="from-[#1C1D24]"],
+  & [class*="from-[#1F1F24]"] {
+    background-image: linear-gradient(to bottom, #F8FAFC, #F1F5F9) !important;
+  }
+  & [class*="from-[#14151C]"] {
+    background-image: linear-gradient(to bottom, #FFFFFF, #F8FAFC) !important;
+  }
+  & [class*="from-[#181A22]"] {
+    background: linear-gradient(to right, #FFFFFF, #F8FAFC, #F1F5F9) !important;
+    border-color: rgba(101, 163, 13, 0.35) !important;
+    box-shadow: 0 10px 30px -10px rgba(101, 163, 13, 0.12) !important;
+  }
+
+  /* Warna teks utama & sekunder (kontras minimal 4.5:1 di latar terang) */
+  & .text-\[\#FAFAFA\],
+  & [class*="text-[#FAFAFA]"],
   & .text-\[\#F4F4F5\],
   & [class*="text-[#F4F4F5]"] {
     color: #0F172A !important;
@@ -232,47 +260,41 @@ html:not(.dark) {
   }
   & .text-\[\#A1A1AA\],
   & [class*="text-[#A1A1AA]"] {
-    color: #64748B !important;
+    color: #475569 !important;
   }
   & .text-\[\#71717A\],
   & [class*="text-[#71717A]"] {
-    color: #94A3B8 !important;
+    color: #64748B !important;
   }
   & .text-\[\#52525B\],
   & [class*="text-[#52525B]"] {
-    color: #94A3B8 !important;
+    color: #475569 !important;
   }
 
-  /* Teks hijau Electric Lime disesuaikan ke Hijau Lime Pekat (#65A30D) agar kontras di latar putih */
+  /* Teks hijau Electric Lime disesuaikan ke Hijau Lime Pekat (#4D7C0F / #65A30D) agar kontras di latar putih */
   & .text-\[\#84CC16\],
   & [class*="text-[#84CC16]"] {
-    color: #65A30D !important;
+    color: #4D7C0F !important;
   }
   & [class*="bg-[#84CC16]/10"] {
-    background-color: rgba(101, 163, 13, 0.1) !important;
+    background-color: rgba(101, 163, 13, 0.12) !important;
   }
   & [class*="border-[#84CC16]/25"],
   & [class*="border-[#84CC16]/30"] {
-    border-color: rgba(101, 163, 13, 0.25) !important;
+    border-color: rgba(101, 163, 13, 0.3) !important;
   }
 
   /* Garis batas (Borders) */
   & .border-\[\#27272A\],
-  & [class*="border-[#27272A]"] {
-    border-color: #E2E8F0 !important;
-  }
+  & [class*="border-[#27272A]"],
+  & .border-\[\#2E2E36\],
+  & [class*="border-[#2E2E36]"],
   & .border-\[\#1F1F23\],
-  & [class*="border-[#1F1F23]"] {
-    border-color: #E2E8F0 !important;
-  }
+  & [class*="border-[#1F1F23]"],
   & .border-\[\#18181B\],
-  & [class*="border-[#18181B]"] {
-    border-color: #E2E8F0 !important;
-  }
+  & [class*="border-[#18181B]"],
   & .border-\[\#1F2026\],
-  & [class*="border-[#1F2026]"] {
-    border-color: #E2E8F0 !important;
-  }
+  & [class*="border-[#1F2026]"],
   & .border-\[\#1A1B22\],
   & [class*="border-[#1A1B22]"] {
     border-color: #E2E8F0 !important;
@@ -305,12 +327,5 @@ html:not(.dark) {
   & .rounded-2xl.border,
   & .rounded-xl.border {
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
-  }
-
-  /* Spanduk CTA WhatsApp di latar terang */
-  & [class*="from-[#181A22]"] {
-    background: linear-gradient(to right, #FFFFFF, #F8FAFC, #F1F5F9) !important;
-    border-color: rgba(101, 163, 13, 0.35) !important;
-    box-shadow: 0 10px 30px -10px rgba(101, 163, 13, 0.12) !important;
   }
 }

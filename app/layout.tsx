@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { db } from "@/lib/db";
-import { siteSettings } from "@/lib/db/schema";
 import "./globals.css";
 
 const inter = Inter({
@@ -10,37 +8,14 @@ const inter = Inter({
   display: "swap",
 });
 
-export async function generateMetadata(): Promise<Metadata> {
-  let title = "First Apparel | Produsen Custom Jersey Olahraga & Tim";
-  let description =
-    "Konveksi spesialis custom jersey olahraga futsal, sepak bola, e-sports, dan running berkualitas premium di Bandung. Bebas konsultasi desain dan tanpa minimum order.";
-  let logoUrl: string | null = null;
-
-  try {
-    const [s] = await db
-      .select({
-        storeName: siteSettings.storeName,
-        storeDescription: siteSettings.storeDescription,
-        logoUrl: siteSettings.logoUrl,
-      })
-      .from(siteSettings)
-      .limit(1);
-
-    if (s) {
-      if (s.storeName) title = `${s.storeName} | Produsen Custom Jersey Olahraga & Tim`;
-      if (s.storeDescription) description = s.storeDescription;
-      logoUrl = s.logoUrl || null;
-    }
-  } catch {
-    // Gunakan metadata bawaan jika database belum siap saat build
-  }
-
-  return {
-    title,
-    description,
-    ...(logoUrl ? { icons: { icon: logoUrl, apple: logoUrl } } : {}),
-  };
-}
+export const metadata: Metadata = {
+  title: "First Apparel | Produsen Custom Jersey Olahraga & Tim",
+  description:
+    "Konveksi spesialis custom jersey olahraga futsal, sepak bola, e-sports, dan running berkualitas premium di Bandung. Bebas konsultasi desain dan tanpa minimum order.",
+  icons: {
+    icon: "/api/icon",
+  },
+};
 
 export default function RootLayout({
   children,

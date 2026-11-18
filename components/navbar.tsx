@@ -30,8 +30,8 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", logoUrl }: Navba
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-3 group">
           {logoUrl ? (
-            <div className="w-9 h-9 rounded-lg overflow-hidden bg-[#181920] border border-[#27272A] flex items-center justify-center p-1 transition-transform group-hover:scale-105 shrink-0">
-              <img src={logoUrl} alt={storeName} className="max-w-full max-h-full object-contain" />
+            <div className="w-9 h-9 rounded-lg overflow-hidden border border-[#27272A]/80 flex items-center justify-center transition-transform group-hover:scale-105 shrink-0">
+              <img src={logoUrl} alt={storeName} className="w-full h-full object-cover" />
             </div>
           ) : (
             <div className="w-8 h-8 rounded-lg bg-[#84CC16] flex items-center justify-center font-black text-[#09090B] text-base transition-transform group-hover:scale-105 shrink-0">

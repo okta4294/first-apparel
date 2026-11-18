@@ -93,10 +93,9 @@ export default function AdminLoginPage() {
           </button>
         </form>
 
-        {/* Info Tambahan */}
         <div className="mt-8 pt-6 border-t border-[#27272A] text-center">
           <p className="text-xs text-[#71717A]">
-            💡 Jika basis data masih baru, akun yang Anda masukkan pertama kali otomatis menjadi akun Administrator.
+            Area terbatas khusus pengelola. Percobaan gagal berulang akan mengunci akun sementara.
           </p>
         </div>
       </div>

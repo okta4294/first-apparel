@@ -22,16 +22,14 @@ export async function hashPassword(password: string): Promise<string> {
 }
 
 export async function comparePassword(password: string, hash: string): Promise<boolean> {
-  // Jika format berupa hash bcrypt ($2a$, $2b$, $2y$)
-  if (hash.startsWith("$2a$") || hash.startsWith("$2b$") || hash.startsWith("$2y$")) {
-    try {
-      return await bcrypt.compare(password, hash);
-    } catch {
-      return false;
-    }
+  if (!hash.startsWith("$2a$") && !hash.startsWith("$2b$") && !hash.startsWith("$2y$")) {
+    return false;
   }
-  // Fallback aman jika data dimasukkan manual dalam bentuk teks biasa di console database
-  return password === hash;
+  try {
+    return await bcrypt.compare(password, hash);
+  } catch {
+    return false;
+  }
 }
 
 export async function signAdminToken(payload: AdminSession): Promise<string> {

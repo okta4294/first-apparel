@@ -42,9 +42,9 @@ export async function updateSettingsAction(formData: FormData) {
     (formData.get("defaultWaText") as string)?.trim() ||
     "Halo Admin First Apparel, saya ingin berkonsultasi tentang pemesanan jersey kustom.";
   const instagramUrl = sanitizeUrl((formData.get("instagramUrl") as string)?.trim() || null);
-  const logoUrl = (formData.get("logoUrl") as string)?.trim() || null;
+  const logoUrl = sanitizeUrl((formData.get("logoUrl") as string)?.trim() || null);
   const logoKey = (formData.get("logoKey") as string)?.trim() || null;
-  const sizeChartUrl = (formData.get("sizeChartUrl") as string)?.trim() || null;
+  const sizeChartUrl = sanitizeUrl((formData.get("sizeChartUrl") as string)?.trim() || null);
   const sizeChartKey = (formData.get("sizeChartKey") as string)?.trim() || null;
   const storeDescription =
     (formData.get("storeDescription") as string)?.trim() ||
