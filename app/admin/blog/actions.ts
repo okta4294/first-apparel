@@ -5,7 +5,7 @@ import { blogs } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { getAdminSession } from "@/lib/auth";
 import { utapi } from "@/lib/uploadthing-server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 
 function slugify(text: string): string {
   return text
@@ -61,6 +61,7 @@ export async function createBlogAction(formData: FormData) {
       })
       .returning();
 
+    updateTag("blogs");
     revalidatePath("/");
     revalidatePath("/blog");
     revalidatePath("/admin");
@@ -119,6 +120,7 @@ export async function updateBlogAction(formData: FormData) {
       await utapi.deleteFiles(oldThumbnailKey);
     }
 
+    updateTag("blogs");
     revalidatePath("/");
     revalidatePath("/blog");
     revalidatePath("/admin");
@@ -144,6 +146,7 @@ export async function deleteBlogAction(id: number, thumbnailKey: string) {
       await utapi.deleteFiles(thumbnailKey);
     }
 
+    updateTag("blogs");
     revalidatePath("/");
     revalidatePath("/blog");
     revalidatePath("/admin");

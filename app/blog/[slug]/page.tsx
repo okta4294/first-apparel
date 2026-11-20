@@ -3,9 +3,7 @@ import { notFound } from "next/navigation";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { ShareButtons } from "./share-buttons";
-import { db } from "@/lib/db";
-import { siteSettings, blogs } from "@/lib/db/schema";
-import { eq, and, ne, desc } from "drizzle-orm";
+import { getSiteSettings, getBlogBySlug, getRelatedBlogs } from "@/lib/public-data";
 import type { Metadata } from "next";
 
 export const instant = false;
@@ -16,27 +14,18 @@ interface BlogPostPageProps {
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params;
-  try {
-    const post = await db
-      .select()
-      .from(blogs)
-      .where(and(eq(blogs.slug, slug), eq(blogs.isPublished, true)))
-      .limit(1);
+  const p = await getBlogBySlug(slug);
 
-    if (post.length > 0) {
-      const p = post[0];
-      return {
-        title: `${p.title} | Blog First Apparel`,
+  if (p) {
+    return {
+      title: `${p.title} | Blog First Apparel`,
+      description: p.excerpt,
+      openGraph: {
+        title: p.title,
         description: p.excerpt,
-        openGraph: {
-          title: p.title,
-          description: p.excerpt,
-          images: [{ url: p.thumbnailUrl }],
-        },
-      };
-    }
-  } catch {
-    // Fallback metadata
+        images: [{ url: p.thumbnailUrl }],
+      },
+    };
   }
 
   return {
@@ -48,60 +37,28 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
 
-  let storeName = "First Apparel";
-  let storeAddress = "Jl. Terusan Olahraga No. 8, Bandung, Jawa Barat";
-  let googleMapsUrl: string | null = null;
-  let operatingHours = "Senin - Sabtu, 09.00 - 17.00 WIB";
-  let whatsappNumber = "6281234567890";
-  let defaultWaText = "Halo Admin First Apparel, saya ingin berkonsultasi tentang pemesanan jersey kustom.";
-  let instagramUrl: string | null = null;
-  let logoUrl: string | null = null;
-  let storeDescription =
-    "Vendor konveksi dan produsen custom jersey olahraga profesional. Melayani pembuatan seragam futsal, sepak bola, esports, running, dan apparel tim.";
-
-  let post: typeof blogs.$inferSelect | null = null;
-  let relatedPosts: (typeof blogs.$inferSelect)[] = [];
-
-  try {
-    const settings = await db.select().from(siteSettings).limit(1);
-    if (settings.length > 0) {
-      const s = settings[0];
-      storeName = s.storeName || storeName;
-      storeAddress = s.storeAddress || storeAddress;
-      googleMapsUrl = s.googleMapsUrl;
-      operatingHours = s.operatingHours || operatingHours;
-      whatsappNumber = s.whatsappNumber || whatsappNumber;
-      defaultWaText = s.defaultWaText || defaultWaText;
-      instagramUrl = s.instagramUrl;
-      logoUrl = s.logoUrl || null;
-      storeDescription = s.storeDescription || storeDescription;
-    }
-
-    const postQuery = await db
-      .select()
-      .from(blogs)
-      .where(and(eq(blogs.slug, slug), eq(blogs.isPublished, true)))
-      .limit(1);
-
-    if (postQuery.length === 0) {
-      notFound();
-    }
-    post = postQuery[0];
-
-    // Ambil artikel terkait lainnya
-    relatedPosts = await db
-      .select()
-      .from(blogs)
-      .where(and(eq(blogs.isPublished, true), ne(blogs.id, post.id)))
-      .orderBy(desc(blogs.publishedAt))
-      .limit(3);
-  } catch {
-    notFound();
-  }
+  const [settings, post] = await Promise.all([
+    getSiteSettings(),
+    getBlogBySlug(slug),
+  ]);
 
   if (!post) {
     notFound();
   }
+
+  const relatedPosts = await getRelatedBlogs(post.id);
+
+  const {
+    storeName,
+    storeAddress,
+    googleMapsUrl,
+    operatingHours,
+    whatsappNumber,
+    defaultWaText,
+    instagramUrl,
+    logoUrl,
+    storeDescription,
+  } = settings;
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat("id-ID", {
@@ -191,6 +148,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <img
             src={post.thumbnailUrl}
             alt={post.title}
+            fetchPriority="high"
+            decoding="async"
             className="w-full max-h-[480px] object-cover"
           />
         </div>
@@ -304,6 +263,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                     <img
                       src={related.thumbnailUrl}
                       alt={related.title}
+                      width={320}
+                      height={200}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>

@@ -5,9 +5,13 @@ import { HeroShowcaseCarousel } from "@/components/hero-showcase-carousel";
 import { SizeChartTrigger } from "@/components/size-chart-trigger";
 import { PromoPopup } from "@/components/promo-popup";
 import { PromoBannerCarousel } from "@/components/promo-banner-carousel";
-import { db } from "@/lib/db";
-import { siteSettings, catalogs, promos, partners, blogs } from "@/lib/db/schema";
-import { eq, and, lte, gte, or, asc, desc } from "drizzle-orm";
+import {
+  getSiteSettings,
+  getActivePromos,
+  getFeaturedCatalogs,
+  getActivePartners,
+  getLatestBlogs,
+} from "@/lib/public-data";
 
 export const instant = false;
 
@@ -58,94 +62,29 @@ const DEFAULT_PARTNERS = [
 ];
 
 export default async function HomePage() {
-  let storeName = "First Apparel";
-  let storeAddress = "Jl. Terusan Olahraga No. 8, Bandung, Jawa Barat";
-  let googleMapsUrl: string | null = null;
-  let operatingHours = "Senin – Sabtu, 09.00 – 17.00 WIB";
-  let whatsappNumber = "6281234567890";
-  let defaultWaText =
-    "Halo Admin First Apparel, saya ingin berkonsultasi mengenai pemesanan custom jersey.";
-  let instagramUrl: string | null = null;
-  let logoUrl: string | null = null;
-  let storeSizeChartUrl: string | null = null;
-  let storeDescription =
-    "Konveksi spesialis jersey olahraga custom & apparel tim profesional di Bandung. Bebas custom desain, bahan dryfit premium, dan melayani kirim ke seluruh Indonesia.";
+  const [settings, activePromos, featuredCatalogs, partnerList, latestBlogs] =
+    await Promise.all([
+      getSiteSettings(),
+      getActivePromos(),
+      getFeaturedCatalogs(),
+      getActivePartners(),
+      getLatestBlogs(3),
+    ]);
 
-  let activePromos: (typeof promos.$inferSelect)[] = [];
-  let popupPromo: typeof promos.$inferSelect | null = null;
-  let featuredCatalogs: (typeof catalogs.$inferSelect)[] = [];
-  let partnerList: (typeof partners.$inferSelect)[] = [];
-  let latestBlogs: (typeof blogs.$inferSelect)[] = [];
+  const {
+    storeName,
+    storeAddress,
+    googleMapsUrl,
+    operatingHours,
+    whatsappNumber,
+    defaultWaText,
+    instagramUrl,
+    logoUrl,
+    sizeChartUrl: storeSizeChartUrl,
+    storeDescription,
+  } = settings;
 
-  try {
-    const settings = await db.select().from(siteSettings).limit(1);
-    if (settings.length > 0) {
-      const s = settings[0];
-      storeName = s.storeName || storeName;
-      storeAddress = s.storeAddress || storeAddress;
-      googleMapsUrl = s.googleMapsUrl;
-      operatingHours = s.operatingHours || operatingHours;
-      whatsappNumber = s.whatsappNumber || whatsappNumber;
-      defaultWaText = s.defaultWaText || defaultWaText;
-      instagramUrl = s.instagramUrl;
-      logoUrl = s.logoUrl || null;
-      storeSizeChartUrl = s.sizeChartUrl || null;
-      storeDescription = s.storeDescription || storeDescription;
-    }
-
-    const now = new Date();
-    activePromos = await db
-      .select()
-      .from(promos)
-      .where(
-        and(
-          eq(promos.isActive, true),
-          or(
-            eq(promos.hasDuration, false),
-            and(lte(promos.startDate, now), gte(promos.endDate, now))
-          )
-        )
-      )
-      .orderBy(desc(promos.id));
-
-    const popupResults = await db
-      .select()
-      .from(promos)
-      .where(
-        and(
-          eq(promos.isActive, true),
-          eq(promos.isPopup, true),
-          or(
-            eq(promos.hasDuration, false),
-            and(lte(promos.startDate, now), gte(promos.endDate, now))
-          )
-        )
-      )
-      .orderBy(desc(promos.id))
-      .limit(1);
-    popupPromo = popupResults[0] || null;
-
-    featuredCatalogs = await db
-      .select()
-      .from(catalogs)
-      .where(and(eq(catalogs.isActive, true), eq(catalogs.isFeatured, true)))
-      .limit(4);
-
-    partnerList = await db
-      .select()
-      .from(partners)
-      .where(eq(partners.isActive, true))
-      .orderBy(asc(partners.sortOrder));
-
-    latestBlogs = await db
-      .select()
-      .from(blogs)
-      .where(eq(blogs.isPublished, true))
-      .orderBy(desc(blogs.publishedAt))
-      .limit(3);
-  } catch {
-    // Gunakan nilai bawaan jika koneksi belum aktif atau saat kompilasi statis
-  }
+  const popupPromo = activePromos.find((p) => p.isPopup) ?? null;
 
   const getWaLink = (message?: string) => {
     const text = message || defaultWaText;
@@ -362,6 +301,8 @@ export default async function HomePage() {
                         alt={item.title}
                         width={400}
                         height={300}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     ) : (
@@ -462,6 +403,8 @@ export default async function HomePage() {
                       alt={partner.name}
                       width={130}
                       height={44}
+                      loading="lazy"
+                      decoding="async"
                       className="max-h-11 max-w-[130px] object-contain opacity-85 group-hover:opacity-100 transition-opacity shrink-0"
                     />
                   ) : (
@@ -611,6 +554,8 @@ export default async function HomePage() {
                       alt={b.title}
                       width={400}
                       height={250}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   </Link>

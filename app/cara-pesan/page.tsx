@@ -3,9 +3,7 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { SizeChartDisplay } from "@/components/size-chart-display";
 import { OrderTemplateCard } from "@/components/order-template-card";
-import { db } from "@/lib/db";
-import { siteSettings, fabrics } from "@/lib/db/schema";
-import { eq, asc } from "drizzle-orm";
+import { getSiteSettings, getActiveFabrics } from "@/lib/public-data";
 
 function getFabricBadge(name: string): string {
   const lower = name.toLowerCase();
@@ -40,44 +38,23 @@ export const metadata = {
 export const instant = false;
 
 export default async function CaraPesanPage() {
-  let storeName = "First Apparel";
-  let storeAddress = "Jl. Terusan Olahraga No. 8, Bandung, Jawa Barat";
-  let googleMapsUrl: string | null = null;
-  let operatingHours = "Senin - Sabtu, 09.00 - 17.00 WIB";
-  let whatsappNumber = "6281234567890";
-  let defaultWaText = "Halo Admin First Apparel, saya ingin berkonsultasi tentang pemesanan jersey kustom.";
-  let instagramUrl: string | null = null;
-  let logoUrl: string | null = null;
-  let sizeChartUrl: string | null = null;
-  let storeDescription =
-    "Vendor konveksi dan produsen custom jersey olahraga profesional. Melayani pembuatan seragam futsal, sepak bola, esports, running, dan apparel tim.";
+  const [settings, fabricList] = await Promise.all([
+    getSiteSettings(),
+    getActiveFabrics(),
+  ]);
 
-  let fabricList: (typeof fabrics.$inferSelect)[] = [];
-
-  try {
-    const settings = await db.select().from(siteSettings).limit(1);
-    if (settings.length > 0) {
-      const s = settings[0];
-      storeName = s.storeName || storeName;
-      storeAddress = s.storeAddress || storeAddress;
-      googleMapsUrl = s.googleMapsUrl;
-      operatingHours = s.operatingHours || operatingHours;
-      whatsappNumber = s.whatsappNumber || whatsappNumber;
-      defaultWaText = s.defaultWaText || defaultWaText;
-      instagramUrl = s.instagramUrl;
-      logoUrl = s.logoUrl || null;
-      sizeChartUrl = s.sizeChartUrl || null;
-      storeDescription = s.storeDescription || storeDescription;
-    }
-
-    fabricList = await db
-      .select()
-      .from(fabrics)
-      .where(eq(fabrics.isActive, true))
-      .orderBy(asc(fabrics.sortOrder), asc(fabrics.id));
-  } catch {
-    // Fallback data
-  }
+  const {
+    storeName,
+    storeAddress,
+    googleMapsUrl,
+    operatingHours,
+    whatsappNumber,
+    defaultWaText,
+    instagramUrl,
+    logoUrl,
+    sizeChartUrl,
+    storeDescription,
+  } = settings;
 
   const waHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
     `Halo Admin ${storeName}, saya ingin konsultasi dan memulai pemesanan custom jersey untuk tim saya.`

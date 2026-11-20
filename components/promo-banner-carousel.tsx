@@ -110,6 +110,8 @@ export function PromoBannerCarousel({
               key={`img-${current.id}`}
               src={current.imageUrl}
               alt={current.title}
+              loading="lazy"
+              decoding="async"
               className="absolute inset-0 w-full h-full object-cover object-center transition-all duration-700 animate-in fade-in"
             />
           ) : (

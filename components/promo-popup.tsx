@@ -80,6 +80,8 @@ export function PromoPopup({ promo, waNumber }: PromoPopupProps) {
             <img
               src={promo.imageUrl}
               alt={promo.title}
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#14151C] via-transparent to-transparent opacity-70" />

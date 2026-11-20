@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { fabrics } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { getAdminSession } from "@/lib/auth";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 
 export async function createFabricAction(formData: FormData) {
   const session = await getAdminSession();
@@ -34,6 +34,7 @@ export async function createFabricAction(formData: FormData) {
       })
       .returning();
 
+    updateTag("fabrics");
     revalidatePath("/cara-pesan");
     revalidatePath("/alur-pemesanan");
     revalidatePath("/admin/bahan");
@@ -73,6 +74,7 @@ export async function updateFabricAction(formData: FormData) {
       })
       .where(eq(fabrics.id, id));
 
+    updateTag("fabrics");
     revalidatePath("/cara-pesan");
     revalidatePath("/alur-pemesanan");
     revalidatePath("/admin/bahan");
@@ -93,6 +95,7 @@ export async function deleteFabricAction(id: number) {
   try {
     await db.delete(fabrics).where(eq(fabrics.id, id));
 
+    updateTag("fabrics");
     revalidatePath("/cara-pesan");
     revalidatePath("/alur-pemesanan");
     revalidatePath("/admin/bahan");

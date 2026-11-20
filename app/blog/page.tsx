@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
-import { db } from "@/lib/db";
-import { siteSettings, blogs } from "@/lib/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { getSiteSettings, getPublishedBlogs } from "@/lib/public-data";
 
 export const metadata = {
   title: "Blog & Panduan Custom Jersey | First Apparel",
@@ -14,42 +12,22 @@ export const metadata = {
 export const instant = false;
 
 export default async function BlogPage() {
-  let storeName = "First Apparel";
-  let storeAddress = "Jl. Terusan Olahraga No. 8, Bandung, Jawa Barat";
-  let googleMapsUrl: string | null = null;
-  let operatingHours = "Senin - Sabtu, 09.00 - 17.00 WIB";
-  let whatsappNumber = "6281234567890";
-  let defaultWaText = "Halo Admin First Apparel, saya ingin berkonsultasi tentang pemesanan jersey kustom.";
-  let instagramUrl: string | null = null;
-  let logoUrl: string | null = null;
-  let storeDescription =
-    "Vendor konveksi dan produsen custom jersey olahraga profesional. Melayani pembuatan seragam futsal, sepak bola, esports, running, dan apparel tim.";
+  const [settings, blogList] = await Promise.all([
+    getSiteSettings(),
+    getPublishedBlogs(),
+  ]);
 
-  let blogList: (typeof blogs.$inferSelect)[] = [];
-
-  try {
-    const settings = await db.select().from(siteSettings).limit(1);
-    if (settings.length > 0) {
-      const s = settings[0];
-      storeName = s.storeName || storeName;
-      storeAddress = s.storeAddress || storeAddress;
-      googleMapsUrl = s.googleMapsUrl;
-      operatingHours = s.operatingHours || operatingHours;
-      whatsappNumber = s.whatsappNumber || whatsappNumber;
-      defaultWaText = s.defaultWaText || defaultWaText;
-      instagramUrl = s.instagramUrl;
-      logoUrl = s.logoUrl || null;
-      storeDescription = s.storeDescription || storeDescription;
-    }
-
-    blogList = await db
-      .select()
-      .from(blogs)
-      .where(eq(blogs.isPublished, true))
-      .orderBy(desc(blogs.publishedAt));
-  } catch {
-    // Fallback bila koneksi terhambat
-  }
+  const {
+    storeName,
+    storeAddress,
+    googleMapsUrl,
+    operatingHours,
+    whatsappNumber,
+    defaultWaText,
+    instagramUrl,
+    logoUrl,
+    storeDescription,
+  } = settings;
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat("id-ID", {
@@ -104,7 +82,7 @@ export default async function BlogPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogList.map((item) => (
+            {blogList.map((item, idx) => (
               <article
                 key={item.id}
                 className="flex flex-col rounded-2xl bg-[#141418] border border-[#27272A] overflow-hidden hover:border-[#3F3F46] hover:shadow-md transition-all group"
@@ -114,6 +92,10 @@ export default async function BlogPage() {
                   <img
                     src={item.thumbnailUrl}
                     alt={item.title}
+                    width={400}
+                    height={250}
+                    loading={idx < 3 ? "eager" : "lazy"}
+                    decoding="async"
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </Link>

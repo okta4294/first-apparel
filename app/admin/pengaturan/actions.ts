@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { siteSettings } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { getAdminSession } from "@/lib/auth";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 
 function sanitizeUrl(urlString: string | null): string | null {
   if (!urlString) return null;
@@ -90,6 +90,7 @@ export async function updateSettingsAction(formData: FormData) {
       });
     }
 
+    updateTag("site-settings");
     revalidatePath("/", "layout");
     revalidatePath("/katalog");
     revalidatePath("/cara-pesan");

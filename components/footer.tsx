@@ -34,7 +34,7 @@ export function Footer({
             <Link href="/" className="flex items-center gap-2.5 group">
               {logoUrl ? (
                 <div className="w-8 h-8 rounded-lg border border-[#27272A]/80 flex items-center justify-center overflow-hidden shrink-0">
-                  <img src={logoUrl} alt={storeName} className="w-full h-full object-cover" />
+                  <img src={logoUrl} alt={storeName} width={32} height={32} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                 </div>
               ) : (
                 <div className="w-7 h-7 rounded-md bg-[#84CC16] flex items-center justify-center font-black text-[#09090B] text-xs shrink-0">

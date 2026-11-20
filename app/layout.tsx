@@ -25,6 +25,9 @@ export default function RootLayout({
   return (
     <html lang="id" data-scroll-behavior="smooth" suppressHydrationWarning className={`h-full ${inter.variable}`}>
       <head>
+        <link rel="preconnect" href="https://utfs.io" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://utfs.io" />
+        <link rel="dns-prefetch" href="https://ufs.sh" />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('first_apparel_theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&d)){document.documentElement.classList.add('dark')}else{document.documentElement.classList.remove('dark')}}catch(e){}})()`,

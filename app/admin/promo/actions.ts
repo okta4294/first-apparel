@@ -5,7 +5,7 @@ import { promos } from "@/lib/db/schema";
 import { eq, desc, or } from "drizzle-orm";
 import { getAdminSession } from "@/lib/auth";
 import { utapi } from "@/lib/uploadthing-server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 
 export async function createPromoAction(formData: FormData) {
   const session = await getAdminSession();
@@ -52,6 +52,7 @@ export async function createPromoAction(formData: FormData) {
       })
       .returning();
 
+    updateTag("promos");
     revalidatePath("/");
     revalidatePath("/admin");
     revalidatePath("/admin/promo");
@@ -159,6 +160,7 @@ export async function updatePromoAction(formData: FormData) {
       await utapi.deleteFiles(oldImageKey);
     }
 
+    updateTag("promos");
     revalidatePath("/");
     revalidatePath("/admin");
     revalidatePath("/admin/promo");
@@ -202,6 +204,7 @@ export async function deletePromoAction(id: number, imageKey: string | null) {
       await utapi.deleteFiles(imageKey);
     }
 
+    updateTag("promos");
     revalidatePath("/");
     revalidatePath("/admin");
     revalidatePath("/admin/promo");

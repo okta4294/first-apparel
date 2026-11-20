@@ -1,56 +1,28 @@
-import Link from "next/link";
 import { Navbar } from "@/components/navbar";
-import { db } from "@/lib/db";
-import { siteSettings, catalogs } from "@/lib/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { Footer } from "@/components/footer";
+import { getSiteSettings, getAllActiveCatalogs } from "@/lib/public-data";
 import { KatalogClient } from "./katalog-client";
 
 export const instant = false;
 
 export default async function KatalogPage() {
-  let storeName = "First Apparel";
-  let storeAddress = "Jl. Terusan Olahraga No. 8, Bandung, Jawa Barat";
-  let googleMapsUrl: string | null = null;
-  let operatingHours = "Senin - Sabtu, 09.00 - 17.00 WIB";
-  let whatsappNumber = "6281234567890";
-  let defaultWaText = "Halo Admin First Apparel, saya ingin berkonsultasi tentang pemesanan jersey kustom.";
-  let instagramUrl: string | null = null;
-  let logoUrl: string | null = null;
-  let storeSizeChartUrl: string | null = null;
-  let storeDescription =
-    "Vendor konveksi dan produsen custom jersey olahraga profesional. Melayani pembuatan seragam futsal, sepak bola, esports, running, dan apparel komunitas.";
+  const [settings, catalogList] = await Promise.all([
+    getSiteSettings(),
+    getAllActiveCatalogs(),
+  ]);
 
-  let catalogList: (typeof catalogs.$inferSelect)[] = [];
-
-  try {
-    const settings = await db.select().from(siteSettings).limit(1);
-    if (settings.length > 0) {
-      const s = settings[0];
-      storeName = s.storeName || storeName;
-      storeAddress = s.storeAddress || storeAddress;
-      googleMapsUrl = s.googleMapsUrl;
-      operatingHours = s.operatingHours || operatingHours;
-      whatsappNumber = s.whatsappNumber || whatsappNumber;
-      defaultWaText = s.defaultWaText || defaultWaText;
-      instagramUrl = s.instagramUrl;
-      logoUrl = s.logoUrl || null;
-      storeSizeChartUrl = s.sizeChartUrl || null;
-      storeDescription = s.storeDescription || storeDescription;
-    }
-
-    catalogList = await db
-      .select()
-      .from(catalogs)
-      .where(eq(catalogs.isActive, true))
-      .orderBy(desc(catalogs.createdAt));
-  } catch {
-    // Fallback jika query database sedang terhambat
-  }
-
-  const getWaLink = (message?: string) => {
-    const text = message || defaultWaText;
-    return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
-  };
+  const {
+    storeName,
+    storeAddress,
+    googleMapsUrl,
+    operatingHours,
+    whatsappNumber,
+    defaultWaText,
+    instagramUrl,
+    logoUrl,
+    sizeChartUrl: storeSizeChartUrl,
+    storeDescription,
+  } = settings;
 
   return (
     <div className="min-h-screen bg-[#09090B] text-[#FAFAFA] flex flex-col selection:bg-[#84CC16] selection:text-[#09090B]">
@@ -75,140 +47,17 @@ export default async function KatalogPage() {
       </main>
 
       {/* 4. Footer */}
-      <footer className="border-t border-[#27272A] bg-[#0C0D11] pt-16 pb-12 text-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-[#1F1F24]">
-            {/* C1: Brand Info */}
-            <div className="space-y-4">
-              <Link href="/" className="flex items-center gap-2.5 group">
-                {logoUrl ? (
-                  <div className="w-8 h-8 rounded-lg border border-[#27272A]/80 flex items-center justify-center overflow-hidden shrink-0">
-                    <img src={logoUrl} alt={storeName} className="w-full h-full object-cover" />
-                  </div>
-                ) : (
-                  <div className="w-7 h-7 rounded-md bg-[#84CC16] flex items-center justify-center font-black text-[#09090B] text-xs shrink-0">
-                    {storeName.slice(0, 2).toUpperCase()}
-                  </div>
-                )}
-                <span className="font-bold text-base tracking-tight text-[#FAFAFA]">
-                  {storeName}
-                </span>
-              </Link>
-              <p className="text-[#71717A] leading-relaxed">
-                {storeDescription}
-              </p>
-            </div>
-
-            {/* C2: Tautan Halaman */}
-            <div>
-              <h3 className="font-bold text-sm text-[#FAFAFA] mb-4">Navigasi Halaman</h3>
-              <ul className="space-y-2.5 text-[#A1A1AA]">
-                <li>
-                  <Link href="/" className="hover:text-[#84CC16] transition-colors">
-                    Beranda
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/katalog" className="text-[#84CC16] font-medium">
-                    Katalog Jersey
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/cara-pesan" className="hover:text-[#84CC16] transition-colors">
-                    Alur Pemesanan
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/blog" className="hover:text-[#84CC16] transition-colors">
-                    Blog &amp; Panduan
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* C3: Kategori Olahraga */}
-            <div>
-              <h3 className="font-bold text-sm text-[#FAFAFA] mb-4">Kategori Produk</h3>
-              <ul className="space-y-2.5 text-[#A1A1AA]">
-                <li>
-                  <Link href="/katalog" className="hover:text-[#84CC16] transition-colors">
-                    Jersey Futsal &amp; Bola
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/katalog" className="hover:text-[#84CC16] transition-colors">
-                    Jersey Esports Pro
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/katalog" className="hover:text-[#84CC16] transition-colors">
-                    Jersey Running &amp; Cycling
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/katalog" className="hover:text-[#84CC16] transition-colors">
-                    Jaket &amp; Coach Jacket
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* C4: Kontak & Lokasi Workshop */}
-            <div>
-              <h3 className="font-bold text-sm text-[#FAFAFA] mb-4">Kontak &amp; Workshop</h3>
-              <ul className="space-y-2.5 text-[#71717A]">
-                <li>
-                  <span className="block text-[#FAFAFA] font-medium mb-0.5">Alamat Workshop:</span>
-                  <span>{storeAddress}</span>
-                </li>
-                {googleMapsUrl && (
-                  <li>
-                    <a
-                      href={googleMapsUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#84CC16] hover:underline inline-flex items-center gap-1 font-medium"
-                    >
-                      📍 Buka di Google Maps →
-                    </a>
-                  </li>
-                )}
-                <li>
-                  <span className="block text-[#FAFAFA] font-medium mb-0.5">Jam Kerja:</span>
-                  <span>{operatingHours}</span>
-                </li>
-                <li>
-                  <span className="block text-[#FAFAFA] font-medium mb-0.5">WhatsApp Resmi:</span>
-                  <a
-                    href={getWaLink()}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#84CC16] hover:underline"
-                  >
-                    +{whatsappNumber}
-                  </a>
-                </li>
-                {instagramUrl && (
-                  <li>
-                    <a
-                      href={instagramUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#84CC16] hover:underline inline-flex items-center gap-1 font-medium"
-                    >
-                      📸 Ikuti Instagram Kami →
-                    </a>
-                  </li>
-                )}
-              </ul>
-            </div>
-          </div>
-
-          <div className="pt-8 text-center text-[#52525B]">
-            © 2026 {storeName}. All Rights Reserved. Seluruh pemesanan dilayani via WhatsApp Resmi.
-          </div>
-        </div>
-      </footer>
+      <Footer
+        storeName={storeName}
+        storeAddress={storeAddress}
+        googleMapsUrl={googleMapsUrl}
+        operatingHours={operatingHours}
+        whatsappNumber={whatsappNumber}
+        defaultWaText={defaultWaText}
+        instagramUrl={instagramUrl}
+        logoUrl={logoUrl}
+        storeDescription={storeDescription}
+      />
     </div>
   );
 }

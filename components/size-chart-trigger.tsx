@@ -46,6 +46,8 @@ export function SizeChartTrigger({ title, sizeChartUrl }: SizeChartTriggerProps)
               <img
                 src={sizeChartUrl}
                 alt={`Size chart ${title}`}
+                loading="lazy"
+                decoding="async"
                 className="max-w-full max-h-[60vh] object-contain rounded-lg"
               />
             </div>

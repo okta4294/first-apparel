@@ -7,9 +7,9 @@
  */
 export async function compressImageToWebP(
   file: File,
-  maxWidth = 1200,
-  maxHeight = 1200,
-  quality = 0.82
+  maxWidth = 1000,
+  maxHeight = 1000,
+  quality = 0.78
 ): Promise<File> {
   // Hanya proses jika bertipe gambar
   if (!file.type.startsWith("image/")) {

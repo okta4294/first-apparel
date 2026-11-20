@@ -221,7 +221,7 @@ export function KatalogClient({ items, waNumber, storeSizeChartUrl }: KatalogCli
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredItems.map((item) => {
+          {filteredItems.map((item, itemIdx) => {
             const itemImages = getCatalogImages(item);
             const activeImage =
               activeImages[item.id] || itemImages[0]?.url || item.imageUrl;
@@ -268,6 +268,11 @@ export function KatalogClient({ items, waNumber, storeSizeChartUrl }: KatalogCli
                       <img
                         src={activeImage}
                         alt={item.title}
+                        width={420}
+                        height={240}
+                        loading={itemIdx < 3 ? "eager" : "lazy"}
+                        decoding="async"
+                        fetchPriority={itemIdx === 0 ? "high" : "auto"}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105"
                       />
                     ) : (
@@ -306,7 +311,7 @@ export function KatalogClient({ items, waNumber, storeSizeChartUrl }: KatalogCli
                             }`}
                             title={`Lihat Sudut Foto ${idx + 1}`}
                           >
-                            <img src={img.url} alt={`Foto ${idx + 1}`} className="w-full h-full object-cover" />
+                            <img src={img.url} alt={`Foto ${idx + 1}`} width={40} height={40} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                           </button>
                         );
                       })}
@@ -442,6 +447,7 @@ export function KatalogClient({ items, waNumber, storeSizeChartUrl }: KatalogCli
                   <img
                     src={currentImg}
                     alt={`${item.title} - Foto ${activeIndex + 1}`}
+                    decoding="async"
                     className="max-h-[54vh] max-w-full object-contain rounded-lg"
                   />
                 ) : (
@@ -499,7 +505,7 @@ export function KatalogClient({ items, waNumber, storeSizeChartUrl }: KatalogCli
                         }`}
                         title={`Lihat Sudut Foto ${idx + 1}`}
                       >
-                        <img src={img.url} alt={`Sudut ${idx + 1}`} className="w-full h-full object-cover" />
+                        <img src={img.url} alt={`Sudut ${idx + 1}`} width={48} height={48} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                       </button>
                     );
                   })}

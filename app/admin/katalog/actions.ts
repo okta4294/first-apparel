@@ -5,7 +5,7 @@ import { catalogs } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { getAdminSession } from "@/lib/auth";
 import { utapi } from "@/lib/uploadthing-server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 
 export async function createCatalogAction(formData: FormData) {
   const session = await getAdminSession();
@@ -64,7 +64,9 @@ export async function createCatalogAction(formData: FormData) {
       })
       .returning();
 
+    updateTag("catalogs");
     revalidatePath("/");
+    revalidatePath("/katalog");
     revalidatePath("/admin");
     revalidatePath("/admin/katalog");
 
@@ -154,7 +156,9 @@ export async function updateCatalogAction(formData: FormData) {
       await utapi.deleteFiles(oldSizeChartKey);
     }
 
+    updateTag("catalogs");
     revalidatePath("/");
+    revalidatePath("/katalog");
     revalidatePath("/admin");
     revalidatePath("/admin/katalog");
 
@@ -193,7 +197,9 @@ export async function deleteCatalogAction(id: number, allKeys: string[] | string
       await utapi.deleteFiles(keysToDelete);
     }
 
+    updateTag("catalogs");
     revalidatePath("/");
+    revalidatePath("/katalog");
     revalidatePath("/admin");
     revalidatePath("/admin/katalog");
 

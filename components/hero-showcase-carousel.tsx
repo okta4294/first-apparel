@@ -155,9 +155,15 @@ export function HeroShowcaseCarousel({
       >
         {/* Latar Belakang Gambar Jika Ada */}
         {current.imageUrl && (
-          <div
-            className="absolute inset-0 bg-cover bg-center opacity-30 group-hover:opacity-40 transition-opacity"
-            style={{ backgroundImage: `url(${current.imageUrl})` }}
+          <img
+            src={current.imageUrl}
+            alt={current.title}
+            width={520}
+            height={280}
+            loading="eager"
+            decoding="async"
+            fetchPriority={currentIndex === 0 ? "high" : "auto"}
+            className="absolute inset-0 w-full h-full object-cover object-center opacity-30 group-hover:opacity-40 transition-opacity"
           />
         )}
 

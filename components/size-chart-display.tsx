@@ -21,6 +21,8 @@ export function SizeChartDisplay({ imageUrl, waNumber, storeName }: SizeChartDis
               <img
                 src={imageUrl}
                 alt={`Panduan Ukuran Resmi ${storeName}`}
+                loading="lazy"
+                decoding="async"
                 className="w-full h-auto max-h-[680px] object-contain rounded-lg"
               />
             </div>

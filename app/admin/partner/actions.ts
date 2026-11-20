@@ -5,7 +5,7 @@ import { partners } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { getAdminSession } from "@/lib/auth";
 import { utapi } from "@/lib/uploadthing-server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 
 function sanitizeUrl(urlString: string | null): string | null {
   if (!urlString) return null;
@@ -55,6 +55,7 @@ export async function createPartnerAction(formData: FormData) {
       })
       .returning();
 
+    updateTag("partners");
     revalidatePath("/");
     revalidatePath("/admin");
     revalidatePath("/admin/partner");
@@ -105,6 +106,7 @@ export async function updatePartnerAction(formData: FormData) {
       await utapi.deleteFiles(oldLogoKey);
     }
 
+    updateTag("partners");
     revalidatePath("/");
     revalidatePath("/admin");
     revalidatePath("/admin/partner");
@@ -129,6 +131,7 @@ export async function deletePartnerAction(id: number, logoKey: string) {
       await utapi.deleteFiles(logoKey);
     }
 
+    updateTag("partners");
     revalidatePath("/");
     revalidatePath("/admin");
     revalidatePath("/admin/partner");
