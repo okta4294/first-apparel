@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { WhatsAppIcon } from "@/components/whatsapp-icon";
 
 interface NavbarProps {
   waNumber: string;
@@ -78,11 +79,9 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", logoUrl }: Navba
             href={waHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#84CC16] text-[#09090B] text-xs font-bold tracking-wide transition-all hover:bg-[#9ee238] active:scale-95 shadow-[0_0_20px_rgba(132,204,22,0.2)]"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#84CC16] text-[#09090B] text-xs font-bold tracking-wide transition-all hover:bg-[#9ee238] active:scale-95 shadow-md"
           >
-            <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-              <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.634.076-1.745-.383-1.423-.588-2.339-2.04-2.41-2.134-.071-.094-.572-.76-.572-1.448 0-.689.361-1.028.49-1.168.129-.14.282-.175.376-.175s.188.005.271.01c.088.005.206-.033.322.247.121.292.412 1.006.448 1.08.036.074.06.16.012.257-.048.097-.072.157-.144.24-.072.083-.153.186-.218.25-.072.072-.148.15-.064.294.084.144.373.616.8 1 .552.497 1.018.652 1.162.724.144.072.228.06.313-.037.085-.097.362-.423.458-.568.096-.145.193-.121.325-.072.133.048.843.398.988.47.145.072.241.108.277.17.036.06.036.357-.108.762z" />
-            </svg>
+            <WhatsAppIcon className="w-3.5 h-3.5 fill-current shrink-0" />
             <span>Konsultasi via WhatsApp</span>
           </a>
         </div>
@@ -93,8 +92,9 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", logoUrl }: Navba
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}
-            className="p-2 rounded-lg text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#141418] transition-colors"
-            aria-label="Toggle menu"
+            className="min-w-[44px] min-h-[44px] w-11 h-11 inline-flex items-center justify-center rounded-lg text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#141418] transition-colors"
+            aria-label={isOpen ? "Tutup menu navigasi" : "Buka menu navigasi"}
+            aria-expanded={isOpen}
           >
             <svg
               className="w-6 h-6"
@@ -102,6 +102,7 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", logoUrl }: Navba
               viewBox="0 0 24 24"
               stroke="currentColor"
               strokeWidth={2}
+              aria-hidden="true"
             >
               {isOpen ? (
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -157,11 +158,9 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", logoUrl }: Navba
               href={waHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-[#84CC16] text-[#09090B] text-xs font-bold tracking-wide"
+              className="w-full min-h-[44px] flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-[#84CC16] text-[#09090B] text-xs font-bold tracking-wide"
             >
-              <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.634.076-1.745-.383-1.423-.588-2.339-2.04-2.41-2.134-.071-.094-.572-.76-.572-1.448 0-.689.361-1.028.49-1.168.129-.14.282-.175.376-.175s.188.005.271.01c.088.005.206-.033.322.247.121.292.412 1.006.448 1.08.036.074.06.16.012.257-.048.097-.072.157-.144.24-.072.083-.153.186-.218.25-.072.072-.148.15-.064.294.084.144.373.616.8 1 .552.497 1.018.652 1.162.724.144.072.228.06.313-.037.085-.097.362-.423.458-.568.096-.145.193-.121.325-.072.133.048.843.398.988.47.145.072.241.108.277.17.036.06.036.357-.108.762z" />
-              </svg>
+              <WhatsAppIcon className="w-3.5 h-3.5 fill-current shrink-0" />
               <span>Konsultasi via WhatsApp</span>
             </a>
           </div>

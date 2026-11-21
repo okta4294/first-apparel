@@ -45,7 +45,7 @@ export function Footer({
                 {storeName}
               </span>
             </Link>
-            <p className="text-[#71717A] leading-relaxed">
+            <p className="text-[#A1A1AA] leading-relaxed">
               {storeDescription}
             </p>
           </div>
@@ -82,22 +82,22 @@ export function Footer({
             <h3 className="font-bold text-sm text-[#FAFAFA] mb-4">Kategori Produk</h3>
             <ul className="space-y-2.5 text-[#A1A1AA]">
               <li>
-                <Link href="/katalog" className="hover:text-[#84CC16] transition-colors">
+                <Link href="/katalog?kategori=FUTSAL" className="hover:text-[#84CC16] transition-colors">
                   Jersey Futsal &amp; Bola
                 </Link>
               </li>
               <li>
-                <Link href="/katalog" className="hover:text-[#84CC16] transition-colors">
+                <Link href="/katalog?kategori=ESPORTS" className="hover:text-[#84CC16] transition-colors">
                   Jersey Esports Pro
                 </Link>
               </li>
               <li>
-                <Link href="/katalog" className="hover:text-[#84CC16] transition-colors">
+                <Link href="/katalog?kategori=RUNNING" className="hover:text-[#84CC16] transition-colors">
                   Jersey Running &amp; Cycling
                 </Link>
               </li>
               <li>
-                <Link href="/katalog" className="hover:text-[#84CC16] transition-colors">
+                <Link href="/katalog?kategori=JAKET" className="hover:text-[#84CC16] transition-colors">
                   Jaket &amp; Coach Jacket
                 </Link>
               </li>
@@ -107,7 +107,7 @@ export function Footer({
           {/* C4: Kontak & Lokasi Workshop */}
           <div>
             <h3 className="font-bold text-sm text-[#FAFAFA] mb-4">Kontak &amp; Workshop</h3>
-            <ul className="space-y-2.5 text-[#71717A]">
+            <ul className="space-y-2.5 text-[#A1A1AA]">
               <li>
                 <span className="block text-[#FAFAFA] font-medium mb-0.5">Alamat Workshop:</span>
                 <span>{storeAddress}</span>
@@ -155,8 +155,8 @@ export function Footer({
           </div>
         </div>
 
-        <div className="pt-8 text-center text-[#52525B]">
-          © 2026 {storeName}. All Rights Reserved. Seluruh pemesanan dilayani via WhatsApp Resmi.
+        <div className="pt-8 text-center text-[#A1A1AA]">
+          © 2026 {storeName}. Hak Cipta Dilindungi. Seluruh pemesanan dilayani via WhatsApp Resmi.
         </div>
       </div>
     </footer>

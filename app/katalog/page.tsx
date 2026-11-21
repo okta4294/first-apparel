@@ -5,11 +5,18 @@ import { KatalogClient } from "./katalog-client";
 
 export const instant = false;
 
-export default async function KatalogPage() {
-  const [settings, catalogList] = await Promise.all([
+export default async function KatalogPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ kategori?: string }>;
+}) {
+  const [settings, catalogList, resolvedParams] = await Promise.all([
     getSiteSettings(),
     getAllActiveCatalogs(),
+    searchParams ?? Promise.resolve({} as { kategori?: string }),
   ]);
+  const initialCategory =
+    typeof resolvedParams?.kategori === "string" ? resolvedParams.kategori : undefined;
 
   const {
     storeName,
@@ -43,7 +50,12 @@ export default async function KatalogPage() {
 
       {/* 3. Konten Utama Katalog & Filter Interaktif */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <KatalogClient items={catalogList} waNumber={whatsappNumber} storeSizeChartUrl={storeSizeChartUrl} />
+        <KatalogClient
+          items={catalogList}
+          waNumber={whatsappNumber}
+          storeSizeChartUrl={storeSizeChartUrl}
+          initialCategory={initialCategory}
+        />
       </main>
 
       {/* 4. Footer */}

@@ -28,6 +28,7 @@ interface KatalogClientProps {
   items: CatalogItem[];
   waNumber: string;
   storeSizeChartUrl?: string | null;
+  initialCategory?: string;
 }
 
 function getCatalogImages(item: CatalogItem): CatalogImageItem[] {
@@ -45,8 +46,17 @@ function getCatalogImages(item: CatalogItem): CatalogImageItem[] {
   return [];
 }
 
-export function KatalogClient({ items, waNumber, storeSizeChartUrl }: KatalogClientProps) {
-  const [selectedCategory, setSelectedCategory] = useState("SEMUA");
+export function KatalogClient({ items, waNumber, storeSizeChartUrl, initialCategory }: KatalogClientProps) {
+  const resolvedInitialCategory = useMemo(() => {
+    if (!initialCategory?.trim()) return "SEMUA";
+    const target = initialCategory.trim().toUpperCase();
+    const matched = items.find((item) =>
+      item.category?.trim().toUpperCase().includes(target)
+    );
+    return matched ? matched.category.trim().toUpperCase() : "SEMUA";
+  }, [items, initialCategory]);
+
+  const [selectedCategory, setSelectedCategory] = useState(resolvedInitialCategory);
   const [searchQuery, setSearchQuery] = useState("");
   // Track selected active image per catalog card (card id -> image url)
   const [activeImages, setActiveImages] = useState<Record<number, string>>({});

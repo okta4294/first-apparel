@@ -5,6 +5,8 @@ import { HeroShowcaseCarousel } from "@/components/hero-showcase-carousel";
 import { SizeChartTrigger } from "@/components/size-chart-trigger";
 import { PromoPopup } from "@/components/promo-popup";
 import { PromoBannerCarousel } from "@/components/promo-banner-carousel";
+import { WhatsAppIcon } from "@/components/whatsapp-icon";
+import { MobileWaFab } from "@/components/mobile-wa-fab";
 import {
   getSiteSettings,
   getActivePromos,
@@ -54,13 +56,6 @@ const INITIAL_CATALOGS = [
   },
 ];
 
-const DEFAULT_PARTNERS = [
-  { id: 1, name: "Bandung Futsal League", category: "Kompetisi Futsal", logoUrl: "", websiteUrl: null },
-  { id: 2, name: "Apex Esports ID", category: "Tim E-Sports", logoUrl: "", websiteUrl: null },
-  { id: 3, name: "Siliwangi Runners", category: "Komunitas Lari", logoUrl: "", websiteUrl: null },
-  { id: 4, name: "Garuda Muda FC", category: "Klub Sepak Bola", logoUrl: "", websiteUrl: null },
-];
-
 export default async function HomePage() {
   const [settings, activePromos, featuredCatalogs, partnerList, latestBlogs] =
     await Promise.all([
@@ -85,6 +80,9 @@ export default async function HomePage() {
   } = settings;
 
   const popupPromo = activePromos.find((p) => p.isPopup) ?? null;
+  const bannerPromos = popupPromo
+    ? activePromos.filter((p) => p.id !== popupPromo.id)
+    : activePromos;
 
   const getWaLink = (message?: string) => {
     const text = message || defaultWaText;
@@ -93,9 +91,6 @@ export default async function HomePage() {
 
   const displayCatalogs =
     featuredCatalogs.length > 0 ? featuredCatalogs : INITIAL_CATALOGS;
-
-  const displayPartners =
-    partnerList.length > 0 ? partnerList : DEFAULT_PARTNERS;
 
   return (
     <div className="min-h-screen bg-[#09090B] text-[#FAFAFA] flex flex-col selection:bg-[#84CC16] selection:text-[#09090B]">
@@ -125,18 +120,16 @@ export default async function HomePage() {
                   href={getWaLink("Halo Admin First Apparel, saya ingin mulai konsultasi pembuatan custom jersey untuk tim saya.")}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-[#84CC16] text-[#09090B] font-bold text-xs sm:text-sm tracking-wide transition-all hover:bg-[#9ee238] active:scale-95 shadow-[0_0_25px_rgba(132,204,22,0.25)]"
+                  className="inline-flex items-center justify-center gap-2.5 min-h-[48px] px-7 py-3.5 rounded-full bg-[#84CC16] text-[#09090B] font-bold text-xs sm:text-sm tracking-wide transition-all hover:bg-[#9ee238] active:scale-95 shadow-lg"
                 >
-                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                    <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.634.076-1.745-.383-1.423-.588-2.339-2.04-2.41-2.134-.071-.094-.572-.76-.572-1.448 0-.689.361-1.028.49-1.168.129-.14.282-.175.376-.175s.188.005.271.01c.088.005.206-.033.322.247.121.292.412 1.006.448 1.08.036.074.06.16.012.257-.048.097-.072.157-.144.24-.072.083-.153.186-.218.25-.072.072-.148.15-.064.294.084.144.373.616.8 1 .552.497 1.018.652 1.162.724.144.072.228.06.313-.037.085-.097.362-.423.458-.568.096-.145.193-.121.325-.072.133.048.843.398.988.47.145.072.241.108.277.17.036.06.036.357-.108.762z" />
-                  </svg>
+                  <WhatsAppIcon className="w-4 h-4 fill-current shrink-0" />
                   <span>Mulai Konsultasi via WhatsApp</span>
                 </a>
                 <Link
                   href="#katalog"
-                  className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-transparent border border-[#27272A] text-[#E4E4E7] font-semibold text-xs sm:text-sm tracking-wide hover:border-[#3F3F46] hover:bg-[#141418] transition-colors"
+                  className="inline-flex items-center justify-center gap-2 min-h-[48px] px-7 py-3.5 rounded-full bg-transparent border border-[#27272A] text-[#E4E4E7] font-semibold text-xs sm:text-sm tracking-wide hover:border-[#3F3F46] hover:bg-[#141418] transition-colors"
                 >
-                  <svg className="w-4 h-4 text-[#84CC16]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                  <svg className="w-4 h-4 text-[#84CC16] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                   </svg>
                   <span>Lihat Katalog Model</span>
@@ -168,9 +161,9 @@ export default async function HomePage() {
       </section>
 
       {/* Banner Promo Dinamis Carousel */}
-      {activePromos.length > 0 && (
+      {bannerPromos.length > 0 && (
         <PromoBannerCarousel
-          promos={activePromos}
+          promos={bannerPromos}
           waNumber={whatsappNumber}
         />
       )}
@@ -191,7 +184,7 @@ export default async function HomePage() {
             <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-8 flex flex-col justify-between hover:border-[#3F3F46] hover:shadow-md transition-all group">
               <div>
                 <div className="w-12 h-12 rounded-xl bg-[#84CC16]/10 border border-[#84CC16]/25 flex items-center justify-center text-[#84CC16] mb-6 group-hover:scale-105 transition-transform">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
@@ -210,7 +203,7 @@ export default async function HomePage() {
             <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-8 flex flex-col justify-between hover:border-[#3F3F46] hover:shadow-md transition-all group">
               <div>
                 <div className="w-12 h-12 rounded-xl bg-[#84CC16]/10 border border-[#84CC16]/25 flex items-center justify-center text-[#84CC16] mb-6 group-hover:scale-105 transition-transform">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M7 21a4 4 0 01-4-4 4 4 0 014-4 4 4 0 014 4 4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
                   </svg>
                 </div>
@@ -229,7 +222,7 @@ export default async function HomePage() {
             <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-8 flex flex-col justify-between hover:border-[#3F3F46] hover:shadow-md transition-all group">
               <div>
                 <div className="w-12 h-12 rounded-xl bg-[#84CC16]/10 border border-[#84CC16]/25 flex items-center justify-center text-[#84CC16] mb-6 group-hover:scale-105 transition-transform">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                 </div>
@@ -308,12 +301,12 @@ export default async function HomePage() {
                     ) : (
                       <div className="text-center space-y-2 relative z-10 transition-transform duration-300 group-hover:scale-105">
                         <div className="w-14 h-14 mx-auto rounded-2xl bg-[#181922] border border-[#84CC16]/25 flex items-center justify-center text-[#84CC16]">
-                          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                           </svg>
                         </div>
-                        <span className="text-[10px] text-[#A1A1AA] uppercase tracking-wider font-bold block">
-                          Preview Produksi HD
+                        <span className="text-[11px] text-[#A1A1AA] uppercase tracking-wider font-bold block">
+                          Pratinjau Produksi HD
                         </span>
                       </div>
                     )}
@@ -368,7 +361,7 @@ export default async function HomePage() {
                         href={getWaLink(waItemMsg)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl bg-[#84CC16] hover:bg-[#9ee238] active:scale-[0.98] text-[#09090B] font-black text-xs tracking-wider uppercase transition-all shadow-[0_0_20px_rgba(132,204,22,0.25)] group-hover:shadow-[0_0_30px_rgba(132,204,22,0.4)]"
+                        className="w-full min-h-[44px] inline-flex items-center justify-center gap-2 py-3 px-4 rounded-full bg-[#84CC16] hover:bg-[#9ee238] active:scale-[0.98] text-[#09090B] font-black text-xs tracking-wider uppercase transition-all shadow-md"
                       >
                         <span>Pesan Model Ini via WA →</span>
                       </a>
@@ -381,7 +374,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 5. Seksi Mitra & Partner */}
+      {/* 5. Seksi Mitra & Partner (Hanya Tampil Jika Ada Data Nyata di Database) */}
+      {partnerList.length > 0 && (
       <section className="py-16 border-b border-[#27272A] bg-[#0C0D11]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-10">
@@ -394,7 +388,7 @@ export default async function HomePage() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 items-center">
-            {displayPartners.map((partner) => {
+            {partnerList.map((partner) => {
               const content = (
                 <div className="p-4 rounded-xl bg-[#141418] border border-[#27272A] hover:border-[#3F3F46] transition-all flex flex-col items-center justify-center text-center gap-2 group min-h-[120px] h-auto">
                   {partner.logoUrl ? (
@@ -440,6 +434,7 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* 6. Alur Pemesanan Section */}
       <section id="alur" className="py-20 border-b border-[#27272A]">
@@ -477,7 +472,7 @@ export default async function HomePage() {
                   Pratinjau Desain Digital
                 </h3>
                 <p className="text-xs text-[#A1A1AA] leading-relaxed">
-                  Tim desainer kami buatkan preview visual jersey untuk disetujui bersama sebelum dicetak.
+                  Tim desainer kami buatkan pratinjau visual jersey untuk disetujui bersama sebelum dicetak.
                 </p>
               </div>
             </div>
@@ -514,9 +509,9 @@ export default async function HomePage() {
           <div className="mt-12 text-center">
             <Link
               href="/cara-pesan"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#181920] border border-[#27272A] text-[#FAFAFA] text-xs sm:text-sm font-semibold hover:border-[#84CC16]/50 hover:text-[#84CC16] transition-all"
+              className="inline-flex items-center gap-2 min-h-[44px] px-6 py-3 rounded-full bg-[#181920] border border-[#27272A] text-[#FAFAFA] text-xs sm:text-sm font-semibold hover:border-[#84CC16]/50 hover:text-[#84CC16] transition-all"
             >
-              <span>Pelajari Alur Lengkap, Size Chart & Panduan Bahan</span>
+              <span>Pelajari Alur Lengkap, Panduan Ukuran &amp; Bahan</span>
               <span>→</span>
             </Link>
           </div>
@@ -610,11 +605,9 @@ export default async function HomePage() {
               href={getWaLink("Halo Admin First Apparel, saya ingin berkonsultasi konsep desain dan penawaran harga khusus tim.")}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-[#84CC16] text-[#09090B] font-bold text-sm tracking-wide transition-all hover:bg-[#9ee238] active:scale-95 shadow-[0_0_30px_rgba(132,204,22,0.3)] shrink-0"
+              className="inline-flex items-center justify-center gap-2.5 min-h-[48px] px-8 py-4 rounded-full bg-[#84CC16] text-[#09090B] font-bold text-sm tracking-wide transition-all hover:bg-[#9ee238] active:scale-95 shadow-lg shrink-0"
             >
-              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.634.076-1.745-.383-1.423-.588-2.339-2.04-2.41-2.134-.071-.094-.572-.76-.572-1.448 0-.689.361-1.028.49-1.168.129-.14.282-.175.376-.175s.188.005.271.01c.088.005.206-.033.322.247.121.292.412 1.006.448 1.08.036.074.06.16.012.257-.048.097-.072.157-.144.24-.072.083-.153.186-.218.25-.072.072-.148.15-.064.294.084.144.373.616.8 1 .552.497 1.018.652 1.162.724.144.072.228.06.313-.037.085-.097.362-.423.458-.568.096-.145.193-.121.325-.072.133.048.843.398.988.47.145.072.241.108.277.17.036.06.036.357-.108.762z" />
-              </svg>
+              <WhatsAppIcon className="w-4 h-4 fill-current shrink-0" />
               <span>Chat WhatsApp Admin Sekarang →</span>
             </a>
           </div>
@@ -634,6 +627,8 @@ export default async function HomePage() {
         logoUrl={logoUrl}
         storeDescription={storeDescription}
       />
+      {/* Tombol WhatsApp Melayang di Mobile Saat Scroll */}
+      <MobileWaFab waHref={getWaLink()} />
     </div>
   );
 }

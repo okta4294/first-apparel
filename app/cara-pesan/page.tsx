@@ -119,11 +119,6 @@ export default async function CaraPesanPage() {
           {/* Jalur Cepat Express & Desain Siap Cetak */}
           <div className="mt-8 p-3.5 sm:p-4 rounded-2xl bg-[#141418] border border-[#27272A] max-w-xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs shadow-sm">
             <div className="flex items-center gap-2.5 text-left">
-              <span className="w-8 h-8 rounded-lg bg-[#84CC16]/10 text-[#84CC16] flex items-center justify-center shrink-0">
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-              </span>
               <div>
                 <span className="font-bold text-[#FAFAFA] block">Sudah Punya Desain Siap Cetak?</span>
                 <span className="text-[#A1A1AA] text-[11px] block">Tersedia jalur prioritas express untuk turnamen (3–5 hari kerja)</span>

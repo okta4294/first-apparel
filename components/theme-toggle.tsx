@@ -65,11 +65,11 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
     window.dispatchEvent(new Event("first-apparel-theme-change"));
   };
 
-  // Render placeholder netral sebelum terhidrasi agar tidak terjadi pergeseran tata letak (CLS)
+    // Render placeholder netral sebelum terhidrasi agar tidak terjadi pergeseran tata letak (CLS)
   if (!mounted) {
     return (
       <div
-        className={`w-9 h-9 rounded-lg border border-transparent p-2 ${className}`}
+        className={`min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg border border-transparent p-2 ${className}`}
         aria-hidden="true"
       />
     );
@@ -79,7 +79,7 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
     <button
       type="button"
       onClick={toggleTheme}
-      className={`inline-flex items-center justify-center w-9 h-9 rounded-lg border border-transparent hover:border-[#E2E8F0] dark:hover:border-[#27272A] text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9] dark:text-[#A1A1AA] dark:hover:text-[#FAFAFA] dark:hover:bg-[#141418] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#84CC16] ${className}`}
+      className={`inline-flex items-center justify-center min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg border border-transparent hover:border-[#E2E8F0] dark:hover:border-[#27272A] text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9] dark:text-[#A1A1AA] dark:hover:text-[#FAFAFA] dark:hover:bg-[#141418] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#84CC16] ${className}`}
       aria-label={isDark ? "Beralih ke Mode Terang" : "Beralih ke Mode Gelap"}
       title={isDark ? "Beralih ke Mode Terang" : "Beralih ke Mode Gelap"}
     >

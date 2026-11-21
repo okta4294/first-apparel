@@ -119,23 +119,29 @@ export function PromoBannerCarousel({
           )}
 
           {/* 2. Layer Overlay Gelap untuk Kontras Maksimal Teks & Tombol */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#09090B]/95 via-[#09090B]/75 to-[#09090B]/30 sm:bg-gradient-to-r sm:from-[#09090B]/95 sm:via-[#09090B]/80 sm:to-black/30" />
+          <div
+            data-keep-dark="true"
+            className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/70 to-black/30 sm:bg-gradient-to-r sm:from-black/90 sm:via-black/75 sm:to-black/25"
+          />
 
           {/* 3. Konten Teks Promo & Tombol Klaim di Atas Layer Gambar */}
-          <div className="relative z-10 w-full max-w-2xl p-6 pb-16 sm:p-10 sm:pl-16 md:p-12 md:pl-20 flex flex-col justify-center items-start space-y-3 sm:space-y-4">
+          <div
+            data-keep-dark="true"
+            className="relative z-10 w-full max-w-2xl p-6 pb-16 sm:p-10 sm:pl-16 md:p-12 md:pl-20 flex flex-col justify-center items-start space-y-3 sm:space-y-4"
+          >
             {/* Lencana Diskon / Kategori Promo */}
             <span className="inline-block px-3.5 py-1.5 rounded-full bg-[#84CC16] text-[#09090B] text-xs font-black uppercase tracking-wider shadow-sm">
               {current.badgeText || "PROMO SPESIAL"}
             </span>
 
             {/* Judul Promo */}
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-[#FAFAFA] tracking-tight leading-[1.15] drop-shadow-md">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.15] drop-shadow-md">
               {current.title}
             </h2>
 
             {/* Sub-judul / Deskripsi Promo */}
             {current.label && (
-              <p className="text-sm sm:text-base md:text-lg text-[#D4D4D8] font-medium leading-relaxed drop-shadow-sm max-w-xl">
+              <p className="text-sm sm:text-base md:text-lg text-zinc-200 font-medium leading-relaxed drop-shadow-sm max-w-xl">
                 {current.label}
               </p>
             )}
@@ -146,7 +152,7 @@ export function PromoBannerCarousel({
                 href={waHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl bg-[#84CC16] hover:bg-[#9ee238] active:scale-95 text-[#09090B] text-xs sm:text-sm font-black uppercase tracking-wider transition-all shadow-[0_0_25px_rgba(132,204,22,0.4)] hover:shadow-[0_0_35px_rgba(132,204,22,0.6)]"
+                className="inline-flex items-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-[#84CC16] hover:bg-[#9ee238] active:scale-95 text-[#09090B] text-xs sm:text-sm font-black uppercase tracking-wider transition-all shadow-lg"
               >
                 <span>Klaim Promo via WhatsApp →</span>
               </a>
@@ -189,6 +195,7 @@ export function PromoBannerCarousel({
                     }}
                     className="min-w-[32px] min-h-[44px] sm:min-h-[32px] flex items-center justify-center p-1 group/dot"
                     aria-label={`Beralih ke promo ${idx + 1}`}
+                    aria-current={idx === currentIndex ? "true" : undefined}
                   >
                     <span
                       className={`h-2 rounded-full transition-all block ${
