@@ -1,6 +1,6 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { db } from "@/lib/db";
-import { siteSettings, catalogs, promos, partners, blogs, fabrics } from "@/lib/db/schema";
+import { siteSettings, catalogs, promos, partners, blogs, fabrics, reviews } from "@/lib/db/schema";
 import { eq, and, lte, gte, or, asc, desc, ne } from "drizzle-orm";
 
 export interface PublicSiteSettings {
@@ -232,6 +232,22 @@ export async function getActiveFabrics() {
       .from(fabrics)
       .where(eq(fabrics.isActive, true))
       .orderBy(asc(fabrics.sortOrder), asc(fabrics.id));
+  } catch {
+    return [];
+  }
+}
+
+export async function getActiveReviews() {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("reviews");
+
+  try {
+    return await db
+      .select()
+      .from(reviews)
+      .where(eq(reviews.isActive, true))
+      .orderBy(asc(reviews.sortOrder), desc(reviews.id));
   } catch {
     return [];
   }

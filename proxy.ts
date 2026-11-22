@@ -4,7 +4,7 @@ import { jwtVerify } from "jose";
 
 const COOKIE_NAME = "admin_session";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Hanya terapkan proteksi pada seluruh rute /admin

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 interface SizeChartTriggerProps {
   title: string;
@@ -64,12 +65,12 @@ export function SizeChartTrigger({ title, sizeChartUrl }: SizeChartTriggerProps)
             </div>
 
             <div className="max-h-[65vh] overflow-auto rounded-xl border border-[#27272A] bg-[#09090B] flex items-center justify-center p-3">
-              <img
+              <Image
                 src={sizeChartUrl}
                 alt={`Panduan ukuran ${title}`}
-                loading="lazy"
-                decoding="async"
-                className="max-w-full max-h-[60vh] object-contain rounded-lg"
+                width={800}
+                height={600}
+                className="max-w-full w-auto max-h-[60vh] object-contain rounded-lg"
               />
             </div>
 

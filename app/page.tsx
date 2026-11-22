@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { HeroShowcaseCarousel } from "@/components/hero-showcase-carousel";
@@ -7,12 +8,14 @@ import { PromoPopup } from "@/components/promo-popup";
 import { PromoBannerCarousel } from "@/components/promo-banner-carousel";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { MobileWaFab } from "@/components/mobile-wa-fab";
+import { getSiteUrl } from "@/lib/site-url";
 import {
   getSiteSettings,
   getActivePromos,
   getFeaturedCatalogs,
   getActivePartners,
   getLatestBlogs,
+  getActiveReviews,
 } from "@/lib/public-data";
 
 export const instant = false;
@@ -57,13 +60,14 @@ const INITIAL_CATALOGS = [
 ];
 
 export default async function HomePage() {
-  const [settings, activePromos, featuredCatalogs, partnerList, latestBlogs] =
+  const [settings, activePromos, featuredCatalogs, partnerList, latestBlogs, activeReviews] =
     await Promise.all([
       getSiteSettings(),
       getActivePromos(),
       getFeaturedCatalogs(),
       getActivePartners(),
       getLatestBlogs(3),
+      getActiveReviews(),
     ]);
 
   const {
@@ -80,9 +84,7 @@ export default async function HomePage() {
   } = settings;
 
   const popupPromo = activePromos.find((p) => p.isPopup) ?? null;
-  const bannerPromos = popupPromo
-    ? activePromos.filter((p) => p.id !== popupPromo.id)
-    : activePromos;
+  const bannerPromos = activePromos;
 
   const getWaLink = (message?: string) => {
     const text = message || defaultWaText;
@@ -92,8 +94,55 @@ export default async function HomePage() {
   const displayCatalogs =
     featuredCatalogs.length > 0 ? featuredCatalogs : INITIAL_CATALOGS;
 
+  const averageRating =
+    activeReviews.length > 0
+      ? Number(
+          (
+            activeReviews.reduce((sum, item) => sum + item.rating, 0) /
+            activeReviews.length
+          ).toFixed(1)
+        )
+      : null;
+
+  const siteUrl = getSiteUrl();
+  const businessJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ClothingStore",
+    name: storeName,
+    description: storeDescription,
+    url: siteUrl,
+    telephone: `+${whatsappNumber}`,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: storeAddress,
+      addressLocality: "Bandung",
+      addressRegion: "Jawa Barat",
+      addressCountry: "ID",
+    },
+    openingHours: operatingHours,
+    ...(logoUrl ? { image: logoUrl } : {}),
+    ...(instagramUrl ? { sameAs: [instagramUrl] } : {}),
+    ...(averageRating !== null
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: averageRating,
+            reviewCount: activeReviews.length,
+            bestRating: 5,
+            worstRating: 1,
+          },
+        }
+      : {}),
+  };
+
   return (
     <div className="min-h-screen bg-[#09090B] text-[#FAFAFA] flex flex-col selection:bg-[#84CC16] selection:text-[#09090B]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(businessJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       {/* 1. Navbar */}
       <Navbar waNumber={whatsappNumber} storeName={storeName} logoUrl={logoUrl} />
 
@@ -136,7 +185,7 @@ export default async function HomePage() {
                 </Link>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-6 border-t border-[#1F1F23] text-xs text-[#A1A1AA] font-medium tracking-tight">
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2.5 pt-6 border-t border-[#1F1F23] text-xs text-[#A1A1AA] font-medium tracking-tight">
                 <div className="flex items-center gap-2">
                   <span className="text-[#84CC16] font-bold text-sm">✓</span> Bahan Premium
                 </div>
@@ -183,11 +232,6 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-8 flex flex-col justify-between hover:border-[#3F3F46] hover:shadow-md transition-all group">
               <div>
-                <div className="w-12 h-12 rounded-xl bg-[#84CC16]/10 border border-[#84CC16]/25 flex items-center justify-center text-[#84CC16] mb-6 group-hover:scale-105 transition-transform">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                </div>
                 <span className="text-xs font-bold text-[#84CC16] tracking-wider block mb-2">
                   Ringan &amp; Menyerap Keringat
                 </span>
@@ -202,11 +246,6 @@ export default async function HomePage() {
 
             <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-8 flex flex-col justify-between hover:border-[#3F3F46] hover:shadow-md transition-all group">
               <div>
-                <div className="w-12 h-12 rounded-xl bg-[#84CC16]/10 border border-[#84CC16]/25 flex items-center justify-center text-[#84CC16] mb-6 group-hover:scale-105 transition-transform">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M7 21a4 4 0 01-4-4 4 4 0 014-4 4 4 0 014 4 4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                  </svg>
-                </div>
                 <span className="text-xs font-bold text-[#84CC16] tracking-wider block mb-2">
                   Sablon Awet Tahan Lama
                 </span>
@@ -221,11 +260,6 @@ export default async function HomePage() {
 
             <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-8 flex flex-col justify-between hover:border-[#3F3F46] hover:shadow-md transition-all group">
               <div>
-                <div className="w-12 h-12 rounded-xl bg-[#84CC16]/10 border border-[#84CC16]/25 flex items-center justify-center text-[#84CC16] mb-6 group-hover:scale-105 transition-transform">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                </div>
                 <span className="text-xs font-bold text-[#84CC16] tracking-wider block mb-2">
                   Pesan Satuan atau Partai Besar
                 </span>
@@ -289,13 +323,11 @@ export default async function HomePage() {
                     </div>
 
                     {item.imageUrl ? (
-                      <img
+                      <Image
                         src={item.imageUrl}
                         alt={item.title}
                         width={400}
                         height={300}
-                        loading="lazy"
-                        decoding="async"
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     ) : (
@@ -392,13 +424,11 @@ export default async function HomePage() {
               const content = (
                 <div className="p-4 rounded-xl bg-[#141418] border border-[#27272A] hover:border-[#3F3F46] transition-all flex flex-col items-center justify-center text-center gap-2 group min-h-[120px] h-auto">
                   {partner.logoUrl ? (
-                    <img
+                    <Image
                       src={partner.logoUrl}
                       alt={partner.name}
                       width={130}
                       height={44}
-                      loading="lazy"
-                      decoding="async"
                       className="max-h-11 max-w-[130px] object-contain opacity-85 group-hover:opacity-100 transition-opacity shrink-0"
                     />
                   ) : (
@@ -434,6 +464,101 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+      )}
+
+      {/* 5.5 Seksi Ulasan Pelanggan (Hanya Tampil Jika Ada Data Asli di Database) */}
+      {activeReviews.length > 0 && (
+        <section className="py-20 border-b border-[#27272A] bg-[#09090B]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+              <div>
+                <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-[#FAFAFA]">
+                  Kata Pelanggan Tentang Hasil Produksi Kami
+                </h2>
+                <p className="text-sm sm:text-base text-[#A1A1AA] mt-2">
+                  Penilaian langsung dari tim dan komunitas yang sudah memesan jersey di {storeName}.
+                </p>
+              </div>
+              {averageRating !== null && (
+                <div className="inline-flex items-center gap-3 px-4 py-2.5 rounded-xl bg-[#141418] border border-[#27272A] self-start md:self-auto">
+                  <div className="flex items-center gap-1" aria-hidden="true">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg
+                        key={star}
+                        className={`w-4 h-4 ${
+                          star <= Math.round(averageRating)
+                            ? "text-[#84CC16] fill-[#84CC16]"
+                            : "text-[#3F3F46] fill-transparent"
+                        }`}
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={1.75}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
+                        />
+                      </svg>
+                    ))}
+                  </div>
+                  <span className="text-xs font-bold text-[#FAFAFA] tabular-nums">
+                    {averageRating} / 5 ({activeReviews.length} ulasan)
+                  </span>
+                </div>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {activeReviews.map((review) => (
+                <article
+                  key={review.id}
+                  className="rounded-2xl bg-[#141418] border border-[#27272A] p-6 flex flex-col justify-between gap-5"
+                >
+                  <div className="space-y-4">
+                    <div
+                      className="flex items-center gap-1"
+                      aria-label={`Rating ${review.rating} dari 5 bintang`}
+                    >
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <svg
+                          key={star}
+                          className={`w-4 h-4 ${
+                            star <= review.rating
+                              ? "text-[#84CC16] fill-[#84CC16]"
+                              : "text-[#3F3F46] fill-transparent"
+                          }`}
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={1.75}
+                          aria-hidden="true"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
+                          />
+                        </svg>
+                      ))}
+                    </div>
+                    <p className="text-sm text-[#D4D4D8] leading-relaxed">
+                      &ldquo;{review.comment}&rdquo;
+                    </p>
+                  </div>
+
+                  <div className="pt-4 border-t border-[#1F1F23]">
+                    <p className="text-sm font-bold text-[#FAFAFA]">{review.customerName}</p>
+                    {(review.teamOrRole || review.productName) && (
+                      <p className="text-xs text-[#A1A1AA] mt-0.5">
+                        {[review.teamOrRole, review.productName].filter(Boolean).join(" • ")}
+                      </p>
+                    )}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
       )}
 
       {/* 6. Alur Pemesanan Section */}
@@ -518,14 +643,14 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 6.5 Preview Blog & Panduan */}
+      {/* 6.5 Preview Blog */}
       {latestBlogs.length > 0 && (
         <section className="py-20 border-b border-[#27272A] bg-[#0C0D11]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-12">
               <div>
                 <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-[#FAFAFA]">
-                  Blog &amp; Panduan Jersey Olahraga
+                  Blog
                 </h2>
               </div>
               <Link
@@ -544,13 +669,11 @@ export default async function HomePage() {
                   className="rounded-2xl bg-[#141418] border border-[#27272A] overflow-hidden hover:border-[#3F3F46] hover:shadow-md transition-all group flex flex-col justify-between"
                 >
                   <Link href={`/blog/${b.slug}`} className="aspect-[16/10] overflow-hidden bg-[#1E1F27] block">
-                    <img
+                    <Image
                       src={b.thumbnailUrl}
                       alt={b.title}
                       width={400}
                       height={250}
-                      loading="lazy"
-                      decoding="async"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   </Link>

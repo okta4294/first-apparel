@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 export interface PromoItem {
   id: number;
@@ -106,13 +107,12 @@ export function PromoBannerCarousel({
         >
           {/* 1. Latar Belakang Gambar Promo Berukuran Besar */}
           {current.imageUrl ? (
-            <img
+            <Image
               key={`img-${current.id}`}
               src={current.imageUrl}
               alt={current.title}
-              loading="lazy"
-              decoding="async"
-              className="absolute inset-0 w-full h-full object-cover object-center transition-all duration-700 animate-in fade-in"
+              fill
+              className="object-cover object-center transition-all duration-700 animate-in fade-in"
             />
           ) : (
             <div className="absolute inset-0 bg-gradient-to-br from-[#181A22] via-[#14151D] to-[#0D0E12]" />
@@ -127,7 +127,7 @@ export function PromoBannerCarousel({
           {/* 3. Konten Teks Promo & Tombol Klaim di Atas Layer Gambar */}
           <div
             data-keep-dark="true"
-            className="relative z-10 w-full max-w-2xl p-6 pb-16 sm:p-10 sm:pl-16 md:p-12 md:pl-20 flex flex-col justify-center items-start space-y-3 sm:space-y-4"
+            className="relative z-10 w-full max-w-2xl px-12 py-6 pb-16 sm:p-10 sm:pl-16 md:p-12 md:pl-20 flex flex-col justify-center items-start space-y-3 sm:space-y-4"
           >
             {/* Lencana Diskon / Kategori Promo */}
             <span className="inline-block px-3.5 py-1.5 rounded-full bg-[#84CC16] text-[#09090B] text-xs font-black uppercase tracking-wider shadow-sm">
@@ -165,7 +165,7 @@ export function PromoBannerCarousel({
               <button
                 type="button"
                 onClick={handlePrev}
-                className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-[#09090B]/70 hover:bg-[#84CC16] border border-white/10 hover:border-[#84CC16] text-[#FAFAFA] hover:text-[#09090B] items-center justify-center text-lg font-bold transition-all backdrop-blur-sm shadow-lg active:scale-90"
+                className="flex absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-[#09090B]/70 hover:bg-[#84CC16] border border-white/10 hover:border-[#84CC16] text-[#FAFAFA] hover:text-[#09090B] items-center justify-center text-lg font-bold transition-all backdrop-blur-sm shadow-lg active:scale-90"
                 aria-label="Promo Sebelumnya"
                 title="Promo Sebelumnya"
               >
@@ -175,7 +175,7 @@ export function PromoBannerCarousel({
               <button
                 type="button"
                 onClick={handleNext}
-                className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-[#09090B]/70 hover:bg-[#84CC16] border border-white/10 hover:border-[#84CC16] text-[#FAFAFA] hover:text-[#09090B] items-center justify-center text-lg font-bold transition-all backdrop-blur-sm shadow-lg active:scale-90"
+                className="flex absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-[#09090B]/70 hover:bg-[#84CC16] border border-white/10 hover:border-[#84CC16] text-[#FAFAFA] hover:text-[#09090B] items-center justify-center text-lg font-bold transition-all backdrop-blur-sm shadow-lg active:scale-90"
                 aria-label="Promo Berikutnya"
                 title="Promo Berikutnya"
               >

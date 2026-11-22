@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 interface SizeChartDisplayProps {
   imageUrl: string | null;
   waNumber: string;
@@ -18,11 +20,11 @@ export function SizeChartDisplay({ imageUrl, waNumber, storeName }: SizeChartDis
         {imageUrl ? (
           <div className="space-y-4">
             <div className="rounded-xl border border-[#27272A] bg-[#09090B] overflow-hidden flex items-center justify-center p-2 sm:p-4">
-              <img
+              <Image
                 src={imageUrl}
                 alt={`Panduan Ukuran Resmi ${storeName}`}
-                loading="lazy"
-                decoding="async"
+                width={800}
+                height={600}
                 className="w-full h-auto max-h-[680px] object-contain rounded-lg"
               />
             </div>

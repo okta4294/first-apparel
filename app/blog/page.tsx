@@ -1,10 +1,11 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { getSiteSettings, getPublishedBlogs } from "@/lib/public-data";
 
 export const metadata = {
-  title: "Blog & Panduan Custom Jersey | First Apparel",
+  title: "Blog Custom Jersey | First Apparel",
   description:
     "Kumpulan artikel, tips desain jersey olahraga, panduan bahan kain dryfit, serta cara merawat jersey printing sublimasi dari tim First Apparel.",
 };
@@ -89,13 +90,12 @@ export default async function BlogPage() {
               >
                 {/* Thumbnail Gambar */}
                 <Link href={`/blog/${item.slug}`} className="relative block aspect-[16/10] overflow-hidden bg-[#1E1F27]">
-                  <img
+                  <Image
                     src={item.thumbnailUrl}
                     alt={item.title}
                     width={400}
                     height={250}
-                    loading={idx < 3 ? "eager" : "lazy"}
-                    decoding="async"
+                    priority={idx < 3}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </Link>

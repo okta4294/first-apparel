@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { UploadDropzone } from "@/lib/uploadthing";
 import { compressImageToWebP } from "@/lib/image-compression";
 import { updateSettingsAction } from "./actions";
@@ -160,7 +161,7 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
             {logoUrl ? (
               <div className="flex items-center gap-4 p-3.5 rounded-xl bg-[#09090B] border border-[#84CC16]/40">
                 <div className="w-16 h-16 rounded-xl border border-[#27272A] overflow-hidden bg-[#181920] flex items-center justify-center p-2 shrink-0">
-                  <img src={logoUrl} alt="Logo Toko" className="max-w-full max-h-full object-contain" />
+                  <Image src={logoUrl} alt="Logo Toko" width={64} height={64} className="max-w-full max-h-full object-contain" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <span className="text-xs font-semibold text-[#84CC16] block">✓ Logo Toko Terpasang</span>
@@ -388,7 +389,7 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
             {sizeChartUrl ? (
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 rounded-xl bg-[#09090B] border border-[#84CC16]/40">
                 <div className="w-24 h-24 rounded-xl border border-[#27272A] overflow-hidden bg-[#181920] flex items-center justify-center p-1 shrink-0">
-                  <img src={sizeChartUrl} alt="Size Chart Toko" className="max-w-full max-h-full object-contain" />
+                  <Image src={sizeChartUrl} alt="Size Chart Toko" width={96} height={96} className="max-w-full max-h-full object-contain" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <span className="text-xs font-semibold text-[#84CC16] block">✓ Gambar Size Chart Terpasang</span>

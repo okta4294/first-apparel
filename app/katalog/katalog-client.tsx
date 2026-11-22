@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import Image from "next/image";
 import { SizeChartTrigger } from "@/components/size-chart-trigger";
 
 export interface CatalogImageItem {
@@ -275,14 +276,12 @@ export function KatalogClient({ items, waNumber, storeSizeChartUrl, initialCateg
                     </div>
 
                     {activeImage ? (
-                      <img
+                      <Image
                         src={activeImage}
                         alt={item.title}
                         width={420}
                         height={240}
-                        loading={itemIdx < 3 ? "eager" : "lazy"}
-                        decoding="async"
-                        fetchPriority={itemIdx === 0 ? "high" : "auto"}
+                        priority={itemIdx === 0}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105"
                       />
                     ) : (
@@ -321,7 +320,7 @@ export function KatalogClient({ items, waNumber, storeSizeChartUrl, initialCateg
                             }`}
                             title={`Lihat Sudut Foto ${idx + 1}`}
                           >
-                            <img src={img.url} alt={`Foto ${idx + 1}`} width={40} height={40} loading="lazy" decoding="async" className="w-full h-full object-cover" />
+                            <Image src={img.url} alt={`Foto ${idx + 1}`} width={40} height={40} className="w-full h-full object-cover" />
                           </button>
                         );
                       })}
@@ -454,11 +453,12 @@ export function KatalogClient({ items, waNumber, storeSizeChartUrl, initialCateg
               {/* Area Tampilan Gambar Utama Pop-up */}
               <div className="relative flex-1 min-h-[300px] max-h-[58vh] bg-[#09090B] flex items-center justify-center overflow-hidden p-4 select-none">
                 {currentImg ? (
-                  <img
+                  <Image
                     src={currentImg}
                     alt={`${item.title} - Foto ${activeIndex + 1}`}
-                    decoding="async"
-                    className="max-h-[54vh] max-w-full object-contain rounded-lg"
+                    width={800}
+                    height={600}
+                    className="max-h-[54vh] w-auto max-w-full object-contain rounded-lg"
                   />
                 ) : (
                   <div className="text-center text-[#71717A] text-xs">
@@ -515,7 +515,7 @@ export function KatalogClient({ items, waNumber, storeSizeChartUrl, initialCateg
                         }`}
                         title={`Lihat Sudut Foto ${idx + 1}`}
                       >
-                        <img src={img.url} alt={`Sudut ${idx + 1}`} width={48} height={48} loading="lazy" decoding="async" className="w-full h-full object-cover" />
+                        <Image src={img.url} alt={`Sudut ${idx + 1}`} width={48} height={48} className="w-full h-full object-cover" />
                       </button>
                     );
                   })}

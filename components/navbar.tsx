@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
@@ -32,7 +33,7 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", logoUrl }: Navba
         <Link href="/" className="flex items-center gap-3 group">
           {logoUrl ? (
             <div className="w-9 h-9 rounded-lg overflow-hidden border border-[#27272A]/80 flex items-center justify-center transition-transform group-hover:scale-105 shrink-0">
-              <img src={logoUrl} alt={storeName} width={36} height={36} decoding="async" fetchPriority="high" className="w-full h-full object-cover" />
+              <Image src={logoUrl} alt={storeName} width={36} height={36} priority className="w-full h-full object-cover" />
             </div>
           ) : (
             <div className="w-8 h-8 rounded-lg bg-[#84CC16] flex items-center justify-center font-black text-[#09090B] text-base transition-transform group-hover:scale-105 shrink-0">
@@ -68,7 +69,7 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", logoUrl }: Navba
             href="/blog"
             className={isBlog ? "text-[#84CC16] font-semibold transition-colors" : "text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors"}
           >
-            Blog & Panduan
+            Blog
           </Link>
         </nav>
 
@@ -151,7 +152,7 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", logoUrl }: Navba
               isBlog ? "text-[#84CC16] bg-[#141418]" : "text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#141418]"
             }`}
           >
-            Blog & Panduan
+            Blog
           </Link>
           <div className="pt-2">
             <a

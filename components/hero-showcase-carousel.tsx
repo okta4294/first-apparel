@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 
 export interface ShowcaseDesign {
@@ -151,14 +152,12 @@ export function HeroShowcaseCarousel({
       <div className="relative rounded-xl bg-gradient-to-b from-[#1F1F24] to-[#0E0E12] border border-[#2E2E36] overflow-hidden group">
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#121318]">
           {current.imageUrl ? (
-            <img
+            <Image
               src={current.imageUrl}
               alt={current.title}
               width={520}
               height={390}
-              loading="eager"
-              decoding="async"
-              fetchPriority={currentIndex === 0 ? "high" : "auto"}
+              priority={currentIndex === 0}
               className="w-full h-full object-cover object-center opacity-100 transition-transform duration-500 group-hover:scale-105"
             />
           ) : (

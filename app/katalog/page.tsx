@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { getSiteSettings, getAllActiveCatalogs } from "@/lib/public-data";
 import { KatalogClient } from "./katalog-client";
+
+export const metadata: Metadata = {
+  title: "Katalog Model Custom Jersey | First Apparel",
+  description:
+    "Eksplorasi pilihan model custom jersey futsal, sepak bola, esports, running, dan jaket tim dengan bahan dryfit premium dari First Apparel.",
+};
 
 export const instant = false;
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { UploadDropzone } from "@/lib/uploadthing";
 import { compressImageToWebP } from "@/lib/image-compression";
 import { createPartnerAction, updatePartnerAction, deletePartnerAction } from "./actions";
@@ -291,7 +292,7 @@ export function PartnerManager({ initialItems }: PartnerManagerProps) {
               {logoUrl ? (
                 <div className="flex items-center gap-4 p-3 rounded-xl bg-[#09090B] border border-[#84CC16]/40">
                   <div className="w-16 h-16 rounded-lg border border-[#27272A] overflow-hidden bg-[#181920] flex items-center justify-center p-2 shrink-0">
-                    <img src={logoUrl} alt="Logo" className="max-w-full max-h-full object-contain" />
+                    <Image src={logoUrl} alt="Logo" width={64} height={64} className="max-w-full max-h-full object-contain" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <span className="text-xs font-semibold text-[#84CC16] block">✓ Logo Terpasang</span>
@@ -440,7 +441,7 @@ export function PartnerManager({ initialItems }: PartnerManagerProps) {
                   <tr key={item.id} className="hover:bg-[#14151B] transition-colors">
                     <td className="py-3 px-4">
                       <div className="w-12 h-12 rounded-lg bg-[#181920] border border-[#27272A] overflow-hidden flex items-center justify-center p-1.5">
-                        <img src={item.logoUrl} alt={item.name} className="max-w-full max-h-full object-contain" />
+                        <Image src={item.logoUrl} alt={item.name} width={48} height={48} className="max-w-full max-h-full object-contain" />
                       </div>
                     </td>
                     <td className="py-3 px-4 font-semibold text-[#FAFAFA]">

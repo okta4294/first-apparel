@@ -1,9 +1,11 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { ShareButtons } from "./share-buttons";
 import { getSiteSettings, getBlogBySlug, getRelatedBlogs } from "@/lib/public-data";
+import { getSiteUrl } from "@/lib/site-url";
 import type { Metadata } from "next";
 
 export const instant = false;
@@ -78,8 +80,35 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     `Halo Admin ${storeName}, saya membaca artikel "${post.title}" di website. Saya ingin berkonsultasi untuk pembuatan custom jersey tim saya.`
   )}`;
 
+  const siteUrl = getSiteUrl();
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt,
+    image: post.thumbnailUrl ? [post.thumbnailUrl] : undefined,
+    datePublished: new Date(post.publishedAt).toISOString(),
+    dateModified: new Date(post.updatedAt || post.publishedAt).toISOString(),
+    mainEntityOfPage: `${siteUrl}/blog/${post.slug}`,
+    author: {
+      "@type": "Organization",
+      name: storeName,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: storeName,
+      ...(logoUrl ? { logo: { "@type": "ImageObject", url: logoUrl } } : {}),
+    },
+  };
+
   return (
     <div className="min-h-screen bg-[#09090B] text-[#FAFAFA] flex flex-col selection:bg-[#84CC16] selection:text-[#09090B]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(articleJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       {/* 1. Navbar */}
       <Navbar waNumber={whatsappNumber} storeName={storeName} logoUrl={logoUrl} />
 
@@ -145,11 +174,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Gambar Thumbnail Utama */}
         <div className="rounded-2xl overflow-hidden border border-[#27272A] bg-[#141418] mb-10 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
-          <img
+          <Image
             src={post.thumbnailUrl}
             alt={post.title}
-            fetchPriority="high"
-            decoding="async"
+            width={896}
+            height={480}
+            priority
             className="w-full max-h-[480px] object-cover"
           />
         </div>
@@ -260,13 +290,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   className="group rounded-xl bg-[#141418] border border-[#27272A] overflow-hidden hover:border-[#84CC16]/50 transition-all flex flex-col"
                 >
                   <div className="aspect-[16/10] overflow-hidden bg-[#1E1F27]">
-                    <img
+                    <Image
                       src={related.thumbnailUrl}
                       alt={related.title}
                       width={320}
                       height={200}
-                      loading="lazy"
-                      decoding="async"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>

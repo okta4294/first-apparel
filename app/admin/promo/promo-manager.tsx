@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { UploadDropzone } from "@/lib/uploadthing";
 import { compressImageToWebP } from "@/lib/image-compression";
 import { createPromoAction, updatePromoAction, deletePromoAction } from "./actions";
@@ -329,7 +330,7 @@ export function PromoManager({ initialItems }: PromoManagerProps) {
               {imageUrl ? (
                 <div className="flex items-center gap-4 p-3 rounded-xl bg-[#09090B] border border-[#84CC16]/40">
                   <div className="w-24 h-16 rounded-lg border border-[#27272A] overflow-hidden bg-[#141418] shrink-0">
-                    <img src={imageUrl} alt="Banner" className="w-full h-full object-cover" />
+                    <Image src={imageUrl} alt="Banner" width={96} height={64} className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <span className="text-xs font-semibold text-[#84CC16] block">✓ Banner Terpasang</span>
@@ -545,7 +546,7 @@ export function PromoManager({ initialItems }: PromoManagerProps) {
                       <td className="py-3 px-4">
                         {item.imageUrl ? (
                           <div className="w-16 h-10 rounded-lg bg-[#181920] border border-[#27272A] overflow-hidden">
-                            <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover" />
+                            <Image src={item.imageUrl} alt={item.title} width={64} height={40} className="w-full h-full object-cover" />
                           </div>
                         ) : (
                           <span className="text-[11px] text-[#52525B]">Teks saja</span>

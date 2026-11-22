@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 
 export interface PromoPopupData {
@@ -103,12 +104,11 @@ export function PromoPopup({ promo, waNumber }: PromoPopupProps) {
         {/* Gambar Banner Promo (Jika Ada) */}
         {promo.imageUrl && (
           <div className="relative w-full aspect-[16/9] overflow-hidden bg-[#09090B] border-b border-[#27272A]">
-            <img
+            <Image
               src={promo.imageUrl}
               alt={promo.title}
-              loading="lazy"
-              decoding="async"
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
             />
             <div data-keep-dark="true" className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
             

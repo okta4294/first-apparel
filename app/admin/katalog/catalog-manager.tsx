@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Image from "next/image";
 import { UploadDropzone } from "@/lib/uploadthing";
 import { compressImageToWebP } from "@/lib/image-compression";
 import { createCatalogAction, updateCatalogAction, deleteCatalogAction } from "./actions";
@@ -71,8 +72,6 @@ export function CatalogManager({ initialItems }: CatalogManagerProps) {
   const [sizeChartUrl, setSizeChartUrl] = useState("");
   const [sizeChartKey, setSizeChartKey] = useState("");
   const [oldSizeChartKey, setOldSizeChartKey] = useState("");
-  const [sizeChartStatus, setSizeChartStatus] = useState<"idle" | "compressing" | "uploading" | "success" | "error">("idle");
-  const [sizeChartProgress, setSizeChartProgress] = useState(0);
 
   // Modal Lightbox Size Chart
   const [modalSizeChart, setModalSizeChart] = useState<{ title: string; url: string } | null>(null);
@@ -107,8 +106,6 @@ export function CatalogManager({ initialItems }: CatalogManagerProps) {
     setSizeChartUrl("");
     setSizeChartKey("");
     setOldSizeChartKey("");
-    setSizeChartStatus("idle");
-    setSizeChartProgress(0);
     setUploadStatus("idle");
     setUploadProgress(0);
     setUploadFileName("");
@@ -132,7 +129,6 @@ export function CatalogManager({ initialItems }: CatalogManagerProps) {
     setSizeChartUrl(item.sizeChartUrl || "");
     setSizeChartKey(item.sizeChartKey || "");
     setOldSizeChartKey(item.sizeChartKey || "");
-    setSizeChartStatus(item.sizeChartUrl ? "success" : "idle");
 
     setUploadStatus(existingImages.length > 0 ? "success" : "idle");
     setUploadProgress(existingImages.length > 0 ? 100 : 0);
@@ -163,16 +159,6 @@ export function CatalogManager({ initialItems }: CatalogManagerProps) {
     const others = images.filter((_, i) => i !== index);
     setImages([target, ...others]);
     setStatusMessage({ type: "success", text: "Foto utama sampul berhasil diubah!" });
-  };
-
-  const handleRemoveSizeChart = () => {
-    if (sizeChartKey) {
-      setDeletedKeys((prev) => [...prev, sizeChartKey]);
-    }
-    setSizeChartUrl("");
-    setSizeChartKey("");
-    setSizeChartStatus("idle");
-    setSizeChartProgress(0);
   };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
@@ -366,7 +352,7 @@ export function CatalogManager({ initialItems }: CatalogManagerProps) {
                       }`}
                     >
                       <div className="relative aspect-square w-full overflow-hidden bg-[#0C0D11]">
-                        <img src={img.url} alt={`Foto ${idx + 1}`} className="w-full h-full object-cover" />
+                        <Image src={img.url} alt={`Foto ${idx + 1}`} width={160} height={160} className="w-full h-full object-cover" />
                         
                         {/* Badge Urutan Foto */}
                         <div className="absolute top-1.5 left-1.5">
@@ -756,9 +742,11 @@ export function CatalogManager({ initialItems }: CatalogManagerProps) {
                               title="Klik untuk lihat foto utama"
                               className="block w-12 h-12 rounded-lg bg-[#181920] border border-[#27272A] overflow-hidden"
                             >
-                              <img
+                              <Image
                                 src={displayThumb}
                                 alt={item.title}
+                                width={64}
+                                height={64}
                                 className="w-full h-full object-cover hover:scale-110 transition-transform"
                               />
                             </a>
@@ -875,10 +863,12 @@ export function CatalogManager({ initialItems }: CatalogManagerProps) {
             </div>
 
             <div className="max-h-[65vh] overflow-auto rounded-xl border border-[#27272A] bg-[#09090B] flex items-center justify-center p-3">
-              <img
+              <Image
                 src={modalSizeChart.url}
                 alt={`Size Chart ${modalSizeChart.title}`}
-                className="max-w-full max-h-[60vh] object-contain rounded-lg"
+                width={800}
+                height={600}
+                className="max-w-full w-auto max-h-[60vh] object-contain rounded-lg"
               />
             </div>
 

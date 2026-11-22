@@ -108,6 +108,20 @@ export const fabrics = pgTable("fabrics", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+// 8. Tabel Ulasan & Rating Pelanggan (Reviews)
+export const reviews = pgTable("reviews", {
+  id: serial("id").primaryKey(),
+  customerName: varchar("customer_name", { length: 120 }).notNull(),
+  teamOrRole: varchar("team_or_role", { length: 120 }),
+  productName: varchar("product_name", { length: 150 }),
+  rating: integer("rating").default(5).notNull(),
+  comment: text("comment").notNull(),
+  sortOrder: integer("sort_order").default(0).notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 export type Admin = typeof admins.$inferSelect;
 export type Catalog = typeof catalogs.$inferSelect;
 export type Promo = typeof promos.$inferSelect;
@@ -115,3 +129,4 @@ export type Blog = typeof blogs.$inferSelect;
 export type Partner = typeof partners.$inferSelect;
 export type SiteSetting = typeof siteSettings.$inferSelect;
 export type Fabric = typeof fabrics.$inferSelect;
+export type Review = typeof reviews.$inferSelect;
