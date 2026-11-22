@@ -41,8 +41,8 @@ export async function createFabricAction(formData: FormData) {
 
     return { success: true, item: created };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Gagal menambahkan data bahan kain.";
-    return { success: false, error: msg };
+    console.error("createFabricAction error:", err);
+    return { success: false, error: "Gagal menambahkan data bahan kain." };
   }
 }
 
@@ -81,8 +81,8 @@ export async function updateFabricAction(formData: FormData) {
 
     return { success: true };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Gagal memperbarui data bahan kain.";
-    return { success: false, error: msg };
+    console.error("updateFabricAction error:", err);
+    return { success: false, error: "Gagal memperbarui data bahan kain." };
   }
 }
 
@@ -102,7 +102,7 @@ export async function deleteFabricAction(id: number) {
 
     return { success: true };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Gagal menghapus bahan kain.";
-    return { success: false, error: msg };
+    console.error("deleteFabricAction error:", err);
+    return { success: false, error: "Gagal menghapus bahan kain." };
   }
 }

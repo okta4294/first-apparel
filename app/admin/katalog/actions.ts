@@ -72,8 +72,8 @@ export async function createCatalogAction(formData: FormData) {
 
     return { success: true, item: created };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Gagal menyimpan katalog.";
-    return { success: false, error: msg };
+    console.error("createCatalogAction error:", err);
+    return { success: false, error: "Gagal menyimpan katalog." };
   }
 }
 
@@ -164,8 +164,8 @@ export async function updateCatalogAction(formData: FormData) {
 
     return { success: true };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Gagal memperbarui katalog.";
-    return { success: false, error: msg };
+    console.error("updateCatalogAction error:", err);
+    return { success: false, error: "Gagal memperbarui katalog." };
   }
 }
 
@@ -205,7 +205,7 @@ export async function deleteCatalogAction(id: number, allKeys: string[] | string
 
     return { success: true };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Gagal menghapus produk.";
-    return { success: false, error: msg };
+    console.error("deleteCatalogAction error:", err);
+    return { success: false, error: "Gagal menghapus produk." };
   }
 }

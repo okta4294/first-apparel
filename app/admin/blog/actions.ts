@@ -69,8 +69,8 @@ export async function createBlogAction(formData: FormData) {
 
     return { success: true, item: created };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Gagal menyimpan artikel blog.";
-    return { success: false, error: msg };
+    console.error("createBlogAction error:", err);
+    return { success: false, error: "Gagal menyimpan artikel blog." };
   }
 }
 
@@ -128,8 +128,8 @@ export async function updateBlogAction(formData: FormData) {
 
     return { success: true };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Gagal memperbarui artikel.";
-    return { success: false, error: msg };
+    console.error("updateBlogAction error:", err);
+    return { success: false, error: "Gagal memperbarui artikel." };
   }
 }
 
@@ -154,7 +154,7 @@ export async function deleteBlogAction(id: number, thumbnailKey: string) {
 
     return { success: true };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Gagal menghapus artikel.";
-    return { success: false, error: msg };
+    console.error("deleteBlogAction error:", err);
+    return { success: false, error: "Gagal menghapus artikel." };
   }
 }

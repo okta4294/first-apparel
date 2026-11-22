@@ -34,9 +34,8 @@ export async function loginAdminAction(
 
     const now = new Date();
     if (admin.lockedUntil && admin.lockedUntil > now) {
-      const remainingMinutes = Math.ceil((admin.lockedUntil.getTime() - now.getTime()) / 60000);
       return {
-        error: `Terlalu banyak percobaan gagal. Akun dikunci sementara selama ${remainingMinutes} menit demi keamanan.`,
+        error: "Email atau kata sandi tidak sesuai.",
       };
     }
 
@@ -51,7 +50,7 @@ export async function loginAdminAction(
           .where(eq(admins.id, admin.id));
 
         return {
-          error: `Terlalu banyak percobaan salah (${MAX_FAILED_ATTEMPTS} kali). Akun dikunci sementara selama ${LOCKOUT_MINUTES} menit.`,
+          error: "Email atau kata sandi tidak sesuai.",
         };
       }
 
@@ -60,9 +59,8 @@ export async function loginAdminAction(
         .set({ failedAttempts: nextAttempts, lockedUntil: null })
         .where(eq(admins.id, admin.id));
 
-      const remaining = MAX_FAILED_ATTEMPTS - nextAttempts;
       return {
-        error: `Email atau kata sandi tidak sesuai. Sisa kesempatan: ${remaining} kali sebelum akun terkunci.`,
+        error: "Email atau kata sandi tidak sesuai.",
       };
     }
 
@@ -82,8 +80,8 @@ export async function loginAdminAction(
     await setAdminSessionCookie(token);
     return { success: true };
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Terjadi kesalahan sistem";
-    return { error: `Gagal memproses login: ${message}` };
+    console.error("loginAdminAction error:", err);
+    return { error: "Gagal memproses login. Silakan coba lagi nanti." };
   }
 }
 

@@ -100,7 +100,7 @@ export async function updateSettingsAction(formData: FormData) {
 
     return { success: true };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Gagal menyimpan pengaturan toko.";
-    return { success: false, error: msg };
+    console.error("updateSettingsAction error:", err);
+    return { success: false, error: "Gagal menyimpan pengaturan toko." };
   }
 }

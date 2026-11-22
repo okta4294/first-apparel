@@ -62,8 +62,8 @@ export async function createPartnerAction(formData: FormData) {
 
     return { success: true, item: created };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Gagal menyimpan partner.";
-    return { success: false, error: msg };
+    console.error("createPartnerAction error:", err);
+    return { success: false, error: "Gagal menyimpan partner." };
   }
 }
 
@@ -113,8 +113,8 @@ export async function updatePartnerAction(formData: FormData) {
 
     return { success: true };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Gagal memperbarui partner.";
-    return { success: false, error: msg };
+    console.error("updatePartnerAction error:", err);
+    return { success: false, error: "Gagal memperbarui partner." };
   }
 }
 
@@ -138,7 +138,7 @@ export async function deletePartnerAction(id: number, logoKey: string) {
 
     return { success: true };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Gagal menghapus partner.";
-    return { success: false, error: msg };
+    console.error("deletePartnerAction error:", err);
+    return { success: false, error: "Gagal menghapus partner." };
   }
 }

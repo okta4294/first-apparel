@@ -59,8 +59,8 @@ export async function createPromoAction(formData: FormData) {
 
     return { success: true, item: created };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Gagal menyimpan promo.";
-    return { success: false, error: msg };
+    console.error("createPromoAction error:", err);
+    return { success: false, error: "Gagal menyimpan promo." };
   }
 }
 
@@ -167,8 +167,8 @@ export async function updatePromoAction(formData: FormData) {
 
     return { success: true, updatedId: targetId };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Gagal memperbarui promo.";
-    return { success: false, error: msg };
+    console.error("updatePromoAction error:", err);
+    return { success: false, error: "Gagal memperbarui promo." };
   }
 }
 
@@ -211,7 +211,7 @@ export async function deletePromoAction(id: number, imageKey: string | null) {
 
     return { success: true, updatedId: targetId };
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Gagal menghapus promo.";
-    return { success: false, error: msg };
+    console.error("deletePromoAction error:", err);
+    return { success: false, error: "Gagal menghapus promo." };
   }
 }
