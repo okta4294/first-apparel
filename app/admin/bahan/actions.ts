@@ -37,7 +37,9 @@ export async function createFabricAction(formData: FormData) {
     updateTag("fabrics");
     revalidatePath("/cara-pesan");
     revalidatePath("/alur-pemesanan");
+    revalidatePath("/katalog");
     revalidatePath("/admin/bahan");
+    revalidatePath("/admin/katalog");
 
     return { success: true, item: created };
   } catch (err: unknown) {
@@ -77,7 +79,9 @@ export async function updateFabricAction(formData: FormData) {
     updateTag("fabrics");
     revalidatePath("/cara-pesan");
     revalidatePath("/alur-pemesanan");
+    revalidatePath("/katalog");
     revalidatePath("/admin/bahan");
+    revalidatePath("/admin/katalog");
 
     return { success: true };
   } catch (err: unknown) {
@@ -98,7 +102,9 @@ export async function deleteFabricAction(id: number) {
     updateTag("fabrics");
     revalidatePath("/cara-pesan");
     revalidatePath("/alur-pemesanan");
+    revalidatePath("/katalog");
     revalidatePath("/admin/bahan");
+    revalidatePath("/admin/katalog");
 
     return { success: true };
   } catch (err: unknown) {

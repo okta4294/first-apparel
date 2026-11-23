@@ -2,12 +2,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { PageMotion } from "@/components/motion-provider";
 import { getSiteSettings, getPublishedBlogs } from "@/lib/public-data";
 
 export const metadata = {
   title: "Blog Custom Jersey | First Apparel",
   description:
-    "Kumpulan artikel, tips desain jersey olahraga, panduan bahan kain dryfit, serta cara merawat jersey printing sublimasi dari tim First Apparel.",
+    "Kumpulan artikel seputar pemilihan bahan kain dryfit, cara merawat jersey printing sublimasi, dan panduan desain jersey tim dari First Apparel.",
 };
 
 export const instant = false;
@@ -41,101 +42,103 @@ export default async function BlogPage() {
   const calculateReadTime = (content: string) => {
     const words = content.trim().split(/\s+/).length;
     const minutes = Math.max(1, Math.ceil(words / 180));
-    return `${minutes} Menit Baca`;
+    return `${minutes} menit baca`;
   };
+
+  const waHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+    `Halo Admin ${storeName}, saya membaca artikel di blog dan ingin konsultasi soal custom jersey.`
+  )}`;
 
   return (
     <div className="min-h-screen bg-[#09090B] text-[#FAFAFA] flex flex-col selection:bg-[#84CC16] selection:text-[#09090B]">
-      {/* 1. Navbar */}
+      <PageMotion />
       <Navbar waNumber={whatsappNumber} storeName={storeName} logoUrl={logoUrl} />
 
-      {/* 2. Hero Header Blog */}
-      <section className="relative py-16 sm:py-20 border-b border-[#27272A] bg-gradient-to-b from-[#121318] to-[#09090B] overflow-hidden">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-[#FAFAFA] uppercase">
-            Tips, Wawasan &amp; Inspirasi Desain
-          </h1>
-          <p className="text-sm sm:text-base text-[#A1A1AA] mt-4 leading-relaxed max-w-2xl mx-auto">
-            Pelajari panduan memilih bahan kain dryfit yang tepat, cara merawat jersey agar warna tidak pudar, serta inspirasi tren desain jersey olahraga terkini.
-          </p>
+      {/* Header Blog */}
+      <section className="border-b border-[#27272A] bg-[#0C0D11]">
+        <div
+          data-animate="hero"
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 flex flex-col md:flex-row md:items-end justify-between gap-6"
+        >
+          <div className="max-w-2xl">
+            <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-[#FAFAFA]">
+              Blog &amp; panduan jersey
+            </h1>
+            <p className="text-sm sm:text-base text-[#A1A1AA] mt-2.5 leading-relaxed">
+              Catatan praktis soal memilih bahan dryfit, merawat cetakan sublimasi agar awet, dan persiapan desain jersey untuk tim.
+            </p>
+          </div>
+          {blogList.length > 0 && (
+            <p className="text-xs font-medium text-[#A1A1AA] tabular-nums shrink-0">
+              {blogList.length} artikel tersedia
+            </p>
+          )}
         </div>
       </section>
 
-      {/* 3. Daftar Kartu Artikel Blog */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      {/* Daftar Artikel */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
         {blogList.length === 0 ? (
-          <div className="text-center py-24 rounded-3xl bg-[#141418] border border-[#27272A] p-8 max-w-2xl mx-auto">
-            <div className="w-16 h-16 rounded-2xl bg-[#84CC16]/10 border border-[#84CC16]/30 flex items-center justify-center text-[#84CC16] text-2xl mx-auto mb-5">
-              ✍️
-            </div>
-            <h2 className="text-xl font-bold text-[#FAFAFA] mb-2">
-              Belum Ada Artikel yang Dipublikasikan
+          <div className="py-20 text-center space-y-3 border-b border-[#27272A]">
+            <h2 className="text-lg font-bold text-[#FAFAFA]">
+              Belum ada artikel yang diterbitkan
             </h2>
-            <p className="text-sm text-[#A1A1AA] mb-6">
-              Artikel panduan dan edukasi seputar jersey kustom sedang dalam proses penyusunan oleh tim First Apparel.
+            <p className="text-sm text-[#A1A1AA] max-w-md mx-auto">
+              Panduan seputar bahan dan perawatan jersey sedang disiapkan oleh tim {storeName}.
             </p>
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#84CC16] text-[#09090B] text-xs font-bold hover:bg-[#9ee238] transition-all"
-            >
-              Kembali ke Beranda
-            </Link>
+            <div className="pt-2">
+              <Link
+                href="/katalog"
+                className="inline-flex min-h-10 items-center px-5 py-2 rounded-full bg-[#84CC16] text-[#09090B] text-xs sm:text-sm font-semibold hover:bg-[#9ee238] transition-colors"
+              >
+                Lihat Katalog
+              </Link>
+            </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div data-animate="stagger-cards" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-7 gap-y-10">
             {blogList.map((item, idx) => (
-              <article
-                key={item.id}
-                className="flex flex-col rounded-2xl bg-[#141418] border border-[#27272A] overflow-hidden hover:border-[#3F3F46] hover:shadow-md transition-all group"
-              >
-                {/* Thumbnail Gambar */}
-                <Link href={`/blog/${item.slug}`} className="relative block aspect-[16/10] overflow-hidden bg-[#1E1F27]">
+              <article key={item.id} className="flex flex-col group">
+                <Link
+                  href={`/blog/${item.slug}`}
+                  className="relative block aspect-[16/10] rounded-xl overflow-hidden bg-[#18181B] border border-[#27272A]"
+                >
                   <Image
                     src={item.thumbnailUrl}
                     alt={item.title}
-                    width={400}
-                    height={250}
+                    width={480}
+                    height={300}
                     priority={idx < 3}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                   />
                 </Link>
 
-                {/* Konten Ringkas */}
-                <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-                  <div className="space-y-2.5">
-                    {/* Meta Informasi */}
-                    <div className="flex items-center justify-between text-xs text-[#71717A]">
-                      <span>{formatDate(item.publishedAt)}</span>
-                      <span className="flex items-center gap-1 text-[#84CC16]">
-                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <circle cx="12" cy="12" r="10" strokeWidth="2" />
-                          <path strokeLinecap="round" strokeWidth="2" d="M12 6v6l4 2" />
-                        </svg>
-                        {calculateReadTime(item.content)}
-                      </span>
-                    </div>
-
-                    {/* Judul Artikel */}
-                    <h2 className="text-lg font-bold text-[#FAFAFA] group-hover:text-[#84CC16] transition-colors leading-snug line-clamp-2">
-                      <Link href={`/blog/${item.slug}`}>
-                        {item.title}
-                      </Link>
-                    </h2>
-
-                    {/* Ringkasan Singkat (Excerpt) */}
-                    <p className="text-xs sm:text-sm text-[#A1A1AA] line-clamp-3 leading-relaxed">
-                      {item.excerpt}
-                    </p>
+                <div className="pt-4 flex-1 flex flex-col">
+                  <div className="flex items-center gap-2 text-xs text-[#A1A1AA]">
+                    <time dateTime={new Date(item.publishedAt).toISOString()}>
+                      {formatDate(item.publishedAt)}
+                    </time>
+                    <span aria-hidden="true">·</span>
+                    <span>{calculateReadTime(item.content)}</span>
                   </div>
 
-                  {/* Tombol Baca Selengkapnya */}
-                  <div className="pt-2 border-t border-[#27272A]/80">
+                  <h2 className="mt-2 text-base sm:text-lg font-bold text-[#FAFAFA] group-hover:text-[#84CC16] transition-colors leading-snug line-clamp-2">
+                    <Link href={`/blog/${item.slug}`}>
+                      {item.title}
+                    </Link>
+                  </h2>
+
+                  <p className="mt-2 text-xs sm:text-sm text-[#A1A1AA] line-clamp-3 leading-relaxed flex-1">
+                    {item.excerpt}
+                  </p>
+
+                  <div className="pt-3 mt-3 border-t border-[#27272A]/70">
                     <Link
                       href={`/blog/${item.slug}`}
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#84CC16] group-hover:translate-x-1 transition-transform"
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#84CC16] hover:underline"
                     >
-                      <span>Baca Selengkapnya</span>
-                      <span>→</span>
+                      <span>Baca artikel</span>
+                      <span aria-hidden="true">→</span>
                     </Link>
                   </div>
                 </div>
@@ -145,30 +148,28 @@ export default async function BlogPage() {
         )}
       </main>
 
-      {/* 4. Banner Konsultasi WA */}
-      <section className="py-14 bg-[#0C0D11] border-t border-[#27272A]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-xl sm:text-2xl font-bold text-[#FAFAFA]">
-            Punya Pertanyaan Seputar Bahan &amp; Desain Jersey?
-          </h2>
-          <p className="text-xs sm:text-sm text-[#A1A1AA] mt-2 mb-6">
-            Masih bingung pilih bahan? Tanya langsung ke admin produksi kami via WhatsApp.
-          </p>
+      {/* Penutup Ringkas */}
+      <section className="py-12 bg-[#0C0D11] border-t border-[#27272A]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div>
+            <h2 className="text-lg sm:text-xl font-bold text-[#FAFAFA]">
+              Masih ada pertanyaan soal bahan atau desain?
+            </h2>
+            <p className="text-xs sm:text-sm text-[#A1A1AA] mt-1">
+              Tanyakan langsung ke admin produksi kami lewat WhatsApp.
+            </p>
+          </div>
           <a
-            href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-              `Halo Admin ${storeName}, saya membaca blog Anda dan ingin berkonsultasi seputar pemesanan custom jersey.`
-            )}`}
+            href={waHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#84CC16] text-[#09090B] text-xs font-bold tracking-wide hover:bg-[#9ee238] active:scale-95 shadow-[0_0_20px_rgba(132,204,22,0.25)] transition-all"
+            className="inline-flex min-h-11 items-center gap-2 px-6 py-2.5 rounded-full bg-[#84CC16] text-[#09090B] text-sm font-bold hover:bg-[#9ee238] active:scale-[0.98] transition-colors shrink-0 self-start sm:self-auto"
           >
-            <span>Konsultasi Gratis via WhatsApp</span>
-            <span>→</span>
+            <span>Tanya Admin di WhatsApp</span>
           </a>
         </div>
       </section>
 
-      {/* 5. Footer */}
       <Footer
         storeName={storeName}
         storeAddress={storeAddress}

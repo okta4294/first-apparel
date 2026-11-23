@@ -3,11 +3,11 @@ import Image from "next/image";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { HeroShowcaseCarousel } from "@/components/hero-showcase-carousel";
-import { SizeChartTrigger } from "@/components/size-chart-trigger";
 import { PromoPopup } from "@/components/promo-popup";
 import { PromoBannerCarousel } from "@/components/promo-banner-carousel";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { MobileWaFab } from "@/components/mobile-wa-fab";
+import { PageMotion } from "@/components/motion-provider";
 import { getSiteUrl } from "@/lib/site-url";
 import {
   getSiteSettings,
@@ -79,7 +79,6 @@ export default async function HomePage() {
     defaultWaText,
     instagramUrl,
     logoUrl,
-    sizeChartUrl: storeSizeChartUrl,
     storeDescription,
   } = settings;
 
@@ -144,6 +143,7 @@ export default async function HomePage() {
         }}
       />
       {/* 1. Navbar */}
+      <PageMotion />
       <Navbar waNumber={whatsappNumber} storeName={storeName} logoUrl={logoUrl} />
 
       {/* Pop-up Promo Otomatis (Jika Diaktifkan Admin) */}
@@ -151,62 +151,55 @@ export default async function HomePage() {
 
       <main className="flex-1">
       {/* 2. Hero Section */}
-      <section className="relative overflow-hidden py-10 sm:py-16 lg:py-24 border-b border-[#27272A]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            {/* Info Kiri */}
-            <div className="lg:col-span-7 space-y-6">
-              <h1 className="text-3xl sm:text-5xl lg:text-[52px] font-black tracking-[-0.035em] leading-[1.1] [text-wrap:balance] text-[#FAFAFA]">
-                Custom Jersey Olahraga <span className="text-[#84CC16]">Sesuai Desain Tim Anda</span>
-              </h1>
+      <section className="relative overflow-hidden border-b border-[#E2E8F0] dark:border-[#27272A] bg-[#F8FAFC] dark:bg-[#09090B] lg:min-h-[540px] xl:min-h-[600px] flex flex-col-reverse lg:flex-row lg:items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-20 pt-4 pb-10 sm:pt-6 sm:pb-14 lg:py-20">
+          {/* Info Kiri */}
+          <div data-animate="hero" className="lg:w-[48%] space-y-6">
+            <h1 className="text-3xl sm:text-5xl lg:text-[52px] font-black tracking-[-0.035em] leading-[1.08] [text-wrap:balance] text-[#0F172A] dark:text-[#FAFAFA]">
+              Custom Jersey Olahraga <span className="text-[#4D7C0F] dark:text-[#84CC16]">Sesuai Desain Tim Anda</span>
+            </h1>
 
-              <p className="text-sm sm:text-base lg:text-lg text-[#A1A1AA] leading-relaxed max-w-[52ch] [text-wrap:pretty]">
-                Bebas konsultasi desain dan pesan tanpa minimum order (bisa satuan hingga ratusan pcs). Seluruh alur pemesanan dan pratinjau desain dilayani langsung oleh tim desainer kami via WhatsApp.
-              </p>
+            <p className="text-sm sm:text-base lg:text-lg text-[#475569] dark:text-[#A1A1AA] leading-relaxed max-w-[48ch] [text-wrap:pretty]">
+              Bebas konsultasi desain dan pesan tanpa minimum order (bisa satuan hingga ratusan pcs). Seluruh alur pemesanan dan pratinjau desain dilayani langsung oleh tim desainer kami via WhatsApp.
+            </p>
 
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
-                <a
-                  href={getWaLink("Halo Admin First Apparel, saya ingin mulai konsultasi pembuatan custom jersey untuk tim saya.")}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2.5 min-h-[48px] px-7 py-3.5 rounded-full bg-[#84CC16] text-[#09090B] font-bold text-xs sm:text-sm tracking-wide transition-all hover:bg-[#9ee238] active:scale-95 shadow-lg"
-                >
-                  <WhatsAppIcon className="w-4 h-4 fill-current shrink-0" />
-                  <span>Mulai Konsultasi via WhatsApp</span>
-                </a>
-                <Link
-                  href="#katalog"
-                  className="inline-flex items-center justify-center gap-2 min-h-[48px] px-7 py-3.5 rounded-full bg-transparent border border-[#27272A] text-[#E4E4E7] font-semibold text-xs sm:text-sm tracking-wide hover:border-[#3F3F46] hover:bg-[#141418] transition-colors"
-                >
-                  <svg className="w-4 h-4 text-[#84CC16] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                  </svg>
-                  <span>Lihat Katalog Model</span>
-                </Link>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2.5 pt-6 border-t border-[#1F1F23] text-xs text-[#A1A1AA] font-medium tracking-tight">
-                <div className="flex items-center gap-2">
-                  <span className="text-[#84CC16] font-bold text-sm">✓</span> Bahan Premium
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[#84CC16] font-bold text-sm">✓</span> Pengerjaan Cepat (3–7 Hari)
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[#84CC16] font-bold text-sm">✓</span> Bebas Konsultasi Desain
-                </div>
-              </div>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
+              <a
+                href={getWaLink("Halo Admin First Apparel, saya ingin mulai konsultasi pembuatan custom jersey untuk tim saya.")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2.5 min-h-[48px] px-7 py-3.5 rounded-full bg-[#65A30D] hover:bg-[#4D7C0F] text-white dark:bg-[#84CC16] dark:text-[#09090B] dark:hover:bg-[#9ee238] font-bold text-xs sm:text-sm tracking-wide transition-all active:scale-95 shadow-lg"
+              >
+                <WhatsAppIcon className="w-4 h-4 fill-current shrink-0" />
+                <span>Mulai Konsultasi via WhatsApp</span>
+              </a>
+              <Link
+                href="#katalog"
+                className="inline-flex items-center justify-center gap-2 min-h-[48px] px-7 py-3.5 rounded-full bg-white/95 dark:bg-[#09090B]/80 backdrop-blur-sm border border-[#CBD5E1] dark:border-[#27272A] text-[#0F172A] dark:text-[#E4E4E7] font-semibold text-xs sm:text-sm tracking-wide hover:border-[#94A3B8] hover:bg-[#F1F5F9] dark:hover:border-[#3F3F46] dark:hover:bg-[#141418] transition-colors"
+              >
+                <svg className="w-4 h-4 text-[#4D7C0F] dark:text-[#84CC16] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+                <span>Lihat Katalog Model</span>
+              </Link>
             </div>
 
-            {/* Kartu Carousel Preview Desain Terpilih (Kanan) */}
-            <div className="lg:col-span-5">
-              <HeroShowcaseCarousel
-                waNumber={whatsappNumber}
-                items={displayCatalogs}
-              />
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2.5 pt-6 border-t border-[#E2E8F0] dark:border-[#1F1F23] text-xs text-[#475569] dark:text-[#A1A1AA] font-medium tracking-tight">
+              <div className="flex items-center gap-2">
+                <span className="text-[#4D7C0F] dark:text-[#84CC16] font-bold text-sm">✓</span> Bahan Premium
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[#4D7C0F] dark:text-[#84CC16] font-bold text-sm">✓</span> Pengerjaan Cepat (3–7 Hari)
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[#4D7C0F] dark:text-[#84CC16] font-bold text-sm">✓</span> Bebas Konsultasi Desain
+              </div>
             </div>
           </div>
         </div>
+
+        {/* Visual Full-Bleed Kanan (Data Gambar UploadThing) */}
+        <HeroShowcaseCarousel items={displayCatalogs} />
       </section>
 
       {/* Banner Promo Dinamis Carousel */}
@@ -220,7 +213,7 @@ export default async function HomePage() {
       {/* 3. USP Section (Keunggulan Produksi Resmi) */}
       <section className="py-20 border-b border-[#27272A] bg-[#0C0D11]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-14">
+          <div data-animate="text-reveal" className="text-center max-w-3xl mx-auto mb-14">
             <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-[#FAFAFA]">
               Mengapa Tim Anda Memilih First Apparel?
             </h2>
@@ -229,7 +222,7 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div data-animate="stagger-cards" className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-8 flex flex-col justify-between hover:border-[#3F3F46] hover:shadow-md transition-all group">
               <div>
                 <span className="text-xs font-bold text-[#84CC16] tracking-wider block mb-2">
@@ -278,7 +271,7 @@ export default async function HomePage() {
       {/* 4. Katalog Section */}
       <section id="katalog" className="py-20 border-b border-[#27272A]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+          <div data-animate="text-reveal" className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
             <div>
               <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-[#FAFAFA]">
                 Pilihan Model Jersey Populer
@@ -292,185 +285,79 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+          <div data-animate="stagger-cards" className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {displayCatalogs.map((item, idx) => {
-              const waItemMsg = `Halo Admin First Apparel, saya tertarik memesan custom jersey model "${item.title}" (${item.category}). Bisa info detail pemesanannya?`;
               const isBestSeller = idx === 0;
+              const cleanPrice = item.priceInfo
+                ? item.priceInfo.replace(/mulai\s*/i, "").replace(/\/.*$/, "").trim()
+                : "Hubungi Kami";
+              const detailHref = featuredCatalogs.length > 0 ? `/katalog/${item.id}` : "/katalog";
 
               return (
-                <div
+                <Link
                   key={item.id}
-                  className={`rounded-2xl bg-[#141418] border transition-all duration-300 flex flex-col justify-between group overflow-hidden ${
-                    isBestSeller
-                      ? "border-[#84CC16] ring-1 ring-[#84CC16]/30 shadow-lg"
-                      : "border-[#27272A] hover:border-[#3F3F46] hover:shadow-lg hover:-translate-y-0.5"
-                  }`}
+                  href={detailHref}
+                  className="group block"
                 >
-                  {/* Badge Best Seller untuk Model Utama */}
-                  {isBestSeller && (
-                    <div className="bg-[#84CC16] text-[#09090B] text-[10px] font-black uppercase tracking-widest text-center py-1">
-                      ★ PALING BANYAK DIPESAN TIM
-                    </div>
-                  )}
-
-                  {/* Visual Mockup & Kategori Tag */}
-                  <div className="h-48 bg-gradient-to-b from-[#1C1D24] to-[#121318] border-b border-[#27272A] relative overflow-hidden p-4 flex items-center justify-center">
-                    {/* Kategori Badge di Pojok Kiri Atas */}
-                    <div className="absolute top-3 left-3 z-10">
-                      <span className="inline-block px-2.5 py-1 rounded-md bg-[#09090B]/85 backdrop-blur-sm border border-[#27272A] text-[10px] font-bold text-[#84CC16] tracking-wider uppercase">
-                        {item.category}
+                  {/* Visual Produk Bersih (4:5) */}
+                  <div className="relative aspect-[4/5] w-full rounded-xl overflow-hidden bg-[#F1F5F9] dark:bg-[#141418]">
+                    {isBestSeller && (
+                      <span className="absolute top-2.5 left-2.5 z-10 px-2.5 py-1 rounded-md bg-[#65A30D] dark:bg-[#84CC16] text-white dark:text-[#09090B] text-[10px] font-bold tracking-wide uppercase shadow-sm">
+                        Terlaris
                       </span>
-                    </div>
+                    )}
 
                     {item.imageUrl ? (
                       <Image
                         src={item.imageUrl}
                         alt={item.title}
-                        width={400}
-                        height={300}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        fill
+                        sizes="(min-width: 1024px) 25vw, 50vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     ) : (
-                      <div className="text-center space-y-2 relative z-10 transition-transform duration-300 group-hover:scale-105">
-                        <div className="w-14 h-14 mx-auto rounded-2xl bg-[#181922] border border-[#84CC16]/25 flex items-center justify-center text-[#84CC16]">
-                          <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
+                      <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-center p-4">
+                        <div className="w-12 h-12 rounded-xl bg-[#E2E8F0] dark:bg-[#181922] flex items-center justify-center text-[#4D7C0F] dark:text-[#84CC16]">
+                          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                           </svg>
                         </div>
-                        <span className="text-[11px] text-[#A1A1AA] uppercase tracking-wider font-bold block">
+                        <span className="text-[11px] text-[#64748B] dark:text-[#A1A1AA] font-medium">
                           Pratinjau Produksi HD
                         </span>
                       </div>
                     )}
                   </div>
 
-                  {/* Keterangan & Blok Harga */}
-                  <div className="p-5 flex-1 flex flex-col justify-between">
-                    <div>
-                      <h3 className="text-base font-bold text-[#FAFAFA] leading-snug group-hover:text-[#84CC16] transition-colors">
-                        {item.title}
-                      </h3>
-
-                      {/* Tag Spesifikasi Bahan */}
-                      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#1C1D24] border border-[#27272A] text-[11px] text-[#D4D4D8] font-medium mt-2.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#84CC16]" />
-                        <span>{item.fabric}</span>
-                      </div>
-                    </div>
-
-                    {/* Blok Harga */}
-                    <div className="pt-4 mt-5 border-t border-[#1F1F23]">
-                      <div className="mb-3.5 p-3.5 rounded-xl bg-[#0A0B0E] border border-[#1F2026]">
-                        {/* Baris Atas: Label & Lencana Spesifikasi */}
-                        <div className="flex items-center justify-between gap-2 mb-1.5">
-                          <span className="text-[10px] font-bold text-[#84CC16] tracking-widest uppercase">
-                            HARGA MULAI
-                          </span>
-                          <span className="px-2 py-0.5 rounded-md bg-[#181920] border border-[#27272A] text-[10px] font-bold text-[#D4D4D8] uppercase tracking-wider shrink-0">
-                            Full Print
-                          </span>
-                        </div>
-
-                        {/* Baris Bawah: Angka Harga Tanpa Patah Baris */}
-                        <div className="flex items-baseline gap-1.5">
-                          <span className="text-xl sm:text-2xl font-black tracking-tight text-[#FAFAFA] tabular-nums whitespace-nowrap">
-                            {item.priceInfo ? item.priceInfo.replace(/mulai\s*/i, "").replace(/\/.*$/, "").trim() : "Hubungi Kami"}
-                          </span>
-                          <span className="text-xs font-semibold text-[#A1A1AA] whitespace-nowrap">/ pcs</span>
-                        </div>
-                      </div>
-
-                      {(storeSizeChartUrl || item.sizeChartUrl) && (
-                        <div className="mb-2.5">
-                          <SizeChartTrigger
-                            title={item.title}
-                            sizeChartUrl={(storeSizeChartUrl || item.sizeChartUrl)!}
-                          />
-                        </div>
+                  {/* Info Produk Ringkas di Bawah Gambar */}
+                  <div className="pt-3 space-y-1">
+                    <h3 className="text-sm font-medium text-[#0F172A] dark:text-[#FAFAFA] leading-snug line-clamp-2 group-hover:text-[#4D7C0F] dark:group-hover:text-[#84CC16] transition-colors">
+                      {item.title}
+                    </h3>
+                    <p className="text-xs text-[#64748B] dark:text-[#A1A1AA] truncate">
+                      {item.fabric}
+                    </p>
+                    <div className="flex items-baseline gap-1 pt-0.5">
+                      <span className="text-sm font-bold text-[#0F172A] dark:text-[#FAFAFA] tabular-nums">
+                        {cleanPrice}
+                      </span>
+                      {item.priceInfo && (
+                        <span className="text-xs text-[#64748B] dark:text-[#71717A]">/ pcs</span>
                       )}
-
-                      <a
-                        href={getWaLink(waItemMsg)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full min-h-[44px] inline-flex items-center justify-center gap-2 py-3 px-4 rounded-full bg-[#84CC16] hover:bg-[#9ee238] active:scale-[0.98] text-[#09090B] font-black text-xs tracking-wider uppercase transition-all shadow-md"
-                      >
-                        <span>Pesan Model Ini via WA →</span>
-                      </a>
                     </div>
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
         </div>
       </section>
-
-      {/* 5. Seksi Mitra & Partner (Hanya Tampil Jika Ada Data Nyata di Database) */}
-      {partnerList.length > 0 && (
-      <section className="py-16 border-b border-[#27272A] bg-[#0C0D11]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <h2 className="text-xl sm:text-3xl font-bold tracking-tight text-[#FAFAFA]">
-              Dipercaya Komunitas & Tim Olahraga
-            </h2>
-            <p className="text-xs sm:text-sm text-[#A1A1AA] mt-2">
-              Mulai dari tim esport, komunitas lari, hingga klub liga lokal telah mempercayakan produksi jersey tim kepada First Apparel.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 items-center">
-            {partnerList.map((partner) => {
-              const content = (
-                <div className="p-4 rounded-xl bg-[#141418] border border-[#27272A] hover:border-[#3F3F46] transition-all flex flex-col items-center justify-center text-center gap-2 group min-h-[120px] h-auto">
-                  {partner.logoUrl ? (
-                    <Image
-                      src={partner.logoUrl}
-                      alt={partner.name}
-                      width={130}
-                      height={44}
-                      className="max-h-11 max-w-[130px] object-contain opacity-85 group-hover:opacity-100 transition-opacity shrink-0"
-                    />
-                  ) : (
-                    <div className="w-10 h-10 rounded-full bg-[#27272A] flex items-center justify-center text-sm font-bold text-[#84CC16] shrink-0">
-                      {partner.name.charAt(0)}
-                    </div>
-                  )}
-                  <span className="text-xs sm:text-sm font-semibold text-[#FAFAFA] group-hover:text-[#84CC16] transition-colors line-clamp-2">
-                    {partner.name}
-                  </span>
-                  {partner.category && partner.category !== "MITRA LAINNYA" && (
-                    <span className="text-[10px] text-[#A1A1AA] line-clamp-1">
-                      {partner.category}
-                    </span>
-                  )}
-                </div>
-              );
-
-              return partner.websiteUrl ? (
-                <a
-                  key={partner.id}
-                  href={partner.websiteUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block"
-                >
-                  {content}
-                </a>
-              ) : (
-                <div key={partner.id}>{content}</div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-      )}
 
       {/* 5.5 Seksi Ulasan Pelanggan (Hanya Tampil Jika Ada Data Asli di Database) */}
       {activeReviews.length > 0 && (
         <section className="py-20 border-b border-[#27272A] bg-[#09090B]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+            <div data-animate="text-reveal" className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
               <div>
                 <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-[#FAFAFA]">
                   Kata Pelanggan Tentang Hasil Produksi Kami
@@ -509,7 +396,7 @@ export default async function HomePage() {
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div data-animate="stagger-cards" className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {activeReviews.map((review) => (
                 <article
                   key={review.id}
@@ -564,7 +451,7 @@ export default async function HomePage() {
       {/* 6. Alur Pemesanan Section */}
       <section id="alur" className="py-20 border-b border-[#27272A]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-14">
+          <div data-animate="text-reveal" className="text-center max-w-3xl mx-auto mb-14">
             <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-[#FAFAFA]">
               4 Tahap Mudah Pemesanan via WhatsApp
             </h2>
@@ -573,7 +460,7 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div data-animate="stagger-cards" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-6 flex flex-col justify-between hover:border-[#3F3F46] hover:shadow-md transition-all group">
               <div className="w-12 h-12 rounded-xl bg-[#84CC16]/10 border border-[#84CC16]/30 flex items-center justify-center text-[#84CC16] font-black text-lg mb-5 group-hover:scale-105 transition-transform">
                 01
@@ -647,7 +534,7 @@ export default async function HomePage() {
       {latestBlogs.length > 0 && (
         <section className="py-20 border-b border-[#27272A] bg-[#0C0D11]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-12">
+            <div data-animate="text-reveal" className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-12">
               <div>
                 <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-[#FAFAFA]">
                   Blog
@@ -662,7 +549,7 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div data-animate="stagger-cards" className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {latestBlogs.map((b) => (
                 <article
                   key={b.id}
@@ -715,8 +602,8 @@ export default async function HomePage() {
       {/* 7. Spanduk CTA WhatsApp */}
       <section className="py-16 bg-[#09090B] border-b border-[#27272A] relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-8 p-8 sm:p-12 rounded-2xl bg-gradient-to-r from-[#181A22] via-[#14151C] to-[#101116] border border-[#27272A] shadow-xl">
-            <div className="max-w-2xl text-center lg:text-left">
+          <div data-animate="fade-up" className="flex flex-col lg:flex-row items-center justify-between gap-8 p-8 sm:p-12 rounded-2xl bg-gradient-to-r from-[#181A22] via-[#14151C] to-[#101116] border border-[#27272A] shadow-xl">
+            <div data-animate="text-reveal" className="max-w-2xl text-center lg:text-left">
               <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#FAFAFA]">
                 Siap Produksi Jersey Tim Anda?
               </h2>
@@ -736,6 +623,75 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Seksi Mitra & Partner sebelum Footer */}
+      {partnerList.length > 0 && (
+      <section className="py-14 sm:py-16 border-b border-[#27272A] bg-[#0C0D11]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div data-animate="text-reveal" className="text-center max-w-xl mx-auto mb-8 sm:mb-10">
+            <h2 className="text-xl sm:text-3xl font-bold tracking-tight text-[#FAFAFA] text-balance">
+              Dipercaya Komunitas & Tim Olahraga
+            </h2>
+            <p className="text-xs sm:text-sm text-[#A1A1AA] mt-2 leading-relaxed">
+              Mulai dari tim esport, komunitas lari, hingga klub liga lokal telah mempercayakan produksi jersey tim kepada First Apparel.
+            </p>
+          </div>
+
+          <div data-animate="stagger-cards" className="flex flex-wrap items-stretch justify-center gap-3.5 sm:gap-4 max-w-5xl mx-auto">
+            {partnerList.map((partner) => {
+              const content = (
+                <div className="h-full px-4 py-3 sm:px-5 sm:py-3.5 rounded-2xl bg-[#141418] border border-[#27272A] hover:border-[#84CC16]/50 hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-3.5 text-left group">
+                  <div className="h-12 min-w-[48px] max-w-[96px] px-1.5 rounded-xl bg-[#18181B] border border-[#27272A] flex items-center justify-center shrink-0 overflow-hidden">
+                    {partner.logoUrl ? (
+                      <Image
+                        src={partner.logoUrl}
+                        alt={partner.name}
+                        width={96}
+                        height={44}
+                        className="max-h-9 w-auto max-w-[84px] object-contain opacity-90 group-hover:opacity-100 transition-opacity"
+                      />
+                    ) : (
+                      <span className="text-sm font-bold text-[#84CC16]">
+                        {partner.name.charAt(0)}
+                      </span>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <span className="block text-sm font-semibold text-[#FAFAFA] group-hover:text-[#84CC16] transition-colors leading-snug line-clamp-2">
+                      {partner.name}
+                    </span>
+                    {partner.category && partner.category !== "MITRA LAINNYA" && (
+                      <span className="block text-[11px] font-medium text-[#A1A1AA] mt-0.5 line-clamp-1">
+                        {partner.category}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+
+              return partner.websiteUrl ? (
+                <a
+                  key={partner.id}
+                  href={partner.websiteUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full max-w-[340px] sm:w-auto sm:min-w-[220px] sm:max-w-[300px]"
+                >
+                  {content}
+                </a>
+              ) : (
+                <div
+                  key={partner.id}
+                  className="w-full max-w-[340px] sm:w-auto sm:min-w-[220px] sm:max-w-[300px]"
+                >
+                  {content}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+      )}
       </main>
 
       {/* 8. Footer */}

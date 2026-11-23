@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { PageMotion } from "@/components/motion-provider";
 import { ShareButtons } from "./share-buttons";
 import { getSiteSettings, getBlogBySlug, getRelatedBlogs } from "@/lib/public-data";
 import { getSiteUrl } from "@/lib/site-url";
@@ -110,11 +111,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         }}
       />
       {/* 1. Navbar */}
+      <PageMotion />
       <Navbar waNumber={whatsappNumber} storeName={storeName} logoUrl={logoUrl} />
 
       {/* 2. Artikel Header & Breadcrumbs */}
       <header className="relative pt-12 pb-10 border-b border-[#27272A] bg-gradient-to-b from-[#121318] to-[#09090B]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div data-animate="hero" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Breadcrumbs Nav */}
           <nav className="flex items-center gap-2 text-xs text-[#71717A] mb-6">
             <Link href="/" className="hover:text-[#FAFAFA] transition-colors">
@@ -173,7 +175,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {/* 3. Konten Utama Artikel */}
       <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Gambar Thumbnail Utama */}
-        <div className="rounded-2xl overflow-hidden border border-[#27272A] bg-[#141418] mb-10 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+        <div data-animate="fade-up" className="rounded-2xl overflow-hidden border border-[#27272A] bg-[#141418] mb-10 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
           <Image
             src={post.thumbnailUrl}
             alt={post.title}

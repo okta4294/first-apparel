@@ -95,25 +95,22 @@ Format: No | Nama Punggung | Nomor | Size | Kain
   const waHref = `https://wa.me/${waNumber}?text=${encodeURIComponent(active.text)}`;
 
   return (
-    <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-6 sm:p-8 hover:border-[#84CC16]/40 transition-all">
+    <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-5 sm:p-7">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-5 border-b border-[#27272A]">
         <div>
-          <span className="text-[11px] font-bold tracking-wider uppercase text-[#84CC16] block mb-1">
-            Salin Cepat Format Order
-          </span>
           <h3 className="text-lg sm:text-xl font-bold text-[#FAFAFA]">{active.title}</h3>
-          <p className="text-xs text-[#A1A1AA] mt-0.5">{active.description}</p>
+          <p className="text-xs sm:text-sm text-[#A1A1AA] mt-1">{active.description}</p>
         </div>
 
         <button
           type="button"
           onClick={handleCopy}
-          className={`inline-flex min-h-11 items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm shrink-0 ${
+          className={`inline-flex min-h-11 items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-colors shrink-0 ${
             copyState === "copied"
               ? "bg-[#22C55E] text-white"
               : copyState === "error"
                 ? "bg-[#EF4444] text-white"
-                : "bg-[#181920] hover:bg-[#1F2026] text-[#FAFAFA] border border-[#27272A]"
+                : "bg-[#18181B] hover:bg-[#27272A] text-[#FAFAFA] border border-[#27272A]"
           }`}
           aria-label={`Salin ${active.label.toLowerCase()} ke clipboard`}
         >
@@ -122,14 +119,14 @@ Format: No | Nama Punggung | Nomor | Size | Kain
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
-              <span>Format Berhasil Disalin!</span>
+              <span>Berhasil disalin</span>
             </>
           ) : copyState === "error" ? (
             <>
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
               </svg>
-              <span>Gagal Menyalin, Blok Teks Manual</span>
+              <span>Gagal menyalin, blok manual</span>
             </>
           ) : (
             <>
@@ -137,7 +134,7 @@ Format: No | Nama Punggung | Nomor | Size | Kain
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
                 <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
               </svg>
-              <span>Salin Format Teks</span>
+              <span>Salin teks</span>
             </>
           )}
         </button>
@@ -169,7 +166,7 @@ Format: No | Nama Punggung | Nomor | Size | Kain
                 setActiveTemplate(option.id);
                 setCopyState("idle");
               }}
-              className={`rounded-lg px-3 py-2 text-[11px] font-bold transition-colors ${
+              className={`rounded-lg px-3.5 py-2 text-xs font-semibold transition-colors ${
                 isActive
                   ? "bg-[#84CC16] text-[#09090B]"
                   : "text-[#A1A1AA] hover:bg-[#141418] hover:text-[#FAFAFA]"
@@ -182,22 +179,22 @@ Format: No | Nama Punggung | Nomor | Size | Kain
       </div>
 
       {/* Preview Snippet Box */}
-      <div className="mt-3 p-4 rounded-xl bg-[#09090B] border border-[#1F2026] font-mono text-xs text-[#D4D4D8] leading-relaxed whitespace-pre-wrap select-all">
+      <div className="mt-3 p-4 rounded-xl bg-[#09090B] border border-[#27272A] font-mono text-xs text-[#D4D4D8] leading-relaxed whitespace-pre-wrap select-all">
         {active.text}
       </div>
 
-      <div className="mt-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
-        <span className="text-[11px] text-[#71717A]">
-          ✓ Gratis konsultasi dan perbaikan desain sampai cocok
+      <div className="mt-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1">
+        <span className="text-xs text-[#A1A1AA]">
+          Bisa langsung ditempel ke grup tim sebelum dikirim ke admin.
         </span>
 
         <a
           href={waHref}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex min-h-11 items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#84CC16] hover:bg-[#9ee238] active:scale-95 text-[#09090B] text-xs font-black tracking-wide uppercase transition-all shadow-[0_0_20px_rgba(132,204,22,0.2)]"
+          className="inline-flex min-h-11 items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#84CC16] hover:bg-[#9ee238] active:scale-[0.98] text-[#09090B] text-xs font-bold transition-colors"
         >
-          <span>Kirim Format Ini ke WhatsApp →</span>
+          <span>Kirim ke WhatsApp →</span>
         </a>
       </div>
     </div>

@@ -17,6 +17,7 @@ export async function createCatalogAction(formData: FormData) {
   const category = (formData.get("category") as string)?.trim().toUpperCase() || "CUSTOM LAINNYA";
   const fabric = (formData.get("fabric") as string)?.trim() || "Dryfit Brazil Original";
   const priceInfo = (formData.get("priceInfo") as string)?.trim() || "Mulai Rp 125.000 / pcs";
+  const minOrder = (formData.get("minOrder") as string)?.trim() || null;
   const isFeatured = formData.get("isFeatured") === "on";
 
   // Tangani multi-gambar (maksimal 4)
@@ -54,6 +55,7 @@ export async function createCatalogAction(formData: FormData) {
         category,
         fabric,
         priceInfo,
+        minOrder,
         imageUrl,
         imageKey,
         images: JSON.stringify(images),
@@ -67,6 +69,7 @@ export async function createCatalogAction(formData: FormData) {
     updateTag("catalogs");
     revalidatePath("/");
     revalidatePath("/katalog");
+    revalidatePath(`/katalog/${created.id}`);
     revalidatePath("/admin");
     revalidatePath("/admin/katalog");
 
@@ -88,6 +91,7 @@ export async function updateCatalogAction(formData: FormData) {
   const category = (formData.get("category") as string)?.trim().toUpperCase() || "CUSTOM LAINNYA";
   const fabric = (formData.get("fabric") as string)?.trim() || "Dryfit Brazil Original";
   const priceInfo = (formData.get("priceInfo") as string)?.trim() || "Mulai Rp 125.000 / pcs";
+  const minOrder = (formData.get("minOrder") as string)?.trim() || null;
   const isFeatured = formData.get("isFeatured") === "on";
   const isActive = formData.get("isActive") === "on";
 
@@ -135,6 +139,7 @@ export async function updateCatalogAction(formData: FormData) {
         category,
         fabric,
         priceInfo,
+        minOrder,
         imageUrl,
         imageKey,
         images: JSON.stringify(images),
@@ -159,6 +164,7 @@ export async function updateCatalogAction(formData: FormData) {
     updateTag("catalogs");
     revalidatePath("/");
     revalidatePath("/katalog");
+    revalidatePath(`/katalog/${id}`);
     revalidatePath("/admin");
     revalidatePath("/admin/katalog");
 
@@ -200,6 +206,7 @@ export async function deleteCatalogAction(id: number, allKeys: string[] | string
     updateTag("catalogs");
     revalidatePath("/");
     revalidatePath("/katalog");
+    revalidatePath(`/katalog/${id}`);
     revalidatePath("/admin");
     revalidatePath("/admin/katalog");
 

@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { PageMotion } from "@/components/motion-provider";
 import { getSiteSettings, getAllActiveCatalogs } from "@/lib/public-data";
 import { KatalogClient } from "./katalog-client";
 
 export const metadata: Metadata = {
   title: "Katalog Model Custom Jersey | First Apparel",
   description:
-    "Eksplorasi pilihan model custom jersey futsal, sepak bola, esports, running, dan jaket tim dengan bahan dryfit premium dari First Apparel.",
+    "Pilihan model custom jersey futsal, sepak bola, esports, running, dan jaket tim dari First Apparel. Warna, logo, dan nama pemain bisa disesuaikan.",
 };
 
 export const instant = false;
@@ -34,38 +35,53 @@ export default async function KatalogPage({
     defaultWaText,
     instagramUrl,
     logoUrl,
-    sizeChartUrl: storeSizeChartUrl,
     storeDescription,
   } = settings;
 
+  const customDesignWaHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+    `Halo Admin ${storeName}, saya ingin konsultasi desain jersey custom berdasarkan referensi sendiri.`
+  )}`;
+
   return (
     <div className="min-h-screen bg-[#09090B] text-[#FAFAFA] flex flex-col selection:bg-[#84CC16] selection:text-[#09090B]">
-      {/* 1. Navbar */}
+      <PageMotion />
       <Navbar waNumber={whatsappNumber} storeName={storeName} logoUrl={logoUrl} />
 
-      {/* 2. Hero Header Katalog */}
-      <section className="relative py-16 border-b border-[#27272A] bg-gradient-to-b from-[#121318] to-[#09090B] overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center max-w-3xl">
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-[#FAFAFA] uppercase">
-            Eksplorasi Desain Jersey Tim Anda
-          </h1>
-          <p className="text-sm sm:text-base text-[#A1A1AA] mt-4 leading-relaxed">
-            Pilihan model jersey futsal, sepak bola, e-sports pro, running, dan jaket tim dengan bahan Dryfit premium berstandar atlet. Seluruh desain dapat dikustomisasi penuh sesuai logo, sponsor, dan nama tim Anda.
-          </p>
+      {/* Header Katalog */}
+      <section className="border-b border-[#27272A] bg-[#0C0D11]">
+        <div
+          data-animate="hero"
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 flex flex-col md:flex-row md:items-end justify-between gap-6"
+        >
+          <div className="max-w-2xl">
+            <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-[#FAFAFA]">
+              Katalog jersey custom
+            </h1>
+            <p className="text-sm sm:text-base text-[#A1A1AA] mt-2.5 leading-relaxed">
+              Pilih model sebagai acuan dasar. Warna, logo tim, sponsor, nama pemain, dan nomor punggung bisa disesuaikan lewat WhatsApp.
+            </p>
+          </div>
+
+          <a
+            href={customDesignWaHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#84CC16] hover:underline shrink-0 self-start md:self-auto"
+          >
+            <span>Punya referensi desain sendiri? Kirim via WA</span>
+            <span aria-hidden="true">→</span>
+          </a>
         </div>
       </section>
 
-      {/* 3. Konten Utama Katalog & Filter Interaktif */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Daftar Produk & Filter */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
         <KatalogClient
           items={catalogList}
-          waNumber={whatsappNumber}
-          storeSizeChartUrl={storeSizeChartUrl}
           initialCategory={initialCategory}
         />
       </main>
 
-      {/* 4. Footer */}
       <Footer
         storeName={storeName}
         storeAddress={storeAddress}

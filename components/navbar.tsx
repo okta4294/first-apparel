@@ -22,7 +22,7 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", logoUrl }: Navba
   )}`;
 
   const isHome = pathname === "/";
-  const isKatalog = pathname === "/katalog";
+  const isKatalog = pathname.startsWith("/katalog");
   const isCaraPesan = pathname === "/cara-pesan" || pathname === "/alur-pemesanan";
   const isBlog = pathname.startsWith("/blog");
 
@@ -57,7 +57,7 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", logoUrl }: Navba
             href="/katalog"
             className={isKatalog ? "text-[#84CC16] font-semibold transition-colors" : "text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors"}
           >
-            Katalog Jersey
+            Katalog
           </Link>
           <Link
             href="/cara-pesan"
@@ -134,7 +134,7 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", logoUrl }: Navba
               isKatalog ? "text-[#84CC16] bg-[#141418]" : "text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#141418]"
             }`}
           >
-            Katalog Jersey
+            Katalog
           </Link>
           <Link
             href="/cara-pesan"

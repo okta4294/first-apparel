@@ -18,6 +18,7 @@ export const catalogs = pgTable("catalogs", {
   category: varchar("category", { length: 100 }).notNull(),
   fabric: varchar("fabric", { length: 150 }).notNull(),
   priceInfo: varchar("price_info", { length: 100 }),
+  minOrder: varchar("min_order", { length: 100 }),
   imageUrl: text("image_url").notNull(),
   imageKey: varchar("image_key", { length: 255 }).notNull(),
   images: text("images").default("[]").notNull(),

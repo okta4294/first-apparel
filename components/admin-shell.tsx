@@ -17,7 +17,7 @@ interface AdminShellProps {
 
 const PAGE_LABELS: Record<AdminShellProps["active"], string> = {
   dashboard: "Dashboard",
-  katalog: "Katalog Jersey",
+  katalog: "Katalog",
   bahan: "Pilihan Bahan Kain",
   promo: "Banner Promo",
   blog: "Artikel Blog",
@@ -183,7 +183,7 @@ export function AdminShell({ session, active, children }: AdminShellProps) {
                   <svg className={`w-4 h-4 shrink-0 ${active === "katalog" ? "text-[#FAFAFA]" : "text-[#71717A] group-hover:text-[#A1A1AA]"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" />
                   </svg>
-                  <span>Katalog Jersey</span>
+                  <span>Katalog</span>
                 </div>
                 {active === "katalog" && <span className="w-1.5 h-1.5 rounded-full bg-[#84CC16] shrink-0" />}
               </Link>

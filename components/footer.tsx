@@ -29,7 +29,7 @@ export function Footer({
   return (
     <footer className="border-t border-[#27272A] bg-[#0C0D11] pt-16 pb-12 text-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-[#1F1F24]">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-[#27272A]">
           {/* C1: Brand Info */}
           <div className="space-y-4">
             <Link href="/" className="flex items-center gap-2.5 group">
@@ -62,7 +62,7 @@ export function Footer({
               </li>
               <li>
                 <Link href="/katalog" className="hover:text-[#84CC16] transition-colors">
-                  Katalog Jersey
+                  Katalog
                 </Link>
               </li>
               <li>
@@ -121,7 +121,7 @@ export function Footer({
                     rel="noopener noreferrer"
                     className="text-[#84CC16] hover:underline inline-flex items-center gap-1 font-medium"
                   >
-                    📍 Buka di Google Maps →
+                    Buka di Google Maps →
                   </a>
                 </li>
               )}
@@ -148,7 +148,7 @@ export function Footer({
                     rel="noopener noreferrer"
                     className="text-[#84CC16] hover:underline inline-flex items-center gap-1 font-medium"
                   >
-                    📸 Ikuti Instagram Kami →
+                    Ikuti Instagram Kami →
                   </a>
                 </li>
               )}

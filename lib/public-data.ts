@@ -117,6 +117,23 @@ export async function getAllActiveCatalogs() {
   }
 }
 
+export async function getCatalogById(id: number) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("catalogs", `catalog-${id}`);
+
+  try {
+    const rows = await db
+      .select()
+      .from(catalogs)
+      .where(and(eq(catalogs.id, id), eq(catalogs.isActive, true)))
+      .limit(1);
+    return rows[0] ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export async function getActivePartners() {
   "use cache";
   cacheLife("hours");

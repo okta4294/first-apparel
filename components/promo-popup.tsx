@@ -43,26 +43,13 @@ export function PromoPopup({ promo, waNumber }: PromoPopupProps) {
       // Fallback jika sessionStorage tidak dapat diakses
     }
 
-    let triggered = false;
-    const openOnce = () => {
-      if (triggered) return;
-      triggered = true;
+    // Tampilkan pop-up di awal kunjungan saja (tanpa pemicu saat scroll)
+    const timer = setTimeout(() => {
       setIsOpen(true);
-    };
-
-    // Tampilkan pop-up setelah 8 detik atau setelah pengguna menggulir >=35% halaman
-    const timer = setTimeout(openOnce, 8000);
-    const onScroll = () => {
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (docHeight > 0 && window.scrollY / docHeight >= 0.35) {
-        openOnce();
-      }
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
+    }, 600);
 
     return () => {
       clearTimeout(timer);
-      window.removeEventListener("scroll", onScroll);
     };
   }, [promo]);
 
@@ -85,85 +72,86 @@ export function PromoPopup({ promo, waNumber }: PromoPopupProps) {
       aria-modal="true"
       aria-labelledby="promo-popup-title"
       onClick={handleClose}
-      className="fixed inset-0 z-50 bg-[#09090B]/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-300"
+      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative max-w-lg w-full rounded-3xl bg-gradient-to-b from-[#181A22] via-[#14151C] to-[#0E0F14] border border-[#84CC16]/40 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200"
+        className="relative max-w-md w-full rounded-2xl bg-white dark:bg-[#141418] border border-[#E2E8F0] dark:border-[#27272A] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200"
       >
-        {/* Tombol Tutup Silang di Sudut Kanan Atas */}
+        {/* Tombol Tutup Minimalis */}
         <button
           type="button"
           onClick={handleClose}
           aria-label="Tutup promo"
-          className="absolute top-3 right-3 z-20 min-w-[44px] min-h-[44px] rounded-full bg-[#09090B]/85 hover:bg-[#27272A] text-[#FAFAFA] flex items-center justify-center text-sm font-bold transition-colors border border-[#27272A]"
+          className="absolute top-3.5 right-3.5 z-20 w-9 h-9 rounded-full bg-white/90 dark:bg-[#141418]/90 backdrop-blur-md text-[#0F172A] dark:text-[#FAFAFA] hover:bg-white dark:hover:bg-[#27272A] flex items-center justify-center text-xs font-semibold transition-colors shadow-sm border border-[#E2E8F0]/80 dark:border-[#27272A]"
         >
           ✕
         </button>
 
-        {/* Gambar Banner Promo (Jika Ada) */}
+        {/* Gambar Promo Tanpa Garis Pemisah Kaku */}
         {promo.imageUrl && (
-          <div className="relative w-full aspect-[16/9] overflow-hidden bg-[#09090B] border-b border-[#27272A]">
+          <div className="relative w-full aspect-[16/10] overflow-hidden bg-[#F1F5F9] dark:bg-[#0E0F13]">
             <Image
               src={promo.imageUrl}
               alt={promo.title}
               fill
+              sizes="(min-width: 640px) 448px, 100vw"
               className="object-cover"
             />
-            <div data-keep-dark="true" className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
-            
-            {/* Badge Highlight di atas gambar */}
-            <div className="absolute bottom-3 left-4">
-              <span className="px-3 py-1 rounded-full bg-[#84CC16] text-[#09090B] text-xs font-black tracking-wider shadow-lg">
-                {promo.badgeText}
-              </span>
-            </div>
+            <div
+              aria-hidden="true"
+              className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white dark:from-[#141418] to-transparent"
+            />
           </div>
         )}
 
-        {/* Konten Pop-up */}
-        <div className="p-6 sm:p-8 text-center space-y-4">
-          <div>
-            <span className="text-[#84CC16] text-xs font-bold uppercase tracking-widest block mb-2">
-              {promo.label}
-            </span>
+        {/* Konten Pop-up Bersih & Rata Kiri */}
+        <div className="p-6 sm:p-7 space-y-4 text-left">
+          <div className="space-y-2.5">
+            <div className="flex flex-wrap items-center gap-2">
+              {promo.badgeText && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full bg-[#65A30D]/10 dark:bg-[#84CC16]/15 text-[#4D7C0F] dark:text-[#84CC16] text-xs font-semibold">
+                  {promo.badgeText}
+                </span>
+              )}
+              {promo.label && (
+                <span className="text-xs font-medium text-[#64748B] dark:text-[#A1A1AA]">
+                  {promo.label}
+                </span>
+              )}
+            </div>
 
-            <h3 id="promo-popup-title" className="text-xl sm:text-2xl font-black tracking-tight text-[#FAFAFA] leading-snug">
+            <h3
+              id="promo-popup-title"
+              className="text-xl sm:text-2xl font-bold tracking-tight text-[#0F172A] dark:text-[#FAFAFA] leading-snug"
+            >
               {promo.title}
             </h3>
 
-            {!promo.imageUrl && (
-              <div className="mt-3">
-                <span className="inline-block px-4 py-1.5 rounded-full bg-[#84CC16] text-[#09090B] text-xs font-black tracking-wider shadow-md">
-                  {promo.badgeText}
-                </span>
-              </div>
-            )}
+            <p className="text-sm text-[#475569] dark:text-[#A1A1AA] leading-relaxed">
+              Hubungi tim kami di WhatsApp untuk menggunakan penawaran ini saat pemesanan jersey.
+            </p>
           </div>
 
-          <p className="text-xs sm:text-sm text-[#A1A1AA] leading-relaxed max-w-sm mx-auto">
-            Jangan lewatkan penawaran terbatas ini! Klaim kode promo Anda sekarang juga langsung melalui WhatsApp resmi kami.
-          </p>
-
-          {/* Tombol Aksi Klaim WA */}
-          <div className="pt-2 space-y-2">
+          {/* Baris Aksi Ringkas */}
+          <div className="pt-2 flex items-center gap-2.5">
             <a
               href={waHref}
               target="_blank"
               rel="noopener noreferrer"
               onClick={handleClose}
-              className="w-full min-h-[44px] inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-[#84CC16] text-[#09090B] text-xs sm:text-sm font-bold tracking-wide hover:bg-[#9ee238] active:scale-95 shadow-lg transition-all"
+              className="flex-1 min-h-[44px] inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#65A30D] hover:bg-[#4D7C0F] text-white dark:bg-[#84CC16] dark:text-[#09090B] dark:hover:bg-[#9ee238] active:scale-[0.98] text-sm font-semibold transition-all"
             >
               <WhatsAppIcon className="w-4 h-4 fill-current shrink-0" />
-              <span>Klaim Promo via WhatsApp Sekarang →</span>
+              <span>Klaim Promo</span>
             </a>
 
             <button
               type="button"
               onClick={handleClose}
-              className="min-h-[44px] text-xs text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors py-2 block w-full text-center font-medium"
+              className="min-h-[44px] px-4 rounded-full text-xs font-medium text-[#64748B] dark:text-[#A1A1AA] hover:text-[#0F172A] dark:hover:text-[#FAFAFA] hover:bg-[#F1F5F9] dark:hover:bg-[#1F1F23] transition-colors"
             >
-              Nanti Saja
+              Tutup
             </button>
           </div>
         </div>

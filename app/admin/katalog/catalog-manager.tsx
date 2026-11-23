@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { UploadDropzone } from "@/lib/uploadthing";
 import { compressImageToWebP } from "@/lib/image-compression";
 import { createCatalogAction, updateCatalogAction, deleteCatalogAction } from "./actions";
@@ -17,6 +18,7 @@ export interface CatalogItem {
   category: string;
   fabric: string;
   priceInfo: string | null;
+  minOrder: string | null;
   imageUrl: string;
   imageKey: string;
   images: string | null;
@@ -27,8 +29,15 @@ export interface CatalogItem {
   createdAt: Date;
 }
 
+export interface FabricOption {
+  id: number;
+  name: string;
+  description: string;
+}
+
 interface CatalogManagerProps {
   initialItems: CatalogItem[];
+  fabrics: FabricOption[];
 }
 
 function getCatalogImages(item: CatalogItem): CatalogImageItem[] {
@@ -46,7 +55,8 @@ function getCatalogImages(item: CatalogItem): CatalogImageItem[] {
   return [];
 }
 
-export function CatalogManager({ initialItems }: CatalogManagerProps) {
+export function CatalogManager({ initialItems, fabrics }: CatalogManagerProps) {
+  const defaultFabric = fabrics[0]?.name || "Dryfit Brazil Original";
   const [items, setItems] = useState<CatalogItem[]>(initialItems);
   const [isAdding, setIsAdding] = useState(false);
   const [editingItem, setEditingItem] = useState<CatalogItem | null>(null);
@@ -56,8 +66,9 @@ export function CatalogManager({ initialItems }: CatalogManagerProps) {
   // Form states
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("FUTSAL & SEPAK BOLA");
-  const [fabric, setFabric] = useState("Dryfit Brazil Original");
+  const [fabric, setFabric] = useState(defaultFabric);
   const [priceInfo, setPriceInfo] = useState("Mulai Rp 125.000 / pcs");
+  const [minOrder, setMinOrder] = useState("");
   const [isFeatured, setIsFeatured] = useState(false);
   const [isActive, setIsActive] = useState(true);
 
@@ -97,8 +108,9 @@ export function CatalogManager({ initialItems }: CatalogManagerProps) {
   const resetForm = () => {
     setTitle("");
     setCategory("FUTSAL & SEPAK BOLA");
-    setFabric("Dryfit Brazil Original");
+    setFabric(defaultFabric);
     setPriceInfo("Mulai Rp 125.000 / pcs");
+    setMinOrder("");
     setIsFeatured(false);
     setIsActive(true);
     setImages([]);
@@ -119,6 +131,7 @@ export function CatalogManager({ initialItems }: CatalogManagerProps) {
     setCategory(item.category);
     setFabric(item.fabric);
     setPriceInfo(item.priceInfo || "");
+    setMinOrder(item.minOrder || "");
     setIsFeatured(item.isFeatured);
     setIsActive(item.isActive);
 
@@ -176,6 +189,7 @@ export function CatalogManager({ initialItems }: CatalogManagerProps) {
     formData.append("category", category);
     formData.append("fabric", fabric);
     formData.append("priceInfo", priceInfo);
+    formData.append("minOrder", minOrder);
     formData.append("imageUrl", images[0]?.url || "");
     formData.append("imageKey", images[0]?.key || "");
     formData.append("images", JSON.stringify(images));
@@ -203,6 +217,7 @@ export function CatalogManager({ initialItems }: CatalogManagerProps) {
                   category,
                   fabric,
                   priceInfo,
+                  minOrder: minOrder.trim() || null,
                   imageUrl: images[0]?.url || "",
                   imageKey: images[0]?.key || "",
                   images: JSON.stringify(images),
@@ -571,16 +586,58 @@ export function CatalogManager({ initialItems }: CatalogManagerProps) {
               </div>
 
               <div>
-                <label className="text-xs font-medium text-[#D4D4D8] block mb-1">
-                  Spesifikasi Bahan Kain
-                </label>
-                <input
-                  type="text"
-                  placeholder="Misal: Dryfit Brazil Original"
-                  value={fabric}
-                  onChange={(e) => setFabric(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-[#09090B] border border-[#27272A] text-xs text-[#FAFAFA] placeholder:text-[#52525B] focus:border-[#84CC16] focus:outline-none"
-                />
+                <div className="flex items-center justify-between mb-1">
+                  <label htmlFor="catalog-fabric" className="text-xs font-medium text-[#D4D4D8]">
+                    Spesifikasi Bahan Kain
+                  </label>
+                  <Link
+                    href="/admin/bahan"
+                    className="text-[10px] text-[#84CC16] hover:underline"
+                  >
+                    Kelola Bahan →
+                  </Link>
+                </div>
+                {fabrics.length > 0 ? (
+                  <>
+                    <select
+                      id="catalog-fabric"
+                      value={fabric}
+                      onChange={(e) => setFabric(e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg bg-[#09090B] border border-[#27272A] text-xs text-[#FAFAFA] focus:border-[#84CC16] focus:outline-none"
+                    >
+                      {fabric &&
+                        !fabrics.some(
+                          (f) => f.name.trim().toLowerCase() === fabric.trim().toLowerCase()
+                        ) && (
+                          <option value={fabric}>{fabric} (bahan lama)</option>
+                        )}
+                      {fabrics.map((item) => (
+                        <option key={item.id} value={item.name}>
+                          {item.name}
+                        </option>
+                      ))}
+                    </select>
+                    {(() => {
+                      const selectedFabric = fabrics.find(
+                        (f) => f.name.trim().toLowerCase() === fabric.trim().toLowerCase()
+                      );
+                      return selectedFabric ? (
+                        <p className="text-[11px] text-[#71717A] mt-1.5 line-clamp-2">
+                          {selectedFabric.description}
+                        </p>
+                      ) : null;
+                    })()}
+                  </>
+                ) : (
+                  <input
+                    id="catalog-fabric"
+                    type="text"
+                    placeholder="Tambahkan bahan di menu Manajemen Bahan terlebih dahulu"
+                    value={fabric}
+                    onChange={(e) => setFabric(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg bg-[#09090B] border border-[#27272A] text-xs text-[#FAFAFA] placeholder:text-[#52525B] focus:border-[#84CC16] focus:outline-none"
+                  />
+                )}
               </div>
 
               <div>
@@ -592,6 +649,19 @@ export function CatalogManager({ initialItems }: CatalogManagerProps) {
                   placeholder="Misal: Mulai Rp 125.000 / pcs"
                   value={priceInfo}
                   onChange={(e) => setPriceInfo(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg bg-[#09090B] border border-[#27272A] text-xs text-[#FAFAFA] placeholder:text-[#52525B] focus:border-[#84CC16] focus:outline-none"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="text-xs font-medium text-[#D4D4D8] block mb-1">
+                  Minimal Order
+                </label>
+                <input
+                  type="text"
+                  placeholder="Misal: Tanpa Minimum (Bisa Satuan) atau Min. 12 pcs"
+                  value={minOrder}
+                  onChange={(e) => setMinOrder(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg bg-[#09090B] border border-[#27272A] text-xs text-[#FAFAFA] placeholder:text-[#52525B] focus:border-[#84CC16] focus:outline-none"
                 />
               </div>
@@ -779,7 +849,12 @@ export function CatalogManager({ initialItems }: CatalogManagerProps) {
                       </td>
                       <td className="py-3 px-4 text-[#A1A1AA]">{item.fabric}</td>
                       <td className="py-3 px-4 font-medium text-[#FAFAFA]">
-                        {item.priceInfo || "-"}
+                        <span className="block">{item.priceInfo || "-"}</span>
+                        {item.minOrder && (
+                          <span className="text-[10px] text-[#71717A] font-normal">
+                            Min. order: {item.minOrder}
+                          </span>
+                        )}
                       </td>
                       <td className="py-3 px-4">
                         {item.sizeChartUrl ? (

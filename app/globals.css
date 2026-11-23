@@ -139,6 +139,15 @@
   }
 }
 
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+html.lenis {
+  scroll-behavior: auto;
+}
+
 /* ==========================================================================
    Sistem Tema Terang (Light Mode - DESIGN.md Section 2.2)
    Otomatis aktif saat kelas .dark tidak disematkan pada elemen html
