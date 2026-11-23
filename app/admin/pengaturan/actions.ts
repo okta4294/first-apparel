@@ -28,6 +28,7 @@ export async function updateSettingsAction(formData: FormData) {
   }
 
   const storeName = (formData.get("storeName") as string)?.trim() || "First Apparel";
+  const companyName = (formData.get("companyName") as string)?.trim() || null;
   const storeAddress =
     (formData.get("storeAddress") as string)?.trim() ||
     "Jl. Terusan Olahraga No. 8, Bandung, Jawa Barat";
@@ -44,6 +45,11 @@ export async function updateSettingsAction(formData: FormData) {
   const instagramUrl = sanitizeUrl((formData.get("instagramUrl") as string)?.trim() || null);
   const logoUrl = sanitizeUrl((formData.get("logoUrl") as string)?.trim() || null);
   const logoKey = (formData.get("logoKey") as string)?.trim() || null;
+  const footerCompanyName = (formData.get("footerCompanyName") as string)?.trim() || null;
+  const footerLogoUrl = sanitizeUrl((formData.get("footerLogoUrl") as string)?.trim() || null);
+  const footerLogoKey = (formData.get("footerLogoKey") as string)?.trim() || null;
+  const footerLogo2Url = sanitizeUrl((formData.get("footerLogo2Url") as string)?.trim() || null);
+  const footerLogo2Key = (formData.get("footerLogo2Key") as string)?.trim() || null;
   const sizeChartUrl = sanitizeUrl((formData.get("sizeChartUrl") as string)?.trim() || null);
   const sizeChartKey = (formData.get("sizeChartKey") as string)?.trim() || null;
   const storeDescription =
@@ -58,6 +64,7 @@ export async function updateSettingsAction(formData: FormData) {
         .update(siteSettings)
         .set({
           storeName,
+          companyName,
           storeAddress,
           googleMapsUrl,
           operatingHours,
@@ -66,6 +73,11 @@ export async function updateSettingsAction(formData: FormData) {
           instagramUrl,
           logoUrl,
           logoKey,
+          footerCompanyName,
+          footerLogoUrl,
+          footerLogoKey,
+          footerLogo2Url,
+          footerLogo2Key,
           sizeChartUrl,
           sizeChartKey,
           storeDescription,
@@ -76,6 +88,7 @@ export async function updateSettingsAction(formData: FormData) {
       await db.insert(siteSettings).values({
         id: 1,
         storeName,
+        companyName,
         storeAddress,
         googleMapsUrl,
         operatingHours,
@@ -84,6 +97,11 @@ export async function updateSettingsAction(formData: FormData) {
         instagramUrl,
         logoUrl,
         logoKey,
+        footerCompanyName,
+        footerLogoUrl,
+        footerLogoKey,
+        footerLogo2Url,
+        footerLogo2Key,
         sizeChartUrl,
         sizeChartKey,
         storeDescription,

@@ -117,6 +117,7 @@ export default async function CatalogDetailPage({
       <Navbar
         waNumber={settings.whatsappNumber}
         storeName={settings.storeName}
+        companyName={settings.companyName}
         logoUrl={settings.logoUrl}
       />
 
@@ -156,11 +157,13 @@ export default async function CatalogDetailPage({
               ))}
             </div>
 
-            <div className="pt-2 border-t border-[#E2E8F0] dark:border-[#27272A]">
-              <p className="text-2xl sm:text-3xl font-bold text-[#0F172A] dark:text-[#FAFAFA] tabular-nums">
-                {item.priceInfo || "Hubungi Kami"}
-              </p>
-            </div>
+            {item.priceInfo?.trim() && item.priceInfo.trim() !== "-" && (
+              <div className="pt-2 border-t border-[#E2E8F0] dark:border-[#27272A]">
+                <p className="text-2xl sm:text-3xl font-bold text-[#0F172A] dark:text-[#FAFAFA] tabular-nums">
+                  {item.priceInfo.trim()}
+                </p>
+              </div>
+            )}
 
             <div className="space-y-3 pt-1">
               {sizeChartUrl && (

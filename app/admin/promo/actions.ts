@@ -18,6 +18,8 @@ export async function createPromoAction(formData: FormData) {
   const badgeText = (formData.get("badgeText") as string)?.trim() || "DISKON";
   const imageUrl = (formData.get("imageUrl") as string)?.trim() || null;
   const imageKey = (formData.get("imageKey") as string)?.trim() || null;
+  const popupImageUrl = (formData.get("popupImageUrl") as string)?.trim() || null;
+  const popupImageKey = (formData.get("popupImageKey") as string)?.trim() || null;
   const waMessage =
     (formData.get("waMessage") as string)?.trim() ||
     "Halo Admin First Apparel, saya ingin klaim promo di website.";
@@ -43,6 +45,8 @@ export async function createPromoAction(formData: FormData) {
         badgeText,
         imageUrl,
         imageKey,
+        popupImageUrl,
+        popupImageKey,
         waMessage,
         hasDuration,
         startDate,
@@ -77,6 +81,9 @@ export async function updatePromoAction(formData: FormData) {
   const imageUrl = (formData.get("imageUrl") as string)?.trim() || null;
   const imageKey = (formData.get("imageKey") as string)?.trim() || null;
   const oldImageKey = (formData.get("oldImageKey") as string)?.trim();
+  const popupImageUrl = (formData.get("popupImageUrl") as string)?.trim() || null;
+  const popupImageKey = (formData.get("popupImageKey") as string)?.trim() || null;
+  const oldPopupImageKey = (formData.get("oldPopupImageKey") as string)?.trim();
   const waMessage =
     (formData.get("waMessage") as string)?.trim() ||
     "Halo Admin First Apparel, saya ingin klaim promo di website.";
@@ -146,6 +153,8 @@ export async function updatePromoAction(formData: FormData) {
         badgeText,
         imageUrl,
         imageKey,
+        popupImageUrl,
+        popupImageKey,
         waMessage,
         hasDuration,
         startDate,
@@ -155,9 +164,12 @@ export async function updatePromoAction(formData: FormData) {
       })
       .where(eq(promos.id, targetId));
 
-    // Jika banner lama diganti atau dihapus, bersihkan dari UploadThing
+    // Jika banner atau gambar pop-up lama diganti/dihapus, bersihkan dari UploadThing
     if (oldImageKey && oldImageKey !== imageKey) {
       await utapi.deleteFiles(oldImageKey);
+    }
+    if (oldPopupImageKey && oldPopupImageKey !== popupImageKey) {
+      await utapi.deleteFiles(oldPopupImageKey);
     }
 
     updateTag("promos");
@@ -172,7 +184,11 @@ export async function updatePromoAction(formData: FormData) {
   }
 }
 
-export async function deletePromoAction(id: number, imageKey: string | null) {
+export async function deletePromoAction(
+  id: number,
+  imageKey: string | null,
+  popupImageKey?: string | null
+) {
   const session = await getAdminSession();
   if (!session) {
     return { success: false, error: "Akses ditolak." };
@@ -198,10 +214,19 @@ export async function deletePromoAction(id: number, imageKey: string | null) {
   }
 
   try {
+    const existing = await db
+      .select({ popupImageKey: promos.popupImageKey })
+      .from(promos)
+      .where(eq(promos.id, targetId))
+      .limit(1);
+
     await db.delete(promos).where(eq(promos.id, targetId));
 
-    if (imageKey) {
-      await utapi.deleteFiles(imageKey);
+    const keysToDelete = [imageKey, popupImageKey ?? existing[0]?.popupImageKey].filter(
+      (k): k is string => Boolean(k)
+    );
+    if (keysToDelete.length > 0) {
+      await utapi.deleteFiles(keysToDelete);
     }
 
     updateTag("promos");

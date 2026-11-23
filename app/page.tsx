@@ -5,6 +5,9 @@ import { Footer } from "@/components/footer";
 import { HeroShowcaseCarousel } from "@/components/hero-showcase-carousel";
 import { PromoPopup } from "@/components/promo-popup";
 import { PromoBannerCarousel } from "@/components/promo-banner-carousel";
+import { FabricCatalogCarousel } from "@/components/fabric-catalog-carousel";
+import { FeaturedCatalogCarousel } from "@/components/featured-catalog-carousel";
+import { FaqSection } from "@/components/faq-section";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { MobileWaFab } from "@/components/mobile-wa-fab";
 import { PageMotion } from "@/components/motion-provider";
@@ -15,6 +18,7 @@ import {
   getFeaturedCatalogs,
   getActivePartners,
   getLatestBlogs,
+  getActiveFabrics,
   getActiveReviews,
 } from "@/lib/public-data";
 
@@ -60,15 +64,23 @@ const INITIAL_CATALOGS = [
 ];
 
 export default async function HomePage() {
-  const [settings, activePromos, featuredCatalogs, partnerList, latestBlogs, activeReviews] =
-    await Promise.all([
-      getSiteSettings(),
-      getActivePromos(),
-      getFeaturedCatalogs(),
-      getActivePartners(),
-      getLatestBlogs(3),
-      getActiveReviews(),
-    ]);
+  const [
+    settings,
+    activePromos,
+    featuredCatalogs,
+    partnerList,
+    latestBlogs,
+    activeFabrics,
+    activeReviews,
+  ] = await Promise.all([
+    getSiteSettings(),
+    getActivePromos(),
+    getFeaturedCatalogs(),
+    getActivePartners(),
+    getLatestBlogs(3),
+    getActiveFabrics(),
+    getActiveReviews(),
+  ]);
 
   const {
     storeName,
@@ -82,7 +94,7 @@ export default async function HomePage() {
     storeDescription,
   } = settings;
 
-  const popupPromo = activePromos.find((p) => p.isPopup) ?? null;
+  const popupPromos = activePromos.filter((p) => p.isPopup);
   const bannerPromos = activePromos;
 
   const getWaLink = (message?: string) => {
@@ -114,10 +126,11 @@ export default async function HomePage() {
     address: {
       "@type": "PostalAddress",
       streetAddress: storeAddress,
-      addressLocality: "Bandung",
-      addressRegion: "Jawa Barat",
+      addressLocality: "Kendal",
+      addressRegion: "Jawa Tengah",
       addressCountry: "ID",
     },
+    areaServed: ["Kendal", "Semarang", "Jawa Tengah", "Indonesia"],
     openingHours: operatingHours,
     ...(logoUrl ? { image: logoUrl } : {}),
     ...(instagramUrl ? { sameAs: [instagramUrl] } : {}),
@@ -144,10 +157,10 @@ export default async function HomePage() {
       />
       {/* 1. Navbar */}
       <PageMotion />
-      <Navbar waNumber={whatsappNumber} storeName={storeName} logoUrl={logoUrl} />
+      <Navbar waNumber={whatsappNumber} storeName={storeName} companyName={settings.companyName} logoUrl={logoUrl} />
 
       {/* Pop-up Promo Otomatis (Jika Diaktifkan Admin) */}
-      <PromoPopup promo={popupPromo} waNumber={whatsappNumber} />
+      <PromoPopup promos={popupPromos} waNumber={whatsappNumber} />
 
       <main className="flex-1">
       {/* 2. Hero Section */}
@@ -184,15 +197,30 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-2.5 pt-6 border-t border-[#E2E8F0] dark:border-[#1F1F23] text-xs text-[#475569] dark:text-[#A1A1AA] font-medium tracking-tight">
-              <div className="flex items-center gap-2">
-                <span className="text-[#4D7C0F] dark:text-[#84CC16] font-bold text-sm">✓</span> Bahan Premium
+            <div className="grid grid-cols-3 gap-4 sm:gap-8 pt-6 border-t border-[#E2E8F0] dark:border-[#1F1F23]">
+              <div>
+                <p className="text-xl sm:text-2xl font-black tracking-tight tabular-nums leading-none text-[#0F172A] dark:text-[#FAFAFA]">
+                  100.000<span className="text-[#4D7C0F] dark:text-[#84CC16]">+</span>
+                </p>
+                <p className="text-[11px] sm:text-xs text-[#475569] dark:text-[#A1A1AA] font-medium mt-1.5 leading-snug">
+                  Jersey Terproduksi
+                </p>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[#4D7C0F] dark:text-[#84CC16] font-bold text-sm">✓</span> Pengerjaan Cepat (3–7 Hari)
+              <div>
+                <p className="text-xl sm:text-2xl font-black tracking-tight tabular-nums leading-none text-[#4D7C0F] dark:text-[#84CC16]">
+                  100%
+                </p>
+                <p className="text-[11px] sm:text-xs text-[#475569] dark:text-[#A1A1AA] font-medium mt-1.5 leading-snug">
+                  Garansi Tepat Waktu
+                </p>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[#4D7C0F] dark:text-[#84CC16] font-bold text-sm">✓</span> Bebas Konsultasi Desain
+              <div>
+                <p className="text-xl sm:text-2xl font-black tracking-tight tabular-nums leading-none text-[#0F172A] dark:text-[#FAFAFA]">
+                  100%
+                </p>
+                <p className="text-[11px] sm:text-xs text-[#475569] dark:text-[#A1A1AA] font-medium mt-1.5 leading-snug">
+                  Workshop Mandiri
+                </p>
               </div>
             </div>
           </div>
@@ -200,6 +228,79 @@ export default async function HomePage() {
 
         {/* Visual Full-Bleed Kanan (Data Gambar UploadThing) */}
         <HeroShowcaseCarousel items={displayCatalogs} />
+      </section>
+
+      {/* 2.5 Seksi Realita di Lapangan (4 Masalah Klasik) */}
+      <section className="py-16 sm:py-24 border-b border-[#E2E8F0] dark:border-[#27272A] bg-[#F8FAFC] dark:bg-[#09090B]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+            {/* Kolom Kiri: Pernyataan Masalah */}
+            <div data-animate="text-reveal" className="lg:col-span-5 lg:sticky lg:top-28 space-y-5">
+              <p className="text-xs font-semibold text-[#DC2626] dark:text-[#F87171]">
+                Realita di lapangan
+              </p>
+              <h2 className="text-2xl sm:text-4xl font-black tracking-[-0.03em] leading-[1.12] [text-wrap:balance] text-[#0F172A] dark:text-[#FAFAFA]">
+                Pernah kecewa pesan jersey tim karena 4 masalah klasik ini?
+              </h2>
+              <p className="text-sm sm:text-base text-[#475569] dark:text-[#A1A1AA] leading-relaxed max-w-[42ch] [text-wrap:pretty]">
+                Jangan sampai semangat bertanding tim atau reputasi panitia acara rusak hanya karena salah memilih vendor produksi.
+              </p>
+              <p className="pt-4 border-t border-[#E2E8F0] dark:border-[#1F1F23] text-xs sm:text-sm font-medium text-[#4D7C0F] dark:text-[#84CC16] max-w-[42ch]">
+                Semua produksi First Apparel dikerjakan di workshop sendiri dengan kontrol kualitas per potong.
+              </p>
+            </div>
+
+            {/* Kolom Kanan: Daftar Masalah Bernomor Tanpa Kotak Kartu */}
+            <ol
+              data-animate="stagger-cards"
+              className="lg:col-span-7 divide-y divide-[#E2E8F0] dark:divide-[#1F1F23] border-t border-b border-[#E2E8F0] dark:border-[#1F1F23]"
+            >
+              {[
+                {
+                  num: "01",
+                  title: "Warna cepat pudar dan luntur",
+                  description:
+                    "Baru dicuci 2-3 kali, warna jersey sudah kusam atau sablon retak karena memakai tinta murah dan suhu press tidak standar.",
+                },
+                {
+                  num: "02",
+                  title: "Bahan panas dan bikin gerah",
+                  description:
+                    "Kain polyester kaku yang tidak menyerap keringat membuat pemain cepat lelah dan tidak nyaman bergerak di cuaca terik.",
+                },
+                {
+                  num: "03",
+                  title: "Ukuran dan nameset meleset",
+                  description:
+                    "Size chart berantakan (terlalu sempit atau kedodoran), hingga salah cetak ejaan nama punggung dan nomor pemain saat hari pertandingan.",
+                },
+                {
+                  num: "04",
+                  title: "Jadwal molor dari hari-H",
+                  description:
+                    "Vendor hanya makelar tanpa mesin sendiri sehingga antrean dilempar sana-sini dan jersey baru tiba setelah turnamen selesai.",
+                },
+              ].map((item) => (
+                <li
+                  key={item.num}
+                  className="grid grid-cols-[2.5rem_1fr] sm:grid-cols-[3.5rem_1fr] gap-4 py-6 sm:py-7 items-baseline"
+                >
+                  <span className="text-sm sm:text-base font-black tabular-nums text-[#DC2626] dark:text-[#F87171]">
+                    {item.num}
+                  </span>
+                  <div className="space-y-1.5">
+                    <h3 className="text-base sm:text-lg font-bold tracking-tight text-[#0F172A] dark:text-[#FAFAFA] leading-snug">
+                      {item.title}
+                    </h3>
+                    <p className="text-sm text-[#475569] dark:text-[#A1A1AA] leading-relaxed max-w-[54ch]">
+                      {item.description}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
       </section>
 
       {/* Banner Promo Dinamis Carousel */}
@@ -210,148 +311,84 @@ export default async function HomePage() {
         />
       )}
 
-      {/* 3. USP Section (Keunggulan Produksi Resmi) */}
-      <section className="py-20 border-b border-[#27272A] bg-[#0C0D11]">
+      {/* 3. USP Section (Kenapa First Apparel) */}
+      <section className="py-16 sm:py-24 border-b border-[#E2E8F0] dark:border-[#27272A] bg-[#FFFFFF] dark:bg-[#0C0D11]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div data-animate="text-reveal" className="text-center max-w-3xl mx-auto mb-14">
-            <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-[#FAFAFA]">
-              Mengapa Tim Anda Memilih First Apparel?
-            </h2>
-            <p className="text-sm sm:text-base text-[#A1A1AA] mt-3">
-              Kualitas jahitan standar apparel profesional dengan teknologi cetak modern dan bahan kain grade-A.
-            </p>
-          </div>
-
-          <div data-animate="stagger-cards" className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-8 flex flex-col justify-between hover:border-[#3F3F46] hover:shadow-md transition-all group">
-              <div>
-                <span className="text-xs font-bold text-[#84CC16] tracking-wider block mb-2">
-                  Ringan &amp; Menyerap Keringat
-                </span>
-                <h3 className="text-lg font-bold text-[#FAFAFA] mb-2.5">
-                  Dryfit Milano & Brazil Original
-                </h3>
-                <p className="text-sm text-[#A1A1AA] leading-relaxed">
-                  Serat kain berpori mikro yang menyerap keringat seketika. Ringan, sejuk, dan tidak membatasi pergerakan saat bertanding.
-                </p>
-              </div>
-            </div>
-
-            <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-8 flex flex-col justify-between hover:border-[#3F3F46] hover:shadow-md transition-all group">
-              <div>
-                <span className="text-xs font-bold text-[#84CC16] tracking-wider block mb-2">
-                  Sablon Awet Tahan Lama
-                </span>
-                <h3 className="text-lg font-bold text-[#FAFAFA] mb-2.5">
-                  Sublimasi Full Print HD
-                </h3>
-                <p className="text-sm text-[#A1A1AA] leading-relaxed">
-                  Tinta khusus meresap sempurna ke serat kain. Warna tajam, gradasi rapi, tidak pecah, dan tidak luntur meski dicuci berkali-kali.
-                </p>
-              </div>
-            </div>
-
-            <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-8 flex flex-col justify-between hover:border-[#3F3F46] hover:shadow-md transition-all group">
-              <div>
-                <span className="text-xs font-bold text-[#84CC16] tracking-wider block mb-2">
-                  Pesan Satuan atau Partai Besar
-                </span>
-                <h3 className="text-lg font-bold text-[#FAFAFA] mb-2.5">
-                  Tanpa Minimum Order
-                </h3>
-                <p className="text-sm text-[#A1A1AA] leading-relaxed">
-                  Melayani pesanan mulai dari 1 pcs untuk contoh atau kapten, hingga ratusan pcs untuk turnamen dengan harga berjenjang makin hemat.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. Katalog Section */}
-      <section id="katalog" className="py-20 border-b border-[#27272A]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div data-animate="text-reveal" className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
-            <div>
-              <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-[#FAFAFA]">
-                Pilihan Model Jersey Populer
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+            {/* Kolom Kiri: Pernyataan Keunggulan */}
+            <div data-animate="text-reveal" className="lg:col-span-5 lg:sticky lg:top-28 space-y-5">
+              <p className="text-xs font-semibold text-[#4D7C0F] dark:text-[#84CC16]">
+                Kenapa First Apparel?
+              </p>
+              <h2 className="text-2xl sm:text-4xl font-black tracking-[-0.03em] leading-[1.12] [text-wrap:balance] text-[#0F172A] dark:text-[#FAFAFA]">
+                Kualitas Apparel Profesional untuk Performa Maksimal di Lapangan
               </h2>
+              <p className="text-sm sm:text-base text-[#475569] dark:text-[#A1A1AA] leading-relaxed max-w-[42ch] [text-wrap:pretty]">
+                Kombinasi teknologi cetak modern, bahan kain pilihan, dan manajemen produksi mandiri dalam satu pintu.
+              </p>
             </div>
-            <Link
-              href="/katalog"
-              className="text-sm font-semibold text-[#84CC16] hover:text-[#9ee238] transition-colors inline-flex items-center gap-1 self-start md:self-auto"
+
+            {/* Kolom Kanan: Daftar 4 Keunggulan Bernomor Tanpa Kotak Kartu */}
+            <ol
+              data-animate="stagger-cards"
+              className="lg:col-span-7 divide-y divide-[#E2E8F0] dark:divide-[#1F1F23] border-t border-b border-[#E2E8F0] dark:border-[#1F1F23]"
             >
-              Lihat Semua Katalog Model →
-            </Link>
-          </div>
-
-          <div data-animate="stagger-cards" className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {displayCatalogs.map((item, idx) => {
-              const isBestSeller = idx === 0;
-              const cleanPrice = item.priceInfo
-                ? item.priceInfo.replace(/mulai\s*/i, "").replace(/\/.*$/, "").trim()
-                : "Hubungi Kami";
-              const detailHref = featuredCatalogs.length > 0 ? `/katalog/${item.id}` : "/katalog";
-
-              return (
-                <Link
-                  key={item.id}
-                  href={detailHref}
-                  className="group block"
+              {[
+                {
+                  num: "01",
+                  title: "Sublimation Printing Tajam",
+                  description:
+                    "Tinta meresap permanen ke dalam serat kain. Bebas gradasi warna tak terbatas, tidak menutup pori-pori kain, dan 100% anti-luntur.",
+                },
+                {
+                  num: "02",
+                  title: "Material Dry-Fit Premium",
+                  description:
+                    "Pilihan kain Milano, Embos, Brazil, hingga Serena (130-160 gsm) yang ringan, sejuk, cepat kering, dan anti-bakteri saat berkeringat.",
+                },
+                {
+                  num: "03",
+                  title: "Produksi Mandiri & Tepat Waktu",
+                  description:
+                    "Dikerjakan langsung di workshop CV Asika Multiguna Semesta tanpa lempar ke pihak ketiga, menjamin ketepatan jadwal pengiriman.",
+                },
+                {
+                  num: "04",
+                  title: "One-Stop Solution",
+                  description:
+                    "Mulai dari konsultasi konsep, pembuatan mockup 3D, pola kerah custom, jahit rantai standar distro, hingga kemasan rapi per pemain.",
+                },
+              ].map((item) => (
+                <li
+                  key={item.num}
+                  className="grid grid-cols-[2.5rem_1fr] sm:grid-cols-[3.5rem_1fr] gap-4 py-6 sm:py-7 items-baseline"
                 >
-                  {/* Visual Produk Bersih (4:5) */}
-                  <div className="relative aspect-[4/5] w-full rounded-xl overflow-hidden bg-[#F1F5F9] dark:bg-[#141418]">
-                    {isBestSeller && (
-                      <span className="absolute top-2.5 left-2.5 z-10 px-2.5 py-1 rounded-md bg-[#65A30D] dark:bg-[#84CC16] text-white dark:text-[#09090B] text-[10px] font-bold tracking-wide uppercase shadow-sm">
-                        Terlaris
-                      </span>
-                    )}
-
-                    {item.imageUrl ? (
-                      <Image
-                        src={item.imageUrl}
-                        alt={item.title}
-                        fill
-                        sizes="(min-width: 1024px) 25vw, 50vw"
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-center p-4">
-                        <div className="w-12 h-12 rounded-xl bg-[#E2E8F0] dark:bg-[#181922] flex items-center justify-center text-[#4D7C0F] dark:text-[#84CC16]">
-                          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                          </svg>
-                        </div>
-                        <span className="text-[11px] text-[#64748B] dark:text-[#A1A1AA] font-medium">
-                          Pratinjau Produksi HD
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Info Produk Ringkas di Bawah Gambar */}
-                  <div className="pt-3 space-y-1">
-                    <h3 className="text-sm font-medium text-[#0F172A] dark:text-[#FAFAFA] leading-snug line-clamp-2 group-hover:text-[#4D7C0F] dark:group-hover:text-[#84CC16] transition-colors">
+                  <span className="text-sm sm:text-base font-black tabular-nums text-[#4D7C0F] dark:text-[#84CC16]">
+                    {item.num}
+                  </span>
+                  <div className="space-y-1.5">
+                    <h3 className="text-base sm:text-lg font-bold tracking-tight text-[#0F172A] dark:text-[#FAFAFA] leading-snug">
                       {item.title}
                     </h3>
-                    <p className="text-xs text-[#64748B] dark:text-[#A1A1AA] truncate">
-                      {item.fabric}
+                    <p className="text-sm text-[#475569] dark:text-[#A1A1AA] leading-relaxed max-w-[54ch]">
+                      {item.description}
                     </p>
-                    <div className="flex items-baseline gap-1 pt-0.5">
-                      <span className="text-sm font-bold text-[#0F172A] dark:text-[#FAFAFA] tabular-nums">
-                        {cleanPrice}
-                      </span>
-                      {item.priceInfo && (
-                        <span className="text-xs text-[#64748B] dark:text-[#71717A]">/ pcs</span>
-                      )}
-                    </div>
                   </div>
-                </Link>
-              );
-            })}
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
       </section>
+
+      {/* 3.5 Katalog Material Kain (Carousel 3 Berjejer + Zoom Detail) */}
+      <FabricCatalogCarousel fabrics={activeFabrics} />
+
+      {/* 4. Katalog Section (Carousel 3 Berjejer) */}
+      <FeaturedCatalogCarousel
+        catalogs={displayCatalogs}
+        hasRealData={featuredCatalogs.length > 0}
+      />
 
       {/* 5.5 Seksi Ulasan Pelanggan (Hanya Tampil Jika Ada Data Asli di Database) */}
       {activeReviews.length > 0 && (
@@ -598,6 +635,9 @@ export default async function HomePage() {
           </div>
         </section>
       )}
+
+      {/* 6.5 Pertanyaan yang Sering Ditanyakan (FAQ) */}
+      <FaqSection />
 
       {/* 7. Spanduk CTA WhatsApp */}
       <section className="py-16 bg-[#09090B] border-b border-[#27272A] relative overflow-hidden">

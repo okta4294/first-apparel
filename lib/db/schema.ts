@@ -38,6 +38,8 @@ export const promos = pgTable("promos", {
   badgeText: varchar("badge_text", { length: 100 }).notNull(),
   imageUrl: text("image_url"),
   imageKey: varchar("image_key", { length: 255 }),
+  popupImageUrl: text("popup_image_url"),
+  popupImageKey: varchar("popup_image_key", { length: 255 }),
   waMessage: text("wa_message").notNull(),
   hasDuration: boolean("has_duration").default(false).notNull(),
   startDate: timestamp("start_date"),
@@ -78,6 +80,7 @@ export const partners = pgTable("partners", {
 export const siteSettings = pgTable("site_settings", {
   id: integer("id").primaryKey().default(1),
   storeName: varchar("store_name", { length: 150 }).default("First Apparel").notNull(),
+  companyName: varchar("company_name", { length: 150 }),
   storeAddress: text("store_address")
     .default("Jl. Terusan Olahraga No. 8, Bandung, Jawa Barat")
     .notNull(),
@@ -90,6 +93,11 @@ export const siteSettings = pgTable("site_settings", {
   instagramUrl: text("instagram_url"),
   logoUrl: text("logo_url"),
   logoKey: varchar("logo_key", { length: 255 }),
+  footerCompanyName: varchar("footer_company_name", { length: 150 }),
+  footerLogoUrl: text("footer_logo_url"),
+  footerLogoKey: varchar("footer_logo_key", { length: 255 }),
+  footerLogo2Url: text("footer_logo_2_url"),
+  footerLogo2Key: varchar("footer_logo_2_key", { length: 255 }),
   sizeChartUrl: text("size_chart_url"),
   sizeChartKey: varchar("size_chart_key", { length: 255 }),
   storeDescription: text("store_description").default(
@@ -102,6 +110,11 @@ export const siteSettings = pgTable("site_settings", {
 export const fabrics = pgTable("fabrics", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 150 }).notNull(),
+  badge: varchar("badge", { length: 60 }),
+  gsm: varchar("gsm", { length: 40 }),
+  recommendation: varchar("recommendation", { length: 255 }),
+  imageUrl: text("image_url"),
+  imageKey: varchar("image_key", { length: 255 }),
   description: text("description").notNull(),
   sortOrder: integer("sort_order").default(0).notNull(),
   isActive: boolean("is_active").default(true).notNull(),

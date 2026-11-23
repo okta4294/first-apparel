@@ -10,10 +10,11 @@ import { WhatsAppIcon } from "@/components/whatsapp-icon";
 interface NavbarProps {
   waNumber: string;
   storeName?: string;
+  companyName?: string | null;
   logoUrl?: string | null;
 }
 
-export function Navbar({ waNumber, storeName = "FIRST APPAREL", logoUrl }: NavbarProps) {
+export function Navbar({ waNumber, storeName = "FIRST APPAREL", companyName, logoUrl }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
@@ -24,7 +25,7 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", logoUrl }: Navba
   const isHome = pathname === "/";
   const isKatalog = pathname.startsWith("/katalog");
   const isCaraPesan = pathname === "/cara-pesan" || pathname === "/alur-pemesanan";
-  const isBlog = pathname.startsWith("/blog");
+  // const isBlog = pathname.startsWith("/blog");
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[#27272A] bg-[#09090B]/95 backdrop-blur-md">
@@ -33,16 +34,23 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", logoUrl }: Navba
         <Link href="/" className="flex items-center gap-3 group">
           {logoUrl ? (
             <div className="w-9 h-9 rounded-lg overflow-hidden border border-[#27272A]/80 flex items-center justify-center transition-transform group-hover:scale-105 shrink-0">
-              <Image src={logoUrl} alt={storeName} width={36} height={36} priority className="w-full h-full object-cover" />
+              <Image src={logoUrl} alt={storeName} width={36} height={36} className="w-full h-full object-cover" />
             </div>
           ) : (
             <div className="w-8 h-8 rounded-lg bg-[#84CC16] flex items-center justify-center font-black text-[#09090B] text-base transition-transform group-hover:scale-105 shrink-0">
               {storeName.slice(0, 2).toUpperCase()}
             </div>
           )}
-          <span className="font-bold text-lg tracking-tight text-[#FAFAFA] truncate max-w-[200px] sm:max-w-xs">
-            {storeName.toUpperCase()}
-          </span>
+          <div className="flex flex-col min-w-0">
+            <span className="font-bold text-base sm:text-lg tracking-tight leading-tight text-[#FAFAFA] truncate max-w-[200px] sm:max-w-xs">
+              {storeName.toUpperCase()}
+            </span>
+            {companyName && (
+              <span className="text-[10px] sm:text-[11px] font-medium text-[#A1A1AA] leading-tight truncate max-w-[200px] sm:max-w-xs mt-0.5">
+                {companyName}
+              </span>
+            )}
+          </div>
         </Link>
 
         {/* Desktop Navigation Links */}
@@ -65,12 +73,12 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", logoUrl }: Navba
           >
             Alur Pemesanan
           </Link>
-          <Link
+          {/* <Link
             href="/blog"
             className={isBlog ? "text-[#84CC16] font-semibold transition-colors" : "text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors"}
           >
             Blog
-          </Link>
+          </Link> */}
         </nav>
 
         {/* Desktop WhatsApp CTA & Theme Switcher */}
@@ -82,7 +90,7 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", logoUrl }: Navba
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#84CC16] text-[#09090B] text-xs font-bold tracking-wide transition-all hover:bg-[#9ee238] active:scale-95 shadow-md"
           >
-            <WhatsAppIcon className="w-3.5 h-3.5 fill-current shrink-0" />
+            <WhatsAppIcon className="w-4 h-4 fill-current shrink-0" />
             <span>Konsultasi via WhatsApp</span>
           </a>
         </div>
@@ -145,7 +153,7 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", logoUrl }: Navba
           >
             Alur Pemesanan
           </Link>
-          <Link
+          {/* <Link
             href="/blog"
             onClick={() => setIsOpen(false)}
             className={`block px-3 py-2 rounded-lg text-sm font-medium ${
@@ -153,7 +161,7 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", logoUrl }: Navba
             }`}
           >
             Blog
-          </Link>
+          </Link> */}
           <div className="pt-2">
             <a
               href={waHref}
@@ -161,7 +169,7 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", logoUrl }: Navba
               rel="noopener noreferrer"
               className="w-full min-h-[44px] flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-[#84CC16] text-[#09090B] text-xs font-bold tracking-wide"
             >
-              <WhatsAppIcon className="w-3.5 h-3.5 fill-current shrink-0" />
+              <WhatsAppIcon className="w-4 h-4 fill-current shrink-0" />
               <span>Konsultasi via WhatsApp</span>
             </a>
           </div>

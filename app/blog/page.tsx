@@ -52,7 +52,7 @@ export default async function BlogPage() {
   return (
     <div className="min-h-screen bg-[#09090B] text-[#FAFAFA] flex flex-col selection:bg-[#84CC16] selection:text-[#09090B]">
       <PageMotion />
-      <Navbar waNumber={whatsappNumber} storeName={storeName} logoUrl={logoUrl} />
+      <Navbar waNumber={whatsappNumber} storeName={storeName} companyName={settings.companyName} logoUrl={logoUrl} />
 
       {/* Header Blog */}
       <section className="border-b border-[#27272A] bg-[#0C0D11]">

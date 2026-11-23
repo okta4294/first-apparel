@@ -1,135 +1,63 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { usePathname } from "next/navigation";
-import { ReactLenis, type LenisRef } from "lenis/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
+import { useEffect } from "react";
 
 export function MotionProvider({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const isAdmin = pathname?.startsWith("/admin") ?? false;
-  const lenisRef = useRef<LenisRef>(null);
-
-  useEffect(() => {
-    if (isAdmin) return;
-
-    function update(time: number) {
-      lenisRef.current?.lenis?.raf(time * 1000);
-    }
-
-    gsap.ticker.add(update);
-    gsap.ticker.lagSmoothing(0);
-
-    const lenis = lenisRef.current?.lenis;
-    lenis?.on("scroll", ScrollTrigger.update);
-
-    return () => {
-      lenis?.off("scroll", ScrollTrigger.update);
-      gsap.ticker.remove(update);
-    };
-  }, [isAdmin]);
-
-  if (isAdmin) {
-    return <>{children}</>;
-  }
-
-  return (
-    <ReactLenis
-      root
-      ref={lenisRef}
-      options={{
-        autoRaf: false,
-        lerp: 0.1,
-        smoothWheel: true,
-      }}
-    >
-      {children}
-    </ReactLenis>
-  );
+  return <>{children}</>;
 }
 
 export function PageMotion() {
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      const mm = gsap.matchMedia();
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
-        const heroContainers = gsap.utils.toArray<HTMLElement>('[data-animate="hero"]');
-        heroContainers.forEach((container) => {
-          const items =
-            container.children.length > 0 ? Array.from(container.children) : [container];
-          gsap.from(items, {
-            y: 22,
-            opacity: 0,
-            duration: 0.75,
-            stagger: 0.1,
-            ease: "power3.out",
-            clearProps: "transform,opacity",
-          });
-        });
+    if (
+      typeof window === "undefined" ||
+      typeof IntersectionObserver === "undefined" ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
 
-        const textBlocks = gsap.utils.toArray<HTMLElement>('[data-animate="text-reveal"]');
-        textBlocks.forEach((block) => {
-          const targets =
-            block.children.length > 0 ? Array.from(block.children) : [block];
-          gsap.from(targets, {
-            y: 24,
-            opacity: 0,
-            duration: 0.7,
-            stagger: 0.08,
-            ease: "power3.out",
-            clearProps: "transform,opacity",
-            scrollTrigger: {
-              trigger: block,
-              start: "top 88%",
-              once: true,
-            },
-          });
-        });
+    const selectors = '[data-animate="text-reveal"], [data-animate="stagger-cards"], [data-animate="fade-up"]';
+    const elements = Array.from(document.querySelectorAll<HTMLElement>(selectors));
+    if (elements.length === 0) return;
 
-        const cardGrids = gsap.utils.toArray<HTMLElement>('[data-animate="stagger-cards"]');
-        cardGrids.forEach((grid) => {
-          const cards = Array.from(grid.children);
-          if (cards.length === 0) return;
-          gsap.from(cards, {
-            y: 26,
-            opacity: 0,
-            duration: 0.65,
-            stagger: 0.08,
-            ease: "power2.out",
-            clearProps: "transform,opacity",
-            scrollTrigger: {
-              trigger: grid,
-              start: "top 86%",
-              once: true,
-            },
-          });
-        });
+    const viewportHeight = window.innerHeight;
+    // Baca posisi semua elemen sekaligus sebelum menulis style agar tidak memicu forced reflow
+    const toObserve = elements.filter(
+      (el) => el.getBoundingClientRect().top >= viewportHeight * 0.95
+    );
 
-        const fadeUps = gsap.utils.toArray<HTMLElement>('[data-animate="fade-up"]');
-        fadeUps.forEach((el) => {
-          gsap.from(el, {
-            y: 22,
-            opacity: 0,
-            duration: 0.65,
-            ease: "power2.out",
-            clearProps: "transform,opacity",
-            scrollTrigger: {
-              trigger: el,
-              start: "top 88%",
-              once: true,
-            },
-          });
-        });
-      });
+    if (toObserve.length === 0) return;
 
-      ScrollTrigger.refresh();
-    });
+    for (const el of toObserve) {
+      el.style.opacity = "0";
+      el.style.transform = "translate3d(0, 18px, 0)";
+      el.style.transition = "opacity 0.5s ease-out, transform 0.5s ease-out";
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const target = entry.target as HTMLElement;
+          target.style.opacity = "1";
+          target.style.transform = "translate3d(0, 0, 0)";
+          observer.unobserve(target);
+        }
+      },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.05 }
+    );
+
+    for (const el of toObserve) {
+      observer.observe(el);
+    }
 
     return () => {
-      ctx.revert();
+      observer.disconnect();
+      for (const el of toObserve) {
+        el.style.opacity = "";
+        el.style.transform = "";
+        el.style.transition = "";
+      }
     };
   }, []);
 

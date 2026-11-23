@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { getActiveCatalogCategories, getSiteSettings } from "@/lib/public-data";
 
 export interface FooterProps {
   storeName: string;
@@ -10,10 +11,18 @@ export interface FooterProps {
   defaultWaText?: string;
   instagramUrl?: string | null;
   logoUrl?: string | null;
+  footerLogoUrl?: string | null;
+  footerCompanyName?: string | null;
   storeDescription?: string | null;
 }
 
-export function Footer({
+function formatCategoryLabel(category: string): string {
+  return category
+    .toLowerCase()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+export async function Footer({
   storeName = "First Apparel",
   storeAddress = "Jl. Terusan Olahraga No. 8, Bandung, Jawa Barat",
   googleMapsUrl,
@@ -22,9 +31,22 @@ export function Footer({
   defaultWaText = "Halo Admin First Apparel, saya ingin berkonsultasi tentang pemesanan jersey kustom.",
   instagramUrl,
   logoUrl,
+  footerLogoUrl,
+  footerCompanyName,
   storeDescription = "Vendor konveksi dan produsen custom jersey olahraga profesional. Melayani pembuatan seragam futsal, sepak bola, esports, running, dan apparel tim.",
 }: FooterProps) {
   const waLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(defaultWaText)}`;
+  const [categories, siteSettings] = await Promise.all([
+    getActiveCatalogCategories(),
+    getSiteSettings(),
+  ]);
+  const companyLogoUrl = footerLogoUrl ?? siteSettings.footerLogoUrl ?? logoUrl ?? siteSettings.logoUrl;
+  const companyLogo2Url = siteSettings.footerLogo2Url;
+  const companyDisplayName =
+    footerCompanyName ??
+    siteSettings.footerCompanyName ??
+    siteSettings.companyName ??
+    storeName;
 
   return (
     <footer className="border-t border-[#27272A] bg-[#0C0D11] pt-16 pb-12 text-xs">
@@ -32,18 +54,9 @@ export function Footer({
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-[#27272A]">
           {/* C1: Brand Info */}
           <div className="space-y-4">
-            <Link href="/" className="flex items-center gap-2.5 group">
-              {logoUrl ? (
-                <div className="w-8 h-8 rounded-lg border border-[#27272A]/80 flex items-center justify-center overflow-hidden shrink-0">
-                  <Image src={logoUrl} alt={storeName} width={32} height={32} className="w-full h-full object-cover" />
-                </div>
-              ) : (
-                <div className="w-7 h-7 rounded-md bg-[#84CC16] flex items-center justify-center font-black text-[#09090B] text-xs shrink-0">
-                  {storeName.slice(0, 2).toUpperCase()}
-                </div>
-              )}
-              <span className="font-bold text-base tracking-tight text-[#FAFAFA]">
-                {storeName}
+            <Link href="/" className="inline-block group">
+              <span className="font-bold text-base tracking-tight text-[#FAFAFA] group-hover:text-[#84CC16] transition-colors">
+                {companyDisplayName}
               </span>
             </Link>
             <p className="text-[#A1A1AA] leading-relaxed">
@@ -70,11 +83,11 @@ export function Footer({
                   Alur Pemesanan
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/blog" className="hover:text-[#84CC16] transition-colors">
                   Blog
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -82,26 +95,24 @@ export function Footer({
           <div>
             <h3 className="font-bold text-sm text-[#FAFAFA] mb-4">Kategori Produk</h3>
             <ul className="space-y-2.5 text-[#A1A1AA]">
-              <li>
-                <Link href="/katalog?kategori=FUTSAL" className="hover:text-[#84CC16] transition-colors">
-                  Jersey Futsal &amp; Bola
-                </Link>
-              </li>
-              <li>
-                <Link href="/katalog?kategori=ESPORTS" className="hover:text-[#84CC16] transition-colors">
-                  Jersey Esports Pro
-                </Link>
-              </li>
-              <li>
-                <Link href="/katalog?kategori=RUNNING" className="hover:text-[#84CC16] transition-colors">
-                  Jersey Running &amp; Cycling
-                </Link>
-              </li>
-              <li>
-                <Link href="/katalog?kategori=JAKET" className="hover:text-[#84CC16] transition-colors">
-                  Jaket &amp; Coach Jacket
-                </Link>
-              </li>
+              {categories.length > 0 ? (
+                categories.map((category) => (
+                  <li key={category}>
+                    <Link
+                      href={`/katalog?kategori=${encodeURIComponent(category)}`}
+                      className="hover:text-[#84CC16] transition-colors"
+                    >
+                      {formatCategoryLabel(category)}
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <li>
+                  <Link href="/katalog" className="hover:text-[#84CC16] transition-colors">
+                    Lihat Semua Katalog
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
 
@@ -156,8 +167,32 @@ export function Footer({
           </div>
         </div>
 
-        <div className="pt-8 text-center text-[#A1A1AA]">
-          © 2026 {storeName}. Hak Cipta Dilindungi. Seluruh pemesanan dilayani via WhatsApp Resmi.
+        <div className="pt-8 flex flex-col items-center gap-5 text-center text-[#A1A1AA]">
+          {(companyLogoUrl || companyLogo2Url) && (
+            <div className="flex flex-wrap items-center justify-center gap-8">
+              {companyLogoUrl && (
+                <Image
+                  src={companyLogoUrl}
+                  alt={companyDisplayName}
+                  width={220}
+                  height={96}
+                  className="h-20 sm:h-24 w-auto object-contain"
+                />
+              )}
+              {companyLogo2Url && (
+                <Image
+                  src={companyLogo2Url}
+                  alt={`${companyDisplayName} logo 2`}
+                  width={220}
+                  height={96}
+                  className="h-20 sm:h-24 w-auto object-contain"
+                />
+              )}
+            </div>
+          )}
+          <p>
+            © 2026 {storeName}. Hak Cipta Dilindungi. Seluruh pemesanan dilayani via WhatsApp Resmi.
+          </p>
         </div>
       </div>
     </footer>

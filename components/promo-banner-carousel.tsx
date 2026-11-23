@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 
 export interface PromoItem {
@@ -42,228 +42,246 @@ function splitBadgeHighlight(raw: string): { main: string; sub: string } {
   return { main: clean, sub: "PENAWARAN AKTIF" };
 }
 
+function formatDurationRange(promo: PromoItem): string {
+  if (!promo.hasDuration) return "Penawaran Terbatas";
+
+  const fullFmt = new Intl.DateTimeFormat("id-ID", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+  const shortFmt = new Intl.DateTimeFormat("id-ID", {
+    day: "numeric",
+    month: "long",
+  });
+
+  if (promo.startDate && promo.endDate) {
+    const start = new Date(promo.startDate);
+    const end = new Date(promo.endDate);
+    if (start.getFullYear() === end.getFullYear()) {
+      return `${shortFmt.format(start)} - ${fullFmt.format(end)}`;
+    }
+    return `${fullFmt.format(start)} - ${fullFmt.format(end)}`;
+  }
+
+  if (promo.endDate) {
+    return `Berlaku s/d ${fullFmt.format(new Date(promo.endDate))}`;
+  }
+
+  return "Penawaran Terbatas";
+}
+
 export function PromoBannerCarousel({
   promos,
   waNumber,
 }: PromoBannerCarouselProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  const total = promos?.length ?? 0;
+  const safeIndex = total > 0 ? activeIndex % total : 0;
+
+  const goPrev = useCallback(() => {
+    if (total <= 1) return;
+    setActiveIndex((prev) => (prev - 1 + total) % total);
+  }, [total]);
+
+  const goNext = useCallback(() => {
+    if (total <= 1) return;
+    setActiveIndex((prev) => (prev + 1) % total);
+  }, [total]);
 
   useEffect(() => {
-    if (isPaused || promos.length <= 1) return;
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      return;
-    }
+    if (total <= 1 || isPaused) return;
+    const timer = window.setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % total);
+    }, 6000);
+    return () => window.clearInterval(timer);
+  }, [total, isPaused]);
 
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % promos.length);
-    }, 5000);
+  if (!promos || total === 0) return null;
 
-    return () => clearInterval(timer);
-  }, [isPaused, promos.length]);
-
-  if (!promos || promos.length === 0) return null;
-
-  const safeIndex = currentIndex % promos.length;
-  const current = promos[safeIndex] || promos[0];
-
+  const activePromo = promos[safeIndex];
   const waText =
-    current.waMessage ||
-    `Halo Admin First Apparel, saya ingin klaim promo "${current.title}" yang sedang tayang di website.`;
-
+    activePromo.waMessage ||
+    `Halo Admin First Apparel, saya ingin klaim promo "${activePromo.title}" yang sedang tayang di website.`;
   const waHref = `https://wa.me/${waNumber}?text=${encodeURIComponent(waText)}`;
-
   const { main: highlightMain, sub: highlightSub } = splitBadgeHighlight(
-    current.badgeText || "PROMO"
+    activePromo.badgeText || "PROMO"
   );
-
-  const durationLabel =
-    current.hasDuration && current.endDate
-      ? `Berlaku s/d ${new Intl.DateTimeFormat("id-ID", {
-          day: "numeric",
-          month: "short",
-          year: "numeric",
-        }).format(new Date(current.endDate))}`
-      : "Penawaran Terbatas";
-
-  const minSwipeDistance = 45;
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-  const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-  const onTouchEnd = () => {
-    if (touchStart === null || touchEnd === null || promos.length <= 1) return;
-    const distance = touchStart - touchEnd;
-    if (distance > minSwipeDistance) {
-      setCurrentIndex((prev) => (prev + 1) % promos.length);
-    } else if (distance < -minSwipeDistance) {
-      setCurrentIndex((prev) => (prev - 1 + promos.length) % promos.length);
-    }
-  };
-
-  const hasImage = Boolean(current.imageUrl);
+  const durationLabel = formatDurationRange(activePromo);
 
   return (
     <section
-      className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 border-b border-[#E2E8F0] dark:border-[#27272A] bg-[#F8FAFC] dark:bg-[#09090B]"
+      className="py-10 sm:py-14 px-4 sm:px-6 lg:px-8 border-b border-[#E2E8F0] dark:border-[#27272A] bg-[#F8FAFC] dark:bg-[#09090B]"
       aria-label="Promo Aktif"
     >
       <div className="max-w-7xl mx-auto">
-        {/* Header Seksi Ringkas */}
-        <div data-animate="text-reveal" className="mb-6 sm:mb-8 max-w-2xl">
-          <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-[#0F172A] dark:text-[#FAFAFA]">
-            Promo Aktif
-          </h2>
-          <p className="text-sm sm:text-base text-[#475569] dark:text-[#A1A1AA] mt-1.5 leading-relaxed">
-            Potongan harga dan penawaran khusus untuk pemesanan custom jersey tim langsung via WhatsApp.
-          </p>
-        </div>
-
-        {/* Kartu Banner Promo dengan Background Gambar Upload (Fallback Gradien Lime) */}
         <div
-          className={`relative overflow-hidden rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:p-11 grid grid-cols-1 md:grid-cols-[1fr_auto] md:items-center gap-4 md:gap-x-10 md:gap-y-5 select-none border ${
-            hasImage
-              ? "bg-[#F8FAFC] dark:bg-[#09090B] border-[#E2E8F0] dark:border-[#27272A] shadow-[0_12px_32px_-12px_rgba(15,23,42,0.10)] dark:shadow-none"
-              : "bg-gradient-to-r from-[#BEF264] via-[#A3E635] to-[#84CC16] border-transparent shadow-sm"
-          }`}
+          role="region"
+          aria-roledescription="carousel"
+          aria-label="Banner promo aktif"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
-          onTouchStart={onTouchStart}
-          onTouchMove={onTouchMove}
-          onTouchEnd={onTouchEnd}
+          onFocusCapture={() => setIsPaused(true)}
+          onBlurCapture={() => setIsPaused(false)}
+          className="relative w-full overflow-hidden rounded-xl sm:rounded-2xl bg-[#11131A] border border-[#E2E8F0] dark:border-[#27272A] min-h-[260px] sm:min-h-[320px] lg:min-h-[360px] flex items-center"
         >
-          {current.imageUrl && (
+          {/* Latar Gambar Banner Penuh */}
+          {activePromo.imageUrl ? (
             <>
               <Image
-                key={`bg-${current.id}`}
-                src={current.imageUrl}
-                alt={current.title}
+                key={activePromo.id}
+                src={activePromo.imageUrl}
+                alt={activePromo.title}
                 fill
                 sizes="(min-width: 1280px) 1216px, 100vw"
-                className="object-cover object-center"
+                className="object-cover object-center transition-opacity duration-500"
               />
               <div
-                className="absolute inset-0 bg-gradient-to-t from-[#F8FAFC]/96 via-[#F8FAFC]/85 to-[#F8FAFC]/45 md:bg-gradient-to-r md:from-[#F8FAFC]/95 md:via-[#F8FAFC]/80 md:to-[#F8FAFC]/25 dark:from-[#09090B]/95 dark:via-[#09090B]/82 dark:to-[#09090B]/45 md:dark:from-[#09090B]/92 md:dark:via-[#09090B]/72 md:dark:to-[#09090B]/35 pointer-events-none"
+                className="absolute inset-0 bg-gradient-to-r from-[#09090B]/90 via-[#09090B]/65 to-[#09090B]/25"
                 aria-hidden="true"
               />
             </>
+          ) : (
+            <div
+              className="absolute inset-0 bg-gradient-to-br from-[#14171F] via-[#11131A] to-[#1A2410]"
+              aria-hidden="true"
+            />
           )}
 
-          {/* Informasi Promo: Label, Judul, dan Deskripsi */}
-          <div className="relative z-10 md:col-start-1 md:row-start-1 space-y-2.5 sm:space-y-3.5 max-w-xl">
-            <span
-              className={`inline-block px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-bold uppercase tracking-wider ${
-                hasImage
-                  ? "bg-[#ECFCCB] border border-[#BEF264] text-[#365314] dark:bg-white/15 dark:backdrop-blur-sm dark:border-white/20 dark:text-white"
-                  : "bg-[#14532D] text-[#ECFCCB]"
-              }`}
-            >
-              {durationLabel}
-            </span>
-
-            <h3
-              className={`text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight uppercase leading-tight ${
-                hasImage ? "text-[#0F172A] dark:text-white" : "text-[#052E16]"
-              }`}
-            >
-              {current.title}
-            </h3>
-
-            {current.label && (
-              <p
-                className={`text-sm sm:text-base font-medium leading-relaxed ${
-                  hasImage ? "text-[#334155] dark:text-white/85" : "text-[#14532D]"
-                }`}
-              >
-                {current.label}
+          {/* Konten Banner Editorial Kiri */}
+          <div className="relative z-10 w-full px-14 sm:px-16 lg:px-24 pt-8 pb-12 sm:py-12">
+            <div className="max-w-3xl space-y-4 sm:space-y-5">
+              {/* Judul Promo Utama */}
+              <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.14em] text-[#84CC16]">
+                Promo Spesial First Apparel
               </p>
-            )}
-          </div>
 
-          {/* Kotak Highlight Diskon: Bar Ringkas di Mobile, Kotak Kanan di Desktop */}
-          <div
-            className={`relative z-10 md:col-start-2 md:row-start-1 md:row-span-2 md:min-w-[180px] lg:min-w-[220px] rounded-xl md:rounded-2xl px-4 py-3 md:px-7 md:py-8 flex flex-row md:flex-col items-baseline md:items-center justify-between md:justify-center gap-3 md:gap-0 md:text-center shrink-0 ${
-              hasImage
-                ? "bg-white/88 backdrop-blur-md border border-[#E2E8F0] shadow-[0_8px_24px_-8px_rgba(15,23,42,0.12)] dark:bg-black/55 dark:border-white/20 dark:shadow-none"
-                : "bg-white/30 border border-white/45"
-            }`}
-          >
-            <span
-              className={`text-3xl sm:text-4xl md:text-5xl font-black tracking-tight leading-none tabular-nums ${
-                hasImage ? "text-[#0F172A] dark:text-white" : "text-[#052E16]"
-              }`}
-            >
-              {highlightMain}
-            </span>
-            <span
-              className={`md:mt-2 text-[11px] sm:text-xs font-bold uppercase tracking-widest ${
-                hasImage ? "text-[#4D7C0F] dark:text-[#BEF264]" : "text-[#14532D]"
-              }`}
-            >
-              {highlightSub}
-            </span>
-          </div>
+              {/* Highlight Diskon & Judul dengan Pemisah Vertikal ala Banner Olahraga */}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+                <div className="shrink-0">
+                  <p className="text-3xl sm:text-5xl lg:text-[54px] font-black tracking-tight leading-none text-[#FAFAFA] tabular-nums">
+                    {highlightMain}
+                  </p>
+                  <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.12em] text-[#D4D4D8] mt-1">
+                    {highlightSub}
+                  </p>
+                </div>
 
-          {/* Tombol Aksi Utama: Penuh di Bawah saat Mobile, Sejajar Kiri saat Desktop */}
-          <div className="relative z-10 md:col-start-1 md:row-start-2 flex flex-wrap items-center gap-3">
-            <span
-              className={`hidden sm:inline text-[11px] font-bold uppercase tracking-widest ${
-                hasImage ? "text-[#475569] dark:text-white/75" : "text-[#14532D]/80"
-              }`}
-            >
-              Klaim Via:
-            </span>
-            <a
-              href={waHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 min-h-[44px] sm:min-h-[40px] px-5 py-2.5 sm:py-2 rounded-full active:scale-[0.98] text-xs font-bold tracking-wider uppercase transition-all ${
-                hasImage
-                  ? "bg-[#65A30D] hover:bg-[#4D7C0F] text-white dark:bg-[#84CC16] dark:hover:bg-[#A3E635] dark:text-[#052E16]"
-                  : "bg-[#052E16] hover:bg-[#14532D] text-[#ECFCCB]"
-              }`}
-            >
-              <span>Klaim Promo</span>
-              <span aria-hidden="true">→</span>
-            </a>
-          </div>
-        </div>
-
-        {/* Indikator Titik Minimalis di Bawah Kartu */}
-        {promos.length > 1 && (
-          <div
-            className="mt-4 flex items-center justify-center gap-1"
-            role="group"
-            aria-label="Navigasi promo"
-          >
-            {promos.map((item, idx) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => setCurrentIndex(idx)}
-                className="min-w-[28px] min-h-[32px] flex items-center justify-center px-1 group/dot"
-                aria-label={`Tampilkan promo ${idx + 1}`}
-                aria-current={idx === safeIndex ? "true" : undefined}
-              >
-                <span
-                  className={`h-1.5 rounded-full transition-all block ${
-                    idx === safeIndex
-                      ? "w-6 bg-[#65A30D] dark:bg-[#84CC16]"
-                      : "w-1.5 bg-[#CBD5E1] dark:bg-[#3F3F46] group-hover/dot:bg-[#94A3B8] dark:group-hover/dot:bg-[#71717A]"
-                  }`}
+                <div
+                  className="hidden sm:block w-px self-stretch bg-white/25"
+                  aria-hidden="true"
                 />
-              </button>
-            ))}
+
+                <div className="min-w-0">
+                  <h2 className="text-xl sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight text-[#FAFAFA] [text-wrap:balance]">
+                    {activePromo.title}
+                  </h2>
+                  {activePromo.label && (
+                    <p className="text-xs sm:text-sm text-[#D4D4D8] mt-1.5 leading-relaxed line-clamp-2 max-w-[52ch]">
+                      {activePromo.label}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Periode Tanggal Promo */}
+              <p className="text-xs sm:text-sm font-medium text-[#E4E4E7]">
+                {durationLabel}
+              </p>
+
+              {/* Tombol CTA Kontras Tinggi */}
+              <div className="pt-1">
+                <a
+                  href={waHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center min-h-[44px] px-6 py-2.5 rounded-sm bg-[#FAFAFA] hover:bg-[#84CC16] text-[#09090B] text-xs sm:text-sm font-bold tracking-wide transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#84CC16]"
+                >
+                  Klaim Promo
+                </a>
+              </div>
+            </div>
           </div>
-        )}
+
+          {/* Keterangan Syarat & Ketentuan Pojok Kanan Bawah */}
+          <span className="hidden sm:block absolute bottom-3 right-5 z-10 text-[11px] font-medium text-white/70">
+            *S&amp;K Berlaku
+          </span>
+
+          {/* Tombol Panah Kiri & Kanan di Sisi Banner */}
+          {total > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={goPrev}
+                aria-label="Promo sebelumnya"
+                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 inline-flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/35 hover:bg-black/60 text-white/90 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#84CC16]"
+              >
+                <svg
+                  className="w-5 h-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
+              </button>
+
+              <button
+                type="button"
+                onClick={goNext}
+                aria-label="Promo berikutnya"
+                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 inline-flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/35 hover:bg-black/60 text-white/90 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#84CC16]"
+              >
+                <svg
+                  className="w-5 h-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </button>
+            </>
+          )}
+
+          {/* Titik Indikator Slide di Bawah Tengah Banner */}
+          {total > 1 && (
+            <div className="absolute bottom-2.5 inset-x-0 z-20 flex items-center justify-center gap-1.5">
+              {promos.map((item, idx) => {
+                const isActive = idx === safeIndex;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setActiveIndex(idx)}
+                    aria-label={`Tampilkan promo ${idx + 1}: ${item.title}`}
+                    aria-current={isActive ? "true" : undefined}
+                    className="inline-flex items-center justify-center w-6 h-6 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#84CC16] rounded-full"
+                  >
+                    <span
+                      className={`block rounded-full transition-all duration-300 ${
+                        isActive
+                          ? "w-2.5 h-2.5 bg-[#84CC16]"
+                          : "w-2 h-2 bg-white/40 hover:bg-white/70"
+                      }`}
+                    />
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );

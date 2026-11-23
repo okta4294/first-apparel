@@ -1,11 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
+import { UploadDropzone } from "@/lib/uploadthing";
+import { compressImageToWebP } from "@/lib/image-compression";
 import { createFabricAction, updateFabricAction, deleteFabricAction } from "./actions";
 
 export interface FabricItem {
   id: number;
   name: string;
+  badge: string | null;
+  gsm: string | null;
+  recommendation: string | null;
+  imageUrl: string | null;
+  imageKey: string | null;
   description: string;
   sortOrder: number;
   isActive: boolean;
@@ -26,12 +34,28 @@ export function FabricManager({ initialItems }: FabricManagerProps) {
 
   // Form states
   const [name, setName] = useState("");
+  const [badge, setBadge] = useState("");
+  const [gsm, setGsm] = useState("");
+  const [recommendation, setRecommendation] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [imageKey, setImageKey] = useState("");
+  const [oldImageKey, setOldImageKey] = useState("");
+  const [uploadStatus, setUploadStatus] = useState<"idle" | "compressing" | "uploading" | "success" | "error">("idle");
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [description, setDescription] = useState("");
   const [sortOrder, setSortOrder] = useState(0);
   const [isActive, setIsActive] = useState(true);
 
   const resetForm = () => {
     setName("");
+    setBadge("");
+    setGsm("");
+    setRecommendation("");
+    setImageUrl("");
+    setImageKey("");
+    setOldImageKey("");
+    setUploadStatus("idle");
+    setUploadProgress(0);
     setDescription("");
     setSortOrder(0);
     setIsActive(true);
@@ -42,6 +66,13 @@ export function FabricManager({ initialItems }: FabricManagerProps) {
   const handleStartEdit = (item: FabricItem) => {
     setEditingItem(item);
     setName(item.name);
+    setBadge(item.badge || "");
+    setGsm(item.gsm || "");
+    setRecommendation(item.recommendation || "");
+    setImageUrl(item.imageUrl || "");
+    setImageKey(item.imageKey || "");
+    setOldImageKey(item.imageKey || "");
+    setUploadStatus(item.imageUrl ? "success" : "idle");
     setDescription(item.description);
     setSortOrder(item.sortOrder);
     setIsActive(item.isActive);
@@ -64,12 +95,18 @@ export function FabricManager({ initialItems }: FabricManagerProps) {
 
     const formData = new FormData();
     formData.append("name", name.trim());
+    if (badge.trim()) formData.append("badge", badge.trim());
+    if (gsm.trim()) formData.append("gsm", gsm.trim());
+    if (recommendation.trim()) formData.append("recommendation", recommendation.trim());
+    if (imageUrl.trim()) formData.append("imageUrl", imageUrl.trim());
+    if (imageKey.trim()) formData.append("imageKey", imageKey.trim());
     formData.append("description", description.trim());
     formData.append("sortOrder", sortOrder.toString());
     if (isActive) formData.append("isActive", "on");
 
     if (editingItem) {
       formData.append("id", editingItem.id.toString());
+      if (oldImageKey) formData.append("oldImageKey", oldImageKey);
       const res = await updateFabricAction(formData);
       setIsSubmitting(false);
 
@@ -80,6 +117,11 @@ export function FabricManager({ initialItems }: FabricManagerProps) {
               ? {
                   ...it,
                   name: name.trim(),
+                  badge: badge.trim() || null,
+                  gsm: gsm.trim() || null,
+                  recommendation: recommendation.trim() || null,
+                  imageUrl: imageUrl.trim() || null,
+                  imageKey: imageKey.trim() || null,
                   description: description.trim(),
                   sortOrder,
                   isActive,
@@ -227,6 +269,139 @@ export function FabricManager({ initialItems }: FabricManagerProps) {
             </div>
           </div>
 
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label className="text-xs font-medium text-[#D4D4D8] block mb-1">
+                Label / Tag Karakteristik
+              </label>
+              <input
+                type="text"
+                placeholder="Contoh: Best Seller, Premium Look, Ultra Light"
+                value={badge}
+                onChange={(e) => setBadge(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg bg-[#09090B] border border-[#27272A] text-xs text-[#FAFAFA] focus:border-[#84CC16] focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="text-xs font-medium text-[#D4D4D8] block mb-1">
+                Gramasi Kain (GSM)
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  placeholder="Contoh: 146 atau 145-155"
+                  value={gsm}
+                  onChange={(e) => setGsm(e.target.value)}
+                  className="w-full pl-3 pr-12 py-2 rounded-lg bg-[#09090B] border border-[#27272A] text-xs text-[#FAFAFA] focus:border-[#84CC16] focus:outline-none"
+                />
+                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-mono text-[#71717A]">
+                  gsm
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <label className="text-xs font-medium text-[#D4D4D8] block mb-1">
+                Rekomendasi Cabang Olahraga
+              </label>
+              <input
+                type="text"
+                placeholder="Contoh: Futsal, Sepak Bola, Mini Soccer"
+                value={recommendation}
+                onChange={(e) => setRecommendation(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg bg-[#09090B] border border-[#27272A] text-xs text-[#FAFAFA] focus:border-[#84CC16] focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="text-xs font-medium text-[#D4D4D8] block mb-1">
+              Foto Close-Up Tekstur Kain (Dapat di-Zoom Pengunjung)
+            </label>
+            <p className="text-[11px] text-[#71717A] mb-2">
+              Unggah foto makro/dekat serat kain (rasio 4:3 disarankan) agar pengunjung dapat memperbesar detail pori kain di halaman beranda.
+            </p>
+            {imageUrl ? (
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-3 rounded-lg bg-[#09090B] border border-[#27272A]">
+                <div className="relative w-40 aspect-[4/3] rounded-lg overflow-hidden border border-[#27272A] shrink-0">
+                  <Image
+                    src={imageUrl}
+                    alt={name || "Pratinjau tekstur kain"}
+                    fill
+                    sizes="160px"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <p className="text-xs font-medium text-[#84CC16]">
+                    Foto tekstur kain siap disimpan.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setImageUrl("");
+                      setImageKey("");
+                      setUploadStatus("idle");
+                      setUploadProgress(0);
+                    }}
+                    className="px-3 py-1.5 rounded-md bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-medium transition-colors"
+                  >
+                    Ganti / Hapus Foto
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="rounded-lg bg-[#09090B] border border-[#27272A] p-2">
+                <UploadDropzone
+                  endpoint="fabricImage"
+                  onBeforeUploadBegin={async (files) => {
+                    setUploadStatus("compressing");
+                    const compressed = await Promise.all(
+                      files.map((file) => compressImageToWebP(file))
+                    );
+                    setUploadStatus("uploading");
+                    return compressed;
+                  }}
+                  onUploadProgress={(p) => setUploadProgress(p)}
+                  onClientUploadComplete={(res) => {
+                    const uploaded = res?.[0];
+                    if (uploaded) {
+                      setImageUrl(uploaded.ufsUrl || uploaded.url);
+                      setImageKey(uploaded.key);
+                      setUploadStatus("success");
+                    }
+                  }}
+                  onUploadError={(error: Error) => {
+                    setUploadStatus("error");
+                    setStatusMessage({
+                      type: "error",
+                      text: `Gagal unggah foto kain: ${error.message}`,
+                    });
+                  }}
+                  appearance={{
+                    container: "border-dashed border-[#27272A] py-5",
+                    label: "text-xs text-[#A1A1AA]",
+                    allowedContent: "text-[11px] text-[#71717A]",
+                    button:
+                      "bg-[#84CC16] text-[#09090B] text-xs font-bold px-4 py-2 rounded-lg ut-uploading:bg-[#65A30D]",
+                  }}
+                />
+                {uploadStatus === "compressing" && (
+                  <p className="text-[11px] text-[#A1A1AA] text-center pb-2">
+                    Mengompres gambar ke WebP...
+                  </p>
+                )}
+                {uploadStatus === "uploading" && (
+                  <p className="text-[11px] text-[#84CC16] text-center pb-2 tabular-nums">
+                    Mengunggah foto kain... {uploadProgress}%
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+
           <div>
             <label className="text-xs font-medium text-[#D4D4D8] block mb-1">
               Deskripsi Karakteristik &amp; Keunggulan Kain <span className="text-[#84CC16]">*</span>
@@ -310,12 +485,47 @@ export function FabricManager({ initialItems }: FabricManagerProps) {
                   </div>
                 </div>
 
+                {item.imageUrl && (
+                  <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden mb-3 border border-[#27272A] bg-[#09090B]">
+                    <Image
+                      src={item.imageUrl}
+                      alt={item.name}
+                      fill
+                      sizes="(min-width: 1024px) 30vw, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+
+                {(item.badge || item.gsm) && (
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    {item.badge ? (
+                      <span className="px-2 py-0.5 rounded bg-[#84CC16]/10 text-[#84CC16] text-[10px] font-bold">
+                        {item.badge}
+                      </span>
+                    ) : (
+                      <span />
+                    )}
+                    {item.gsm && (
+                      <span className="text-[11px] font-mono text-[#71717A]">
+                        {/gsm$/i.test(item.gsm.trim()) ? item.gsm.trim() : `${item.gsm.trim()} gsm`}
+                      </span>
+                    )}
+                  </div>
+                )}
+
                 <h3 className="font-bold text-sm text-[#FAFAFA] group-hover:text-[#84CC16] transition-colors mb-2">
                   {item.name}
                 </h3>
                 <p className="text-xs text-[#A1A1AA] leading-relaxed line-clamp-4">
                   {item.description}
                 </p>
+                {item.recommendation && (
+                  <p className="text-[11px] text-[#D4D4D8] mt-3 pt-2 border-t border-[#1F1F23]">
+                    <span className="text-[#84CC16] font-semibold">Rekomendasi:</span>{" "}
+                    {item.recommendation}
+                  </p>
+                )}
               </div>
 
               <div className="mt-5 pt-3 border-t border-[#27272A] flex items-center justify-end gap-2 text-xs">

@@ -112,7 +112,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       />
       {/* 1. Navbar */}
       <PageMotion />
-      <Navbar waNumber={whatsappNumber} storeName={storeName} logoUrl={logoUrl} />
+      <Navbar waNumber={whatsappNumber} storeName={storeName} companyName={settings.companyName} logoUrl={logoUrl} />
 
       {/* 2. Artikel Header & Breadcrumbs */}
       <header className="relative pt-12 pb-10 border-b border-[#27272A] bg-gradient-to-b from-[#121318] to-[#09090B]">

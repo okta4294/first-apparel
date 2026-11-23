@@ -67,7 +67,7 @@ export function CatalogManager({ initialItems, fabrics }: CatalogManagerProps) {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("FUTSAL & SEPAK BOLA");
   const [fabric, setFabric] = useState(defaultFabric);
-  const [priceInfo, setPriceInfo] = useState("Mulai Rp 125.000 / pcs");
+  const [priceInfo, setPriceInfo] = useState("");
   const [minOrder, setMinOrder] = useState("");
   const [isFeatured, setIsFeatured] = useState(false);
   const [isActive, setIsActive] = useState(true);
@@ -109,7 +109,7 @@ export function CatalogManager({ initialItems, fabrics }: CatalogManagerProps) {
     setTitle("");
     setCategory("FUTSAL & SEPAK BOLA");
     setFabric(defaultFabric);
-    setPriceInfo("Mulai Rp 125.000 / pcs");
+    setPriceInfo("");
     setMinOrder("");
     setIsFeatured(false);
     setIsActive(true);
@@ -216,7 +216,7 @@ export function CatalogManager({ initialItems, fabrics }: CatalogManagerProps) {
                   title,
                   category,
                   fabric,
-                  priceInfo,
+                  priceInfo: priceInfo.trim() || null,
                   minOrder: minOrder.trim() || null,
                   imageUrl: images[0]?.url || "",
                   imageKey: images[0]?.key || "",
@@ -642,11 +642,12 @@ export function CatalogManager({ initialItems, fabrics }: CatalogManagerProps) {
 
               <div>
                 <label className="text-xs font-medium text-[#D4D4D8] block mb-1">
-                  Keterangan Harga Dasar
+                  Keterangan Harga Dasar{" "}
+                  <span className="text-[10px] text-[#71717A] font-normal">(Opsional)</span>
                 </label>
                 <input
                   type="text"
-                  placeholder="Misal: Mulai Rp 125.000 / pcs"
+                  placeholder="Kosongkan jika tidak menampilkan harga (misal: Mulai Rp 125.000 / pcs)"
                   value={priceInfo}
                   onChange={(e) => setPriceInfo(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg bg-[#09090B] border border-[#27272A] text-xs text-[#FAFAFA] placeholder:text-[#52525B] focus:border-[#84CC16] focus:outline-none"

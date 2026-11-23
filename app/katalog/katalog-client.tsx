@@ -209,9 +209,11 @@ export function KatalogClient({ items, initialCategory }: KatalogClientProps) {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10">
           {filteredItems.map((item, itemIdx) => {
             const coverImage = getCoverImage(item);
-            const cleanPrice = item.priceInfo
-              ? item.priceInfo.replace(/mulai\s*/i, "").replace(/\/.*$/, "").trim()
-              : "Tanya harga";
+            const rawPrice = item.priceInfo?.trim() || "";
+            const hasPrice = Boolean(rawPrice && rawPrice !== "-");
+            const cleanPrice = hasPrice
+              ? rawPrice.replace(/mulai\s*/i, "").replace(/\/.*$/, "").trim()
+              : "";
 
             return (
               <Link
@@ -219,7 +221,7 @@ export function KatalogClient({ items, initialCategory }: KatalogClientProps) {
                 href={`/katalog/${item.id}`}
                 className="group block focus-visible:outline-none"
               >
-                <div className="relative aspect-[4/5] w-full rounded-xl overflow-hidden bg-[#141418] border border-[#27272A]">
+                <div className="relative aspect-[3/4] w-full rounded-xl overflow-hidden bg-[#141418] border border-[#27272A]">
                   {item.isFeatured && (
                     <span className="absolute top-2.5 left-2.5 z-10 px-2.5 py-0.5 rounded-full bg-[#09090B]/85 backdrop-blur-sm text-[#FAFAFA] text-[10px] font-semibold tracking-wide border border-[#27272A]">
                       Unggulan
@@ -254,14 +256,14 @@ export function KatalogClient({ items, initialCategory }: KatalogClientProps) {
                   <h2 className="text-sm font-semibold text-[#FAFAFA] leading-snug line-clamp-2 group-hover:text-[#84CC16] transition-colors">
                     {item.title}
                   </h2>
-                  <div className="flex items-baseline gap-1 pt-0.5">
-                    <span className="text-sm font-bold text-[#FAFAFA] tabular-nums">
-                      {cleanPrice}
-                    </span>
-                    {item.priceInfo && (
+                  {hasPrice && cleanPrice && (
+                    <div className="flex items-baseline gap-1 pt-0.5">
+                      <span className="text-sm font-bold text-[#FAFAFA] tabular-nums">
+                        {cleanPrice}
+                      </span>
                       <span className="text-xs text-[#A1A1AA]">/ pcs</span>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </Link>
             );

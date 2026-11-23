@@ -9,6 +9,7 @@ import { updateSettingsAction } from "./actions";
 interface SettingsFormProps {
   initialSettings: {
     storeName: string;
+    companyName?: string | null;
     storeAddress: string;
     googleMapsUrl: string | null;
     operatingHours: string | null;
@@ -17,6 +18,11 @@ interface SettingsFormProps {
     instagramUrl: string | null;
     logoUrl?: string | null;
     logoKey?: string | null;
+    footerCompanyName?: string | null;
+    footerLogoUrl?: string | null;
+    footerLogoKey?: string | null;
+    footerLogo2Url?: string | null;
+    footerLogo2Key?: string | null;
     sizeChartUrl?: string | null;
     sizeChartKey?: string | null;
     storeDescription?: string | null;
@@ -25,8 +31,14 @@ interface SettingsFormProps {
 
 export function SettingsForm({ initialSettings }: SettingsFormProps) {
   const [storeName, setStoreName] = useState(initialSettings?.storeName || "First Apparel");
+  const [companyName, setCompanyName] = useState(initialSettings?.companyName || "");
   const [logoUrl, setLogoUrl] = useState(initialSettings?.logoUrl || "");
   const [logoKey, setLogoKey] = useState(initialSettings?.logoKey || "");
+  const [footerCompanyName, setFooterCompanyName] = useState(initialSettings?.footerCompanyName || "");
+  const [footerLogoUrl, setFooterLogoUrl] = useState(initialSettings?.footerLogoUrl || "");
+  const [footerLogoKey, setFooterLogoKey] = useState(initialSettings?.footerLogoKey || "");
+  const [footerLogo2Url, setFooterLogo2Url] = useState(initialSettings?.footerLogo2Url || "");
+  const [footerLogo2Key, setFooterLogo2Key] = useState(initialSettings?.footerLogo2Key || "");
   const [sizeChartUrl, setSizeChartUrl] = useState(initialSettings?.sizeChartUrl || "");
   const [sizeChartKey, setSizeChartKey] = useState(initialSettings?.sizeChartKey || "");
   const [storeDescription, setStoreDescription] = useState(
@@ -49,9 +61,15 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
   );
   const [instagramUrl, setInstagramUrl] = useState(initialSettings?.instagramUrl || "");
 
-  // Upload states untuk Logo
+  // Upload states untuk Logo Navbar
   const [uploadStatus, setUploadStatus] = useState<"idle" | "compressing" | "uploading" | "success" | "error">("idle");
   const [uploadProgress, setUploadProgress] = useState(0);
+
+  // Upload states untuk Logo Perusahaan Footer 1 & 2
+  const [footerUploadStatus, setFooterUploadStatus] = useState<"idle" | "compressing" | "uploading" | "success" | "error">("idle");
+  const [footerUploadProgress, setFooterUploadProgress] = useState(0);
+  const [footer2UploadStatus, setFooter2UploadStatus] = useState<"idle" | "compressing" | "uploading" | "success" | "error">("idle");
+  const [footer2UploadProgress, setFooter2UploadProgress] = useState(0);
 
   // Upload states untuk Size Chart
   const [sizeChartUploadStatus, setSizeChartUploadStatus] = useState<"idle" | "compressing" | "uploading" | "success" | "error">("idle");
@@ -67,8 +85,14 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
 
     const formData = new FormData();
     formData.append("storeName", storeName);
+    formData.append("companyName", companyName);
     formData.append("logoUrl", logoUrl);
     formData.append("logoKey", logoKey);
+    formData.append("footerCompanyName", footerCompanyName);
+    formData.append("footerLogoUrl", footerLogoUrl);
+    formData.append("footerLogoKey", footerLogoKey);
+    formData.append("footerLogo2Url", footerLogo2Url);
+    formData.append("footerLogo2Key", footerLogo2Key);
     formData.append("sizeChartUrl", sizeChartUrl);
     formData.append("sizeChartKey", sizeChartKey);
     formData.append("storeDescription", storeDescription);
@@ -149,10 +173,10 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
             </span>
           </div>
 
-          {/* Unggah Logo Toko */}
+          {/* Unggah Logo Toko (Navbar) */}
           <div className="space-y-2">
             <label className="text-xs font-medium text-[#D4D4D8] block">
-              Logo Resmi Usaha / Toko
+              Logo Toko / Brand (Navbar Atas)
               <span className="text-[10px] text-[#71717A] font-normal ml-1">
                 (Format PNG transparan atau WebP, maks. 2MB)
               </span>
@@ -164,9 +188,9 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
                   <Image src={logoUrl} alt="Logo Toko" width={64} height={64} className="max-w-full max-h-full object-contain" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <span className="text-xs font-semibold text-[#84CC16] block">✓ Logo Toko Terpasang</span>
+                  <span className="text-xs font-semibold text-[#84CC16] block">✓ Logo Navbar Terpasang</span>
                   <span className="text-[11px] text-[#A1A1AA] block mt-0.5">
-                    Logo ini otomatis muncul di Navbar atas dan Footer halaman utama.
+                    Ditampilkan di Navbar atas (dan menjadi cadangan Footer bila logo Footer belum diisi).
                   </span>
                   <span className="text-[10px] text-[#71717A] truncate block font-mono mt-1">Key: {logoKey || "external"}</span>
                 </div>
@@ -251,7 +275,7 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="text-xs font-medium text-[#D4D4D8] block mb-1">
-                Nama Usaha / Toko <span className="text-[#84CC16]">*</span>
+                Nama Usaha / Toko (Navbar) <span className="text-[#84CC16]">*</span>
               </label>
               <input
                 type="text"
@@ -264,6 +288,19 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
 
             <div>
               <label className="text-xs font-medium text-[#D4D4D8] block mb-1">
+                Nama Perusahaan / CV Induk (Navbar)
+              </label>
+              <input
+                type="text"
+                placeholder="Contoh: CV Asika Multiguna Semesta"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg bg-[#09090B] border border-[#27272A] text-xs text-[#FAFAFA] focus:border-[#84CC16] focus:outline-none"
+              />
+            </div>
+
+            <div className="sm:col-span-2">
+              <label className="text-xs font-medium text-[#D4D4D8] block mb-1">
                 Nomor WhatsApp Admin <span className="text-[#84CC16]">*</span>
                 <span className="text-[10px] text-[#71717A] font-normal ml-1">(Format diawali 62)</span>
               </label>
@@ -274,6 +311,225 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
                 value={whatsappNumber}
                 onChange={(e) => setWhatsappNumber(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg bg-[#09090B] border border-[#27272A] text-xs font-mono text-[#FAFAFA] focus:border-[#84CC16] focus:outline-none"
+              />
+            </div>
+          </div>
+
+          {/* Identitas Perusahaan Khusus Footer */}
+          <div className="pt-4 border-t border-[#27272A] space-y-4">
+            <div>
+              <h3 className="text-xs font-semibold text-[#FAFAFA]">Identitas Perusahaan di Footer (Opsional)</h3>
+              <span className="text-[11px] text-[#71717A]">
+                Atur logo dan nama perusahaan induk khusus untuk Footer. Jika dikosongkan, otomatis mengikuti data Navbar.
+              </span>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-medium text-[#D4D4D8] block">
+                Logo Perusahaan 1 (Footer Bawah)
+                <span className="text-[10px] text-[#71717A] font-normal ml-1">
+                  (Format PNG transparan atau WebP, maks. 2MB)
+                </span>
+              </label>
+
+              {footerLogoUrl ? (
+                <div className="flex items-center gap-4 p-3.5 rounded-xl bg-[#09090B] border border-[#84CC16]/40">
+                  <div className="w-16 h-16 rounded-xl border border-[#27272A] overflow-hidden bg-[#181920] flex items-center justify-center p-2 shrink-0">
+                    <Image src={footerLogoUrl} alt="Logo Footer" width={64} height={64} className="max-w-full max-h-full object-contain" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-xs font-semibold text-[#84CC16] block">✓ Logo Footer Terpasang</span>
+                    <span className="text-[11px] text-[#A1A1AA] block mt-0.5">
+                      Logo ini ditampilkan di atas nama perusahaan pada Footer.
+                    </span>
+                    <span className="text-[10px] text-[#71717A] truncate block font-mono mt-1">Key: {footerLogoKey || "external"}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFooterLogoUrl("");
+                      setFooterLogoKey("");
+                      setFooterUploadStatus("idle");
+                    }}
+                    className="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-medium transition-colors shrink-0"
+                  >
+                    Hapus / Ganti
+                  </button>
+                </div>
+              ) : (
+                <div className="relative border border-dashed border-[#3F3F46] rounded-xl p-4 bg-[#0D0E12] text-center overflow-hidden">
+                  {(footerUploadStatus === "compressing" || footerUploadStatus === "uploading") && (
+                    <div className="absolute inset-0 z-20 bg-[#0C0D11]/95 backdrop-blur-sm flex flex-col items-center justify-center p-4 space-y-2">
+                      <div className="w-8 h-8 rounded-full border-2 border-[#27272A] border-t-[#84CC16] animate-spin" />
+                      <span className="text-xs font-semibold text-[#84CC16]">
+                        {footerUploadStatus === "compressing" ? "Mengompres logo WebP..." : `Mengunggah logo (${footerUploadProgress}%)...`}
+                      </span>
+                    </div>
+                  )}
+
+                  <UploadDropzone
+                    endpoint="storeLogo"
+                    onBeforeUploadBegin={async (files) => {
+                      setFooterUploadStatus("compressing");
+                      setFooterUploadProgress(20);
+                      try {
+                        const compressed = await Promise.all(
+                          files.map((f) => compressImageToWebP(f, 400, 400, 0.9))
+                        );
+                        return compressed;
+                      } catch {
+                        return files;
+                      }
+                    }}
+                    onUploadBegin={() => {
+                      setFooterUploadStatus("uploading");
+                      setFooterUploadProgress(40);
+                    }}
+                    onUploadProgress={(progress) => {
+                      setFooterUploadStatus("uploading");
+                      setFooterUploadProgress(progress);
+                    }}
+                    onClientUploadComplete={(res) => {
+                      if (res?.[0]) {
+                        setFooterLogoUrl(res[0].ufsUrl || res[0].url);
+                        setFooterLogoKey(res[0].key);
+                        setFooterUploadStatus("success");
+                        setFooterUploadProgress(100);
+                      }
+                    }}
+                    onUploadError={(err: Error) => {
+                      setFooterUploadStatus("error");
+                      setStatusMessage({
+                        type: "error",
+                        text: `Gagal upload logo footer: ${err.message}`,
+                      });
+                    }}
+                    appearance={{
+                      container: "py-6 border-none bg-transparent",
+                      label: "text-xs font-semibold text-[#84CC16] hover:text-[#9ee238]",
+                      allowedContent: "text-[10px] text-[#71717A]",
+                      button: "bg-[#84CC16] hover:bg-[#9ee238] text-[#09090B] font-bold text-xs py-2 px-4 rounded-lg mt-3",
+                    }}
+                    content={{
+                      label: "Pilih file logo perusahaan 1 untuk Footer atau tarik ke sini",
+                      allowedContent: "Maksimal 2MB (PNG / JPG / WEBP)",
+                      button({ ready }) {
+                        return ready ? "Pilih Logo Footer 1" : "Memuat...";
+                      },
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-xs font-medium text-[#D4D4D8] block">
+                Logo Perusahaan 2 (Footer Bawah — Opsional)
+                <span className="text-[10px] text-[#71717A] font-normal ml-1">
+                  (Tampil bersebelahan di kanan Logo 1, maks. 2MB)
+                </span>
+              </label>
+
+              {footerLogo2Url ? (
+                <div className="flex items-center gap-4 p-3.5 rounded-xl bg-[#09090B] border border-[#84CC16]/40">
+                  <div className="w-16 h-16 rounded-xl border border-[#27272A] overflow-hidden bg-[#181920] flex items-center justify-center p-2 shrink-0">
+                    <Image src={footerLogo2Url} alt="Logo Footer 2" width={64} height={64} className="max-w-full max-h-full object-contain" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-xs font-semibold text-[#84CC16] block">✓ Logo Footer 2 Terpasang</span>
+                    <span className="text-[11px] text-[#A1A1AA] block mt-0.5">
+                      Logo ini ditampilkan bersebelahan dengan Logo 1 di bagian bawah Footer.
+                    </span>
+                    <span className="text-[10px] text-[#71717A] truncate block font-mono mt-1">Key: {footerLogo2Key || "external"}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFooterLogo2Url("");
+                      setFooterLogo2Key("");
+                      setFooter2UploadStatus("idle");
+                    }}
+                    className="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-medium transition-colors shrink-0"
+                  >
+                    Hapus / Ganti
+                  </button>
+                </div>
+              ) : (
+                <div className="relative border border-dashed border-[#3F3F46] rounded-xl p-4 bg-[#0D0E12] text-center overflow-hidden">
+                  {(footer2UploadStatus === "compressing" || footer2UploadStatus === "uploading") && (
+                    <div className="absolute inset-0 z-20 bg-[#0C0D11]/95 backdrop-blur-sm flex flex-col items-center justify-center p-4 space-y-2">
+                      <div className="w-8 h-8 rounded-full border-2 border-[#27272A] border-t-[#84CC16] animate-spin" />
+                      <span className="text-xs font-semibold text-[#84CC16]">
+                        {footer2UploadStatus === "compressing" ? "Mengompres logo WebP..." : `Mengunggah logo (${footer2UploadProgress}%)...`}
+                      </span>
+                    </div>
+                  )}
+
+                  <UploadDropzone
+                    endpoint="storeLogo"
+                    onBeforeUploadBegin={async (files) => {
+                      setFooter2UploadStatus("compressing");
+                      setFooter2UploadProgress(20);
+                      try {
+                        const compressed = await Promise.all(
+                          files.map((f) => compressImageToWebP(f, 400, 400, 0.9))
+                        );
+                        return compressed;
+                      } catch {
+                        return files;
+                      }
+                    }}
+                    onUploadBegin={() => {
+                      setFooter2UploadStatus("uploading");
+                      setFooter2UploadProgress(40);
+                    }}
+                    onUploadProgress={(progress) => {
+                      setFooter2UploadStatus("uploading");
+                      setFooter2UploadProgress(progress);
+                    }}
+                    onClientUploadComplete={(res) => {
+                      if (res?.[0]) {
+                        setFooterLogo2Url(res[0].ufsUrl || res[0].url);
+                        setFooterLogo2Key(res[0].key);
+                        setFooter2UploadStatus("success");
+                        setFooter2UploadProgress(100);
+                      }
+                    }}
+                    onUploadError={(err: Error) => {
+                      setFooter2UploadStatus("error");
+                      setStatusMessage({
+                        type: "error",
+                        text: `Gagal upload logo footer 2: ${err.message}`,
+                      });
+                    }}
+                    appearance={{
+                      container: "py-6 border-none bg-transparent",
+                      label: "text-xs font-semibold text-[#84CC16] hover:text-[#9ee238]",
+                      allowedContent: "text-[10px] text-[#71717A]",
+                      button: "bg-[#84CC16] hover:bg-[#9ee238] text-[#09090B] font-bold text-xs py-2 px-4 rounded-lg mt-3",
+                    }}
+                    content={{
+                      label: "Pilih file logo perusahaan 2 untuk Footer atau tarik ke sini",
+                      allowedContent: "Maksimal 2MB (PNG / JPG / WEBP)",
+                      button({ ready }) {
+                        return ready ? "Pilih Logo Footer 2" : "Memuat...";
+                      },
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label className="text-xs font-medium text-[#D4D4D8] block mb-1">
+                Nama Perusahaan / CV Induk (Footer)
+              </label>
+              <input
+                type="text"
+                placeholder="Kosongkan jika sama dengan CV Induk di Navbar"
+                value={footerCompanyName}
+                onChange={(e) => setFooterCompanyName(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg bg-[#09090B] border border-[#27272A] text-xs text-[#FAFAFA] focus:border-[#84CC16] focus:outline-none"
               />
             </div>
           </div>

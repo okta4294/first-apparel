@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { WhatsAppIcon } from "@/components/whatsapp-icon";
 
 interface MobileWaFabProps {
   waHref: string;
@@ -22,15 +21,28 @@ export function MobileWaFab({ waHref }: MobileWaFabProps) {
   if (!visible) return null;
 
   return (
-    <div className="md:hidden fixed bottom-4 inset-x-4 z-40 pointer-events-none flex justify-end">
+    <div className="md:hidden fixed bottom-[max(1rem,env(safe-area-inset-bottom))] inset-x-4 z-40 pointer-events-none flex justify-end">
       <a
         href={waHref}
         target="_blank"
         rel="noopener noreferrer"
-        className="pointer-events-auto inline-flex items-center justify-center gap-2 min-h-[48px] px-5 py-3 rounded-full bg-[#84CC16] hover:bg-[#9ee238] active:scale-95 text-[#09090B] font-bold text-xs tracking-wide shadow-lg border border-[#09090B]/15 transition-all"
+        className="pointer-events-auto inline-flex items-center justify-center gap-2.5 min-h-[52px] px-5 py-3.5 rounded-full bg-[#84CC16] hover:bg-[#9ee238] active:scale-95 text-[#09090B] font-bold text-sm tracking-wide shadow-lg border border-[#09090B]/15 transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#84CC16]"
         aria-label="Konsultasi cepat via WhatsApp"
       >
-        <WhatsAppIcon className="w-4 h-4 fill-current shrink-0" />
+        <svg
+          className="w-6 h-6 shrink-0"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M12 1.25C17.9371 1.25 22.75 6.06294 22.75 12C22.75 17.9371 17.9371 22.75 12 22.75C10.1409 22.75 8.39016 22.2775 6.86335 21.4455L2.12395 22.2397C1.88692 22.2794 1.6452 22.2031 1.47391 22.0345C1.30261 21.8659 1.2225 21.6255 1.25845 21.3878L2.05878 16.0977C1.53735 14.8339 1.25001 13.4496 1.25001 12C1.25001 6.06294 6.06295 1.25 12 1.25ZM7.94309 6.7002C7.20774 6.7002 6.599 7.32056 6.71374 8.08595C6.929 9.52188 7.56749 12.1676 9.46536 14.0799C11.4494 16.0789 14.2876 16.9343 15.8259 17.2715C16.6211 17.4459 17.3 16.8158 17.3 16.0387V14.2151C17.3 14.0909 17.2235 13.9796 17.1076 13.935L15.1475 13.1825C15.0949 13.1623 15.0377 13.1573 14.9824 13.1681L13.0048 13.5542C11.7304 12.894 10.958 12.1532 10.4942 11.0387L10.867 9.02365C10.8769 8.97021 10.8721 8.91508 10.8531 8.86416L10.1182 6.89529C10.0744 6.77797 9.96233 6.7002 9.83711 6.7002H7.94309Z"
+            fill="currentColor"
+          />
+        </svg>
         <span>Chat WA Admin</span>
       </a>
     </div>

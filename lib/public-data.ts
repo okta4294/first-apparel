@@ -5,6 +5,7 @@ import { eq, and, lte, gte, or, asc, desc, ne } from "drizzle-orm";
 
 export interface PublicSiteSettings {
   storeName: string;
+  companyName: string | null;
   storeAddress: string;
   googleMapsUrl: string | null;
   operatingHours: string;
@@ -12,12 +13,16 @@ export interface PublicSiteSettings {
   defaultWaText: string;
   instagramUrl: string | null;
   logoUrl: string | null;
+  footerCompanyName: string | null;
+  footerLogoUrl: string | null;
+  footerLogo2Url: string | null;
   sizeChartUrl: string | null;
   storeDescription: string;
 }
 
 const DEFAULT_SITE_SETTINGS: PublicSiteSettings = {
   storeName: "First Apparel",
+  companyName: null,
   storeAddress: "Jl. Terusan Olahraga No. 8, Bandung, Jawa Barat",
   googleMapsUrl: null,
   operatingHours: "Senin – Sabtu, 09.00 – 17.00 WIB",
@@ -26,6 +31,9 @@ const DEFAULT_SITE_SETTINGS: PublicSiteSettings = {
     "Halo Admin First Apparel, saya ingin berkonsultasi mengenai pemesanan custom jersey.",
   instagramUrl: null,
   logoUrl: null,
+  footerCompanyName: null,
+  footerLogoUrl: null,
+  footerLogo2Url: null,
   sizeChartUrl: null,
   storeDescription:
     "Konveksi spesialis jersey olahraga custom & apparel tim profesional di Bandung. Bebas custom desain, bahan dryfit premium, dan melayani kirim ke seluruh Indonesia.",
@@ -42,6 +50,7 @@ export async function getSiteSettings(): Promise<PublicSiteSettings> {
       const s = settings[0];
       return {
         storeName: s.storeName || DEFAULT_SITE_SETTINGS.storeName,
+        companyName: s.companyName || null,
         storeAddress: s.storeAddress || DEFAULT_SITE_SETTINGS.storeAddress,
         googleMapsUrl: s.googleMapsUrl,
         operatingHours: s.operatingHours || DEFAULT_SITE_SETTINGS.operatingHours,
@@ -49,6 +58,9 @@ export async function getSiteSettings(): Promise<PublicSiteSettings> {
         defaultWaText: s.defaultWaText || DEFAULT_SITE_SETTINGS.defaultWaText,
         instagramUrl: s.instagramUrl,
         logoUrl: s.logoUrl || null,
+        footerCompanyName: s.footerCompanyName || null,
+        footerLogoUrl: s.footerLogoUrl || null,
+        footerLogo2Url: s.footerLogo2Url || null,
         sizeChartUrl: s.sizeChartUrl || null,
         storeDescription: s.storeDescription || DEFAULT_SITE_SETTINGS.storeDescription,
       };
@@ -95,7 +107,7 @@ export async function getFeaturedCatalogs() {
       .select()
       .from(catalogs)
       .where(and(eq(catalogs.isActive, true), eq(catalogs.isFeatured, true)))
-      .limit(4);
+      .limit(12);
   } catch {
     return [];
   }
@@ -112,6 +124,31 @@ export async function getAllActiveCatalogs() {
       .from(catalogs)
       .where(eq(catalogs.isActive, true))
       .orderBy(desc(catalogs.createdAt));
+  } catch {
+    return [];
+  }
+}
+
+export async function getActiveCatalogCategories(): Promise<string[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("catalogs");
+
+  try {
+    const rows = await db
+      .selectDistinct({ category: catalogs.category })
+      .from(catalogs)
+      .where(eq(catalogs.isActive, true))
+      .orderBy(asc(catalogs.category));
+
+    const unique = new Set<string>();
+    for (const row of rows) {
+      const trimmed = row.category?.trim();
+      if (trimmed) {
+        unique.add(trimmed.toUpperCase());
+      }
+    }
+    return Array.from(unique);
   } catch {
     return [];
   }

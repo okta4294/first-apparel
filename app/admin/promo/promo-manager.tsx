@@ -13,6 +13,8 @@ export interface PromoItem {
   badgeText: string;
   imageUrl: string | null;
   imageKey: string | null;
+  popupImageUrl: string | null;
+  popupImageKey: string | null;
   waMessage: string;
   hasDuration: boolean;
   startDate: Date | null;
@@ -44,12 +46,19 @@ export function PromoManager({ initialItems }: PromoManagerProps) {
   const [isActive, setIsActive] = useState(true);
   const [isPopup, setIsPopup] = useState(false);
 
-  // Image states
+  // Image states (Banner Beranda)
   const [imageUrl, setImageUrl] = useState("");
   const [imageKey, setImageKey] = useState("");
   const [oldImageKey, setOldImageKey] = useState("");
   const [uploadStatus, setUploadStatus] = useState<"idle" | "compressing" | "uploading" | "success" | "error">("idle");
   const [uploadProgress, setUploadProgress] = useState(0);
+
+  // Image states (Pop-up Poster)
+  const [popupImageUrl, setPopupImageUrl] = useState("");
+  const [popupImageKey, setPopupImageKey] = useState("");
+  const [oldPopupImageKey, setOldPopupImageKey] = useState("");
+  const [popupUploadStatus, setPopupUploadStatus] = useState<"idle" | "compressing" | "uploading" | "success" | "error">("idle");
+  const [popupUploadProgress, setPopupUploadProgress] = useState(0);
 
   const resetForm = () => {
     setLabel("PROMO SPESIAL");
@@ -66,6 +75,11 @@ export function PromoManager({ initialItems }: PromoManagerProps) {
     setOldImageKey("");
     setUploadStatus("idle");
     setUploadProgress(0);
+    setPopupImageUrl("");
+    setPopupImageKey("");
+    setOldPopupImageKey("");
+    setPopupUploadStatus("idle");
+    setPopupUploadProgress(0);
     setEditingItem(null);
     setIsAdding(false);
   };
@@ -91,6 +105,10 @@ export function PromoManager({ initialItems }: PromoManagerProps) {
     setImageKey(item.imageKey || "");
     setOldImageKey(item.imageKey || "");
     setUploadStatus(item.imageUrl ? "success" : "idle");
+    setPopupImageUrl(item.popupImageUrl || "");
+    setPopupImageKey(item.popupImageKey || "");
+    setOldPopupImageKey(item.popupImageKey || "");
+    setPopupUploadStatus(item.popupImageUrl ? "success" : "idle");
     setIsAdding(true);
     setStatusMessage(null);
     if (typeof window !== "undefined") {
@@ -120,6 +138,8 @@ export function PromoManager({ initialItems }: PromoManagerProps) {
     formData.append("waMessage", waMessage);
     if (imageUrl) formData.append("imageUrl", imageUrl);
     if (imageKey) formData.append("imageKey", imageKey);
+    if (popupImageUrl) formData.append("popupImageUrl", popupImageUrl);
+    if (popupImageKey) formData.append("popupImageKey", popupImageKey);
     if (hasDuration) formData.append("hasDuration", "on");
     if (startDate) formData.append("startDate", startDate);
     if (endDate) formData.append("endDate", endDate);
@@ -129,6 +149,7 @@ export function PromoManager({ initialItems }: PromoManagerProps) {
     if (editingItem) {
       formData.append("id", editingItem.id.toString());
       if (oldImageKey) formData.append("oldImageKey", oldImageKey);
+      if (oldPopupImageKey) formData.append("oldPopupImageKey", oldPopupImageKey);
 
       const res = await updatePromoAction(formData);
       setIsSubmitting(false);
@@ -148,6 +169,8 @@ export function PromoManager({ initialItems }: PromoManagerProps) {
                   waMessage,
                   imageUrl: imageUrl || null,
                   imageKey: imageKey || null,
+                  popupImageUrl: popupImageUrl || null,
+                  popupImageKey: popupImageKey || null,
                   hasDuration,
                   startDate: startDate ? new Date(startDate) : null,
                   endDate: endDate ? new Date(endDate) : null,
@@ -181,7 +204,7 @@ export function PromoManager({ initialItems }: PromoManagerProps) {
   const handleDelete = async (item: PromoItem) => {
     if (!confirm(`Hapus promo "${item.title}"?`)) return;
 
-    const res = await deletePromoAction(item.id, item.imageKey);
+    const res = await deletePromoAction(item.id, item.imageKey, item.popupImageKey);
     if (res.success) {
       setItems((prev) => prev.filter((i) => i.id !== item.id));
       setStatusMessage({ type: "success", text: "Promo dan berkas gambarnya berhasil dihapus." });
@@ -321,90 +344,181 @@ export function PromoManager({ initialItems }: PromoManagerProps) {
               </div>
             </div>
 
-            {/* Opsi Banner Promo Bergambar (Opsional) */}
-            <div className="space-y-2">
-              <label className="text-xs font-medium text-[#D4D4D8] block">
-                Gambar Banner Promo <span className="text-[10px] text-[#71717A] font-normal">(Opsional)</span>
-              </label>
+            {/* 2 Input Gambar Terpisah: Banner Beranda (Lebar) & Poster Pop-up (Potret) */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* 1. Gambar Banner Beranda */}
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-[#D4D4D8] block">
+                  Gambar Banner Beranda{" "}
+                  <span className="text-[10px] text-[#71717A] font-normal">(Rasio lebar/horizontal, opsional)</span>
+                </label>
 
-              {imageUrl ? (
-                <div className="flex items-center gap-4 p-3 rounded-xl bg-[#09090B] border border-[#84CC16]/40">
-                  <div className="w-24 h-16 rounded-lg border border-[#27272A] overflow-hidden bg-[#141418] shrink-0">
-                    <Image src={imageUrl} alt="Banner" width={96} height={64} className="w-full h-full object-cover" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <span className="text-xs font-semibold text-[#84CC16] block">✓ Banner Terpasang</span>
-                    <span className="text-[10px] text-[#71717A] truncate block font-mono">Key: {imageKey}</span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setImageUrl("");
-                      setImageKey("");
-                      setUploadStatus("idle");
-                    }}
-                    className="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-medium transition-colors"
-                  >
-                    Hapus Gambar
-                  </button>
-                </div>
-              ) : (
-                <div className="relative border border-dashed border-[#3F3F46] rounded-xl p-3 bg-[#0D0E12] text-center overflow-hidden">
-                  {(uploadStatus === "compressing" || uploadStatus === "uploading") && (
-                    <div className="absolute inset-0 z-20 bg-[#0C0D11]/95 backdrop-blur-sm flex flex-col items-center justify-center p-4 space-y-2">
-                      <div className="w-8 h-8 rounded-full border-2 border-[#27272A] border-t-[#84CC16] animate-spin" />
-                      <span className="text-xs font-semibold text-[#84CC16]">
-                        {uploadStatus === "compressing" ? "Mengompres banner..." : `Mengunggah (${uploadProgress}%)...`}
-                      </span>
+                {imageUrl ? (
+                  <div className="flex items-center gap-4 p-3 rounded-xl bg-[#09090B] border border-[#84CC16]/40">
+                    <div className="w-24 h-16 rounded-lg border border-[#27272A] overflow-hidden bg-[#141418] shrink-0">
+                      <Image src={imageUrl} alt="Banner Beranda" width={96} height={64} className="w-full h-full object-cover" />
                     </div>
-                  )}
+                    <div className="flex-1 min-w-0">
+                      <span className="text-xs font-semibold text-[#84CC16] block">✓ Banner Beranda Terpasang</span>
+                      <span className="text-[10px] text-[#71717A] truncate block font-mono">Key: {imageKey}</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setImageUrl("");
+                        setImageKey("");
+                        setUploadStatus("idle");
+                      }}
+                      className="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-medium transition-colors"
+                    >
+                      Hapus
+                    </button>
+                  </div>
+                ) : (
+                  <div className="relative border border-dashed border-[#3F3F46] rounded-xl p-3 bg-[#0D0E12] text-center overflow-hidden">
+                    {(uploadStatus === "compressing" || uploadStatus === "uploading") && (
+                      <div className="absolute inset-0 z-20 bg-[#0C0D11]/95 backdrop-blur-sm flex flex-col items-center justify-center p-4 space-y-2">
+                        <div className="w-8 h-8 rounded-full border-2 border-[#27272A] border-t-[#84CC16] animate-spin" />
+                        <span className="text-xs font-semibold text-[#84CC16]">
+                          {uploadStatus === "compressing" ? "Mengompres banner..." : `Mengunggah (${uploadProgress}%)...`}
+                        </span>
+                      </div>
+                    )}
 
-                  <UploadDropzone
-                    endpoint="promoBanner"
-                    onBeforeUploadBegin={async (files) => {
-                      setUploadStatus("compressing");
-                      setUploadProgress(20);
-                      try {
-                        const compressed = await Promise.all(
-                          files.map((f) => compressImageToWebP(f, 1200, 600, 0.85))
-                        );
-                        return compressed;
-                      } catch {
-                        return files;
-                      }
-                    }}
-                    onUploadBegin={() => {
-                      setUploadStatus("uploading");
-                      setUploadProgress(40);
-                    }}
-                    onUploadProgress={(progress) => {
-                      setUploadStatus("uploading");
-                      setUploadProgress(progress);
-                    }}
-                    onClientUploadComplete={(res) => {
-                      if (res?.[0]) {
-                        setImageUrl(res[0].ufsUrl || res[0].url);
-                        setImageKey(res[0].key);
-                        setUploadStatus("success");
-                        setUploadProgress(100);
-                      }
-                    }}
-                    onUploadError={(err: Error) => {
-                      setUploadStatus("error");
-                      setStatusMessage({
-                        type: "error",
-                        text: `Gagal mengunggah banner: ${err.message}`,
-                      });
-                    }}
-                    appearance={{
-                      container: "border-none p-2",
-                      label: "text-xs text-[#A1A1AA] hover:text-[#FAFAFA]",
-                      button: "bg-[#84CC16] text-[#09090B] font-bold text-xs px-3 py-1.5 rounded-lg hover:bg-[#9ee238]",
-                      allowedContent: "text-[10px] text-[#71717A]",
-                    }}
-                  />
-                </div>
-              )}
+                    <UploadDropzone
+                      endpoint="promoBanner"
+                      onBeforeUploadBegin={async (files) => {
+                        setUploadStatus("compressing");
+                        setUploadProgress(20);
+                        try {
+                          const compressed = await Promise.all(
+                            files.map((f) => compressImageToWebP(f, 1400, 600, 0.85))
+                          );
+                          return compressed;
+                        } catch {
+                          return files;
+                        }
+                      }}
+                      onUploadBegin={() => {
+                        setUploadStatus("uploading");
+                        setUploadProgress(40);
+                      }}
+                      onUploadProgress={(progress) => {
+                        setUploadStatus("uploading");
+                        setUploadProgress(progress);
+                      }}
+                      onClientUploadComplete={(res) => {
+                        if (res?.[0]) {
+                          setImageUrl(res[0].ufsUrl || res[0].url);
+                          setImageKey(res[0].key);
+                          setUploadStatus("success");
+                          setUploadProgress(100);
+                        }
+                      }}
+                      onUploadError={(err: Error) => {
+                        setUploadStatus("error");
+                        setStatusMessage({
+                          type: "error",
+                          text: `Gagal mengunggah banner beranda: ${err.message}`,
+                        });
+                      }}
+                      appearance={{
+                        container: "border-none p-2",
+                        label: "text-xs text-[#A1A1AA] hover:text-[#FAFAFA]",
+                        button: "bg-[#84CC16] text-[#09090B] font-bold text-xs px-3 py-1.5 rounded-lg hover:bg-[#9ee238]",
+                        allowedContent: "text-[10px] text-[#71717A]",
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* 2. Gambar Pop-up Promo */}
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-[#D4D4D8] block">
+                  Gambar Pop-up Promo{" "}
+                  <span className="text-[10px] text-[#71717A] font-normal">(Poster potret/full gambar, opsional)</span>
+                </label>
+
+                {popupImageUrl ? (
+                  <div className="flex items-center gap-4 p-3 rounded-xl bg-[#09090B] border border-[#84CC16]/40">
+                    <div className="w-14 h-20 rounded-lg border border-[#27272A] overflow-hidden bg-[#141418] shrink-0">
+                      <Image src={popupImageUrl} alt="Poster Pop-up" width={56} height={80} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <span className="text-xs font-semibold text-[#84CC16] block">✓ Gambar Pop-up Terpasang</span>
+                      <span className="text-[10px] text-[#71717A] truncate block font-mono">Key: {popupImageKey}</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPopupImageUrl("");
+                        setPopupImageKey("");
+                        setPopupUploadStatus("idle");
+                      }}
+                      className="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-medium transition-colors"
+                    >
+                      Hapus
+                    </button>
+                  </div>
+                ) : (
+                  <div className="relative border border-dashed border-[#3F3F46] rounded-xl p-3 bg-[#0D0E12] text-center overflow-hidden">
+                    {(popupUploadStatus === "compressing" || popupUploadStatus === "uploading") && (
+                      <div className="absolute inset-0 z-20 bg-[#0C0D11]/95 backdrop-blur-sm flex flex-col items-center justify-center p-4 space-y-2">
+                        <div className="w-8 h-8 rounded-full border-2 border-[#27272A] border-t-[#84CC16] animate-spin" />
+                        <span className="text-xs font-semibold text-[#84CC16]">
+                          {popupUploadStatus === "compressing" ? "Mengompres poster pop-up..." : `Mengunggah (${popupUploadProgress}%)...`}
+                        </span>
+                      </div>
+                    )}
+
+                    <UploadDropzone
+                      endpoint="promoBanner"
+                      onBeforeUploadBegin={async (files) => {
+                        setPopupUploadStatus("compressing");
+                        setPopupUploadProgress(20);
+                        try {
+                          const compressed = await Promise.all(
+                            files.map((f) => compressImageToWebP(f, 1080, 1600, 0.88))
+                          );
+                          return compressed;
+                        } catch {
+                          return files;
+                        }
+                      }}
+                      onUploadBegin={() => {
+                        setPopupUploadStatus("uploading");
+                        setPopupUploadProgress(40);
+                      }}
+                      onUploadProgress={(progress) => {
+                        setPopupUploadStatus("uploading");
+                        setPopupUploadProgress(progress);
+                      }}
+                      onClientUploadComplete={(res) => {
+                        if (res?.[0]) {
+                          setPopupImageUrl(res[0].ufsUrl || res[0].url);
+                          setPopupImageKey(res[0].key);
+                          setPopupUploadStatus("success");
+                          setPopupUploadProgress(100);
+                        }
+                      }}
+                      onUploadError={(err: Error) => {
+                        setPopupUploadStatus("error");
+                        setStatusMessage({
+                          type: "error",
+                          text: `Gagal mengunggah gambar pop-up: ${err.message}`,
+                        });
+                      }}
+                      appearance={{
+                        container: "border-none p-2",
+                        label: "text-xs text-[#A1A1AA] hover:text-[#FAFAFA]",
+                        button: "bg-[#84CC16] text-[#09090B] font-bold text-xs px-3 py-1.5 rounded-lg hover:bg-[#9ee238]",
+                        allowedContent: "text-[10px] text-[#71717A]",
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Pengaturan Durasi Waktu */}

@@ -12,16 +12,24 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
-  title: "First Apparel | Produsen Custom Jersey Olahraga & Tim",
+  title: "First Apparel | Printing Jersey Kendal & Custom Jersey Olahraga",
   description:
-    "Konveksi spesialis custom jersey olahraga futsal, sepak bola, e-sports, dan running berkualitas premium di Bandung. Bebas konsultasi desain dan tanpa minimum order.",
+    "Jasa printing jersey Kendal dan konveksi custom jersey futsal, sepak bola, e-sports, dan running di Kendal, Jawa Tengah. Cetak sublimasi tajam, bebas desain, dan tanpa minimum order.",
+  keywords: [
+    "printing jersey kendal",
+    "custom jersey kendal",
+    "konveksi jersey kendal",
+    "bikin jersey kendal",
+    "jersey futsal kendal",
+    "First Apparel",
+  ],
   openGraph: {
     type: "website",
     locale: "id_ID",
     siteName: "First Apparel",
-    title: "First Apparel | Produsen Custom Jersey Olahraga & Tim",
+    title: "First Apparel | Printing Jersey Kendal & Custom Jersey Olahraga",
     description:
-      "Konveksi spesialis custom jersey olahraga futsal, sepak bola, e-sports, dan running berkualitas premium di Bandung. Bebas konsultasi desain dan tanpa minimum order.",
+      "Jasa printing jersey Kendal dan konveksi custom jersey futsal, sepak bola, e-sports, dan running di Kendal, Jawa Tengah. Cetak sublimasi tajam, bebas desain, dan tanpa minimum order.",
   },
   robots: {
     index: true,

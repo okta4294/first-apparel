@@ -91,7 +91,7 @@ export function HeroShowcaseCarousel({ items }: HeroShowcaseCarouselProps) {
     >
       {hasAnyImage ? (
         designs.map((design, idx) =>
-          design.imageUrl ? (
+          design.imageUrl && (idx === 0 || idx === safeIndex) ? (
             <div
               key={design.id}
               className={`absolute inset-0 transition-opacity duration-700 ease-out ${
@@ -103,7 +103,9 @@ export function HeroShowcaseCarousel({ items }: HeroShowcaseCarouselProps) {
                 src={design.imageUrl}
                 alt={design.title}
                 fill
-                priority={idx === 0}
+                preload={idx === 0}
+                fetchPriority={idx === 0 ? "high" : "auto"}
+                loading={idx === 0 ? "eager" : "lazy"}
                 sizes="(min-width: 1024px) 58vw, 100vw"
                 className="object-cover object-center"
               />
@@ -144,7 +146,7 @@ export function HeroShowcaseCarousel({ items }: HeroShowcaseCarouselProps) {
               aria-current={idx === safeIndex ? "true" : undefined}
             >
               <span
-                className={`h-1.5 rounded-full transition-all block ${
+                className={`h-1.5 rounded-full transition-colors block ${
                   idx === safeIndex
                     ? "w-6 bg-[#84CC16]"
                     : "w-1.5 bg-white/40 group-hover/dot:bg-white/75"

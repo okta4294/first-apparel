@@ -75,6 +75,18 @@ export const ourFileRouter = {
     .onUploadComplete(async ({ metadata, file }) => {
       return { uploadedBy: metadata.adminId, url: file.ufsUrl || file.url, key: file.key };
     }),
+
+  fabricImage: f({
+    image: { maxFileSize: "4MB", maxFileCount: 1 },
+  })
+    .middleware(async () => {
+      const session = await getAdminSession();
+      if (!session) throw new Error("Akses ditolak: Anda belum masuk sebagai admin.");
+      return { adminId: session.id };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      return { uploadedBy: metadata.adminId, url: file.ufsUrl || file.url, key: file.key };
+    }),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;
