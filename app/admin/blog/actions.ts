@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { blogs } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { getAdminSession } from "@/lib/auth";
-import { utapi } from "@/lib/uploadthing-server";
+import { utapi, sanitizeUploadThingUrl } from "@/lib/uploadthing-server";
 import { revalidatePath, updateTag } from "next/cache";
 
 function slugify(text: string): string {
@@ -26,7 +26,7 @@ export async function createBlogAction(formData: FormData) {
   let slug = (formData.get("slug") as string)?.trim();
   const excerpt = (formData.get("excerpt") as string)?.trim();
   const content = (formData.get("content") as string)?.trim();
-  const thumbnailUrl = (formData.get("thumbnailUrl") as string)?.trim();
+  const thumbnailUrl = sanitizeUploadThingUrl((formData.get("thumbnailUrl") as string)?.trim());
   const thumbnailKey = (formData.get("thumbnailKey") as string)?.trim();
   const isPublished = formData.get("isPublished") === "on";
 
@@ -85,9 +85,8 @@ export async function updateBlogAction(formData: FormData) {
   let slug = (formData.get("slug") as string)?.trim();
   const excerpt = (formData.get("excerpt") as string)?.trim();
   const content = (formData.get("content") as string)?.trim();
-  const thumbnailUrl = (formData.get("thumbnailUrl") as string)?.trim();
+  const thumbnailUrl = sanitizeUploadThingUrl((formData.get("thumbnailUrl") as string)?.trim());
   const thumbnailKey = (formData.get("thumbnailKey") as string)?.trim();
-  const oldThumbnailKey = (formData.get("oldThumbnailKey") as string)?.trim();
   const isPublished = formData.get("isPublished") === "on";
 
   if (!id || !title || !thumbnailUrl || !thumbnailKey) {
@@ -101,6 +100,13 @@ export async function updateBlogAction(formData: FormData) {
   }
 
   try {
+    const existing = await db
+      .select({ thumbnailKey: blogs.thumbnailKey })
+      .from(blogs)
+      .where(eq(blogs.id, id))
+      .limit(1);
+    const dbOldThumbnailKey = existing[0]?.thumbnailKey;
+
     await db
       .update(blogs)
       .set({
@@ -116,8 +122,8 @@ export async function updateBlogAction(formData: FormData) {
       .where(eq(blogs.id, id));
 
     // Bersihkan gambar lama jika diganti
-    if (oldThumbnailKey && oldThumbnailKey !== thumbnailKey) {
-      await utapi.deleteFiles(oldThumbnailKey);
+    if (dbOldThumbnailKey && dbOldThumbnailKey !== thumbnailKey) {
+      await utapi.deleteFiles(dbOldThumbnailKey);
     }
 
     updateTag("blogs");
@@ -133,17 +139,24 @@ export async function updateBlogAction(formData: FormData) {
   }
 }
 
-export async function deleteBlogAction(id: number, thumbnailKey: string) {
+export async function deleteBlogAction(id: number, _thumbnailKey?: string) {
   const session = await getAdminSession();
   if (!session) {
     return { success: false, error: "Akses ditolak." };
   }
 
   try {
+    const existing = await db
+      .select({ thumbnailKey: blogs.thumbnailKey })
+      .from(blogs)
+      .where(eq(blogs.id, id))
+      .limit(1);
+
     await db.delete(blogs).where(eq(blogs.id, id));
 
-    if (thumbnailKey) {
-      await utapi.deleteFiles(thumbnailKey);
+    const keyToDelete = existing[0]?.thumbnailKey;
+    if (keyToDelete) {
+      await utapi.deleteFiles(keyToDelete);
     }
 
     updateTag("blogs");

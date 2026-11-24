@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { getSiteUrl } from "@/lib/site-url";
+import { getSiteSettings } from "@/lib/public-data";
 import "./globals.css";
 
 const inter = Inter({
@@ -11,37 +12,47 @@ const inter = Inter({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(getSiteUrl()),
-  title: "First Apparel | Printing Jersey Kendal & Custom Jersey Olahraga",
-  description:
-    "Jasa printing jersey Kendal dan konveksi custom jersey futsal, sepak bola, e-sports, dan running di Kendal, Jawa Tengah. Cetak sublimasi tajam, bebas desain, dan tanpa minimum order.",
-  keywords: [
-    "printing jersey kendal",
-    "custom jersey kendal",
-    "konveksi jersey kendal",
-    "bikin jersey kendal",
-    "jersey futsal kendal",
-    "First Apparel",
-  ],
-  openGraph: {
-    type: "website",
-    locale: "id_ID",
-    siteName: "First Apparel",
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  const iconVersion = settings.logoUrl
+    ? Buffer.from(settings.logoUrl).toString("base64url").slice(-10)
+    : "default";
+  const iconUrl = `/api/icon?v=${iconVersion}`;
+
+  return {
+    metadataBase: new URL(getSiteUrl()),
     title: "First Apparel | Printing Jersey Kendal & Custom Jersey Olahraga",
     description:
-      "Jasa printing jersey Kendal dan konveksi custom jersey futsal, sepak bola, e-sports, dan running di Kendal, Jawa Tengah. Cetak sublimasi tajam, bebas desain, dan tanpa minimum order.",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-  icons: {
-    icon: [{ url: "/api/icon", type: "image/png", sizes: "192x192" }],
-    shortcut: "/api/icon",
-    apple: "/api/icon",
-  },
-};
+      "Jasa printing jersey Kendal & konveksi custom jersey futsal, sepak bola, e-sports, dan running. Cetak sublimasi tajam, bebas desain, tanpa minimum order.",
+    keywords: [
+      "printing jersey kendal dan sekitarnya",
+      "custom jersey kendal dan sekitarnya",
+      "konveksi jersey kendal dan sekitarnya",
+      "bikin jersey kendal",
+      "jersey futsal kendal",
+      "First Apparel",
+      "custom jersey semarang dan sekitarnya",
+      "fisrt apparel kendal",
+    ],
+    openGraph: {
+      type: "website",
+      locale: "id_ID",
+      siteName: "First Apparel",
+      title: "First Apparel | Printing Jersey Kendal & Custom Jersey Olahraga",
+      description:
+        "Jasa printing jersey Kendal & konveksi custom jersey futsal, sepak bola, e-sports, dan running. Cetak sublimasi tajam, bebas desain, tanpa minimum order.",
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+    icons: {
+      icon: [{ url: iconUrl, type: "image/png", sizes: "192x192" }],
+      shortcut: iconUrl,
+      apple: iconUrl,
+    },
+  };
+}
 
 export default function RootLayout({
   children,
@@ -49,18 +60,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" data-scroll-behavior="smooth" suppressHydrationWarning className={`h-full ${inter.variable}`}>
+    <html lang="id" data-scroll-behavior="smooth" className={`h-full dark ${inter.variable}`}>
       <head>
         <link rel="preconnect" href="https://utfs.io" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://utfs.io" />
         <link rel="dns-prefetch" href="https://ufs.sh" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('first_apparel_theme');if(t==='light'){document.documentElement.classList.remove('dark')}else{document.documentElement.classList.add('dark')}}catch(e){document.documentElement.classList.add('dark')}})()`,
-          }}
-        />
       </head>
-      <body className="min-h-full flex flex-col bg-[#F8FAFC] text-[#0F172A] dark:bg-[#09090B] dark:text-[#FAFAFA] antialiased font-sans">
+      <body className="min-h-full flex flex-col bg-[#09090B] text-[#FAFAFA] antialiased font-sans">
         {children}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-KYYVTM0EYJ"

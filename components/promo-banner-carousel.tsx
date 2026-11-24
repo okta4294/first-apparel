@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
+import { WhatsAppIcon } from "@/components/whatsapp-icon";
 
 export interface PromoItem {
   id: number;
@@ -127,25 +128,37 @@ export function PromoBannerCarousel({
           onBlurCapture={() => setIsPaused(false)}
           className="relative w-full overflow-hidden rounded-xl sm:rounded-2xl bg-[#11131A] border border-[#E2E8F0] dark:border-[#27272A]"
         >
+          <div className="relative">
           {activePromo.imageUrl ? (
-            /* Banner Penuh Gambar Tanpa Teks Overlay: Klik Langsung ke WhatsApp */
-            <a
-              href={waHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Klaim promo ${activePromo.title} via WhatsApp`}
-              className="block w-full focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#84CC16]"
-            >
-              <Image
-                key={activePromo.id}
-                src={activePromo.imageUrl}
-                alt={activePromo.title}
-                width={1920}
-                height={600}
-                sizes="(min-width: 1280px) 1216px, 100vw"
-                className="w-full h-auto block transition-opacity duration-500"
-              />
-            </a>
+            /* Banner Penuh Gambar dengan Tombol WhatsApp di Pojok (Desktop) & Bar Bawah (Mobile) */
+            <div className="relative group">
+              <a
+                href={waHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Klaim promo ${activePromo.title} via WhatsApp`}
+                className="block w-full focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#84CC16]"
+              >
+                <Image
+                  key={activePromo.id}
+                  src={activePromo.imageUrl}
+                  alt={activePromo.title}
+                  width={1920}
+                  height={600}
+                  sizes="(min-width: 1280px) 1216px, 100vw"
+                  className="w-full h-auto block transition-opacity duration-500"
+                />
+              </a>
+              <a
+                href={waHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:inline-flex items-center gap-2 absolute bottom-3.5 right-3.5 z-20 px-4 py-2 rounded-full bg-[#84CC16] hover:bg-[#9ee238] text-[#09090B] text-xs font-bold tracking-wide shadow-lg shadow-black/40 transition-transform group-hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FAFAFA]"
+              >
+                <WhatsAppIcon className="w-4 h-4 fill-current shrink-0" />
+                <span>Klaim via WA</span>
+              </a>
+            </div>
           ) : (
             /* Cadangan Jika Promo Tidak Memakai Gambar */
             <div className="relative w-full min-h-[260px] sm:min-h-[320px] lg:min-h-[360px] flex items-center">
@@ -279,6 +292,24 @@ export function PromoBannerCarousel({
                   </button>
                 );
               })}
+            </div>
+          )}
+          </div>
+
+          {activePromo.imageUrl && (
+            <div className="sm:hidden flex items-center justify-between gap-3 px-4 py-2.5 bg-[#14171F] border-t border-white/10">
+              <span className="text-xs font-medium text-[#E4E4E7] truncate">
+                {activePromo.title}
+              </span>
+              <a
+                href={waHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 min-h-[36px] px-3.5 py-1.5 rounded-full bg-[#84CC16] hover:bg-[#9ee238] text-[#09090B] text-xs font-bold shrink-0 transition-colors"
+              >
+                <WhatsAppIcon className="w-3.5 h-3.5 fill-current shrink-0" />
+                <span>Klaim via WA</span>
+              </a>
             </div>
           )}
         </div>

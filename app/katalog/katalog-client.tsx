@@ -247,22 +247,13 @@ export function KatalogClient({ items, initialCategory }: KatalogClientProps) {
                 </div>
 
                 <div className="pt-3 space-y-1">
-                  <div className="flex items-center justify-between gap-2 text-[11px] text-[#A1A1AA]">
-                    <span className="truncate">{item.fabric}</span>
-                    {item.minOrder && (
-                      <span className="shrink-0">Min. {item.minOrder}</span>
-                    )}
-                  </div>
-                  <h2 className="text-sm font-semibold text-[#FAFAFA] leading-snug line-clamp-2 group-hover:text-[#84CC16] transition-colors">
+                  <h2 className="text-base font-semibold text-[#FAFAFA] leading-snug line-clamp-2 group-hover:text-[#84CC16] transition-colors">
                     {item.title}
                   </h2>
                   {hasPrice && cleanPrice && (
-                    <div className="flex items-baseline gap-1 pt-0.5">
-                      <span className="text-sm font-bold text-[#FAFAFA] tabular-nums">
-                        {cleanPrice}
-                      </span>
-                      <span className="text-xs text-[#A1A1AA]">/ pcs</span>
-                    </div>
+                    <p className="text-xs sm:text-sm font-normal text-[#A1A1AA] pt-0.5 line-clamp-2">
+                      {cleanPrice}
+                    </p>
                   )}
                 </div>
               </Link>

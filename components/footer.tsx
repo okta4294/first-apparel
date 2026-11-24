@@ -56,7 +56,7 @@ export async function Footer({
           <div className="space-y-4">
             <Link href="/" className="inline-block group">
               <span className="font-bold text-base tracking-tight text-[#FAFAFA] group-hover:text-[#84CC16] transition-colors">
-                {companyDisplayName}
+                {storeName}
               </span>
             </Link>
             <p className="text-[#A1A1AA] leading-relaxed">

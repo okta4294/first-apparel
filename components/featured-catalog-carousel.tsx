@@ -22,36 +22,46 @@ export function FeaturedCatalogCarousel({
   hasRealData,
 }: FeaturedCatalogCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null);
+  const scrollRafRef = useRef<number | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(catalogs.length > 1);
 
   const syncScrollState = useCallback(() => {
-    const el = trackRef.current;
-    if (!el) return;
+    if (scrollRafRef.current !== null) return;
+    scrollRafRef.current = window.requestAnimationFrame(() => {
+      scrollRafRef.current = null;
+      const el = trackRef.current;
+      if (!el) return;
 
-    const maxScroll = Math.max(0, el.scrollWidth - el.clientWidth);
-    setCanScrollPrev(el.scrollLeft > 4);
-    setCanScrollNext(el.scrollLeft < maxScroll - 4);
+      const maxScroll = Math.max(0, el.scrollWidth - el.clientWidth);
+      setCanScrollPrev(el.scrollLeft > 4);
+      setCanScrollNext(el.scrollLeft < maxScroll - 4);
 
-    const slides = Array.from(el.children) as HTMLElement[];
-    if (slides.length === 0) return;
+      const slides = Array.from(el.children) as HTMLElement[];
+      if (slides.length === 0) return;
 
-    let closestIdx = 0;
-    let minDistance = Infinity;
-    for (let i = 0; i < slides.length; i++) {
-      const distance = Math.abs(slides[i].offsetLeft - el.scrollLeft);
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestIdx = i;
+      let closestIdx = 0;
+      let minDistance = Infinity;
+      for (let i = 0; i < slides.length; i++) {
+        const distance = Math.abs(slides[i].offsetLeft - el.scrollLeft);
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestIdx = i;
+        }
       }
-    }
-    setActiveIndex(closestIdx);
+      setActiveIndex(closestIdx);
+    });
   }, []);
 
   useEffect(() => {
     window.addEventListener("resize", syncScrollState, { passive: true });
-    return () => window.removeEventListener("resize", syncScrollState);
+    return () => {
+      window.removeEventListener("resize", syncScrollState);
+      if (scrollRafRef.current !== null) {
+        window.cancelAnimationFrame(scrollRafRef.current);
+      }
+    };
   }, [syncScrollState, catalogs.length]);
 
   const scrollToSlide = useCallback((index: number) => {
@@ -220,21 +230,13 @@ export function FeaturedCatalogCarousel({
 
                 {/* Info Produk Ringkas di Bawah Gambar */}
                 <div className="pt-3 space-y-1">
-                  <h3 className="text-sm font-medium text-[#0F172A] dark:text-[#FAFAFA] leading-snug line-clamp-2 group-hover:text-[#4D7C0F] dark:group-hover:text-[#84CC16] transition-colors">
+                  <h3 className="text-base font-semibold text-[#0F172A] dark:text-[#FAFAFA] leading-snug line-clamp-2 group-hover:text-[#4D7C0F] dark:group-hover:text-[#84CC16] transition-colors">
                     {item.title}
                   </h3>
-                  <p className="text-xs text-[#64748B] dark:text-[#A1A1AA] truncate">
-                    {item.fabric}
-                  </p>
                   {hasPrice && cleanPrice && (
-                    <div className="flex items-baseline gap-1 pt-0.5">
-                      <span className="text-sm font-bold text-[#0F172A] dark:text-[#FAFAFA] tabular-nums">
-                        {cleanPrice}
-                      </span>
-                      <span className="text-xs text-[#64748B] dark:text-[#71717A]">
-                        / pcs
-                      </span>
-                    </div>
+                    <p className="text-xs sm:text-sm font-normal text-[#64748B] dark:text-[#A1A1AA] pt-0.5 line-clamp-2">
+                      {cleanPrice}
+                    </p>
                   )}
                 </div>
               </Link>

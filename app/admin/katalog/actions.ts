@@ -4,8 +4,27 @@ import { db } from "@/lib/db";
 import { catalogs } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { getAdminSession } from "@/lib/auth";
-import { utapi } from "@/lib/uploadthing-server";
+import { utapi, sanitizeUploadThingUrl } from "@/lib/uploadthing-server";
 import { revalidatePath, updateTag } from "next/cache";
+
+function sanitizeImageGallery(raw: string | null | undefined): { url: string; key: string }[] {
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    const valid: { url: string; key: string }[] = [];
+    for (const item of parsed) {
+      const safeUrl = sanitizeUploadThingUrl(item?.url);
+      const safeKey = typeof item?.key === "string" ? item.key.trim() : "";
+      if (safeUrl && safeKey) {
+        valid.push({ url: safeUrl, key: safeKey });
+      }
+    }
+    return valid;
+  } catch {
+    return [];
+  }
+}
 
 export async function createCatalogAction(formData: FormData) {
   const session = await getAdminSession();
@@ -22,26 +41,21 @@ export async function createCatalogAction(formData: FormData) {
 
   // Tangani multi-gambar (maksimal 4)
   const imagesRaw = (formData.get("images") as string)?.trim();
-  let images: { url: string; key: string }[] = [];
-  try {
-    if (imagesRaw) images = JSON.parse(imagesRaw);
-  } catch {
-    images = [];
-  }
+  let images = sanitizeImageGallery(imagesRaw);
 
   // Fallback single image
-  const singleUrl = (formData.get("imageUrl") as string)?.trim();
+  const singleUrl = sanitizeUploadThingUrl((formData.get("imageUrl") as string)?.trim());
   const singleKey = (formData.get("imageKey") as string)?.trim();
   if (images.length === 0 && singleUrl && singleKey) {
     images = [{ url: singleUrl, key: singleKey }];
   }
 
   const imageUrl = images[0]?.url || singleUrl || "";
-  const imageKey = images[0]?.key || singleKey || "";
+  const imageKey = images[0]?.key || (singleUrl ? singleKey : "") || "";
 
   // Size chart
-  const sizeChartUrl = (formData.get("sizeChartUrl") as string)?.trim() || null;
-  const sizeChartKey = (formData.get("sizeChartKey") as string)?.trim() || null;
+  const sizeChartUrl = sanitizeUploadThingUrl((formData.get("sizeChartUrl") as string)?.trim() || null);
+  const sizeChartKey = sizeChartUrl ? (formData.get("sizeChartKey") as string)?.trim() || null : null;
 
   if (!title || !imageUrl || !imageKey) {
     return { success: false, error: "Judul dan setidaknya 1 foto produk wajib diunggah." };
@@ -97,41 +111,46 @@ export async function updateCatalogAction(formData: FormData) {
 
   // Tangani multi-gambar
   const imagesRaw = (formData.get("images") as string)?.trim();
-  let images: { url: string; key: string }[] = [];
-  try {
-    if (imagesRaw) images = JSON.parse(imagesRaw);
-  } catch {
-    images = [];
-  }
+  let images = sanitizeImageGallery(imagesRaw);
 
-  const singleUrl = (formData.get("imageUrl") as string)?.trim();
+  const singleUrl = sanitizeUploadThingUrl((formData.get("imageUrl") as string)?.trim());
   const singleKey = (formData.get("imageKey") as string)?.trim();
   if (images.length === 0 && singleUrl && singleKey) {
     images = [{ url: singleUrl, key: singleKey }];
   }
 
   const imageUrl = images[0]?.url || singleUrl || "";
-  const imageKey = images[0]?.key || singleKey || "";
+  const imageKey = images[0]?.key || (singleUrl ? singleKey : "") || "";
 
   // Size chart
-  const sizeChartUrl = (formData.get("sizeChartUrl") as string)?.trim() || null;
-  const sizeChartKey = (formData.get("sizeChartKey") as string)?.trim() || null;
-  const oldSizeChartKey = (formData.get("oldSizeChartKey") as string)?.trim();
-
-  // Berkas yang dihapus saat pengeditan
-  const deletedKeysRaw = (formData.get("deletedKeys") as string)?.trim();
-  let deletedKeys: string[] = [];
-  try {
-    if (deletedKeysRaw) deletedKeys = JSON.parse(deletedKeysRaw);
-  } catch {
-    deletedKeys = [];
-  }
+  const sizeChartUrl = sanitizeUploadThingUrl((formData.get("sizeChartUrl") as string)?.trim() || null);
+  const sizeChartKey = sizeChartUrl ? (formData.get("sizeChartKey") as string)?.trim() || null : null;
 
   if (!id || !title || !imageUrl || !imageKey) {
     return { success: false, error: "Data produk tidak lengkap: judul dan foto utama wajib ada." };
   }
 
   try {
+    const existing = await db
+      .select({
+        imageKey: catalogs.imageKey,
+        images: catalogs.images,
+        sizeChartKey: catalogs.sizeChartKey,
+      })
+      .from(catalogs)
+      .where(eq(catalogs.id, id))
+      .limit(1);
+
+    const oldKeys = new Set<string>();
+    if (existing[0]?.imageKey) oldKeys.add(existing[0].imageKey);
+    for (const img of sanitizeImageGallery(existing[0]?.images)) {
+      oldKeys.add(img.key);
+    }
+    const newKeys = new Set(images.map((img) => img.key));
+    if (imageKey) newKeys.add(imageKey);
+    const removedGalleryKeys = Array.from(oldKeys).filter((k) => !newKeys.has(k));
+    const dbOldSizeChartKey = existing[0]?.sizeChartKey || null;
+
     await db
       .update(catalogs)
       .set({
@@ -151,14 +170,14 @@ export async function updateCatalogAction(formData: FormData) {
       })
       .where(eq(catalogs.id, id));
 
-    // Bersihkan berkas yang dihapus dari UploadThing
-    if (deletedKeys.length > 0) {
-      await utapi.deleteFiles(deletedKeys);
+    // Bersihkan berkas milik baris ini yang dihapus saat pengeditan
+    if (removedGalleryKeys.length > 0) {
+      await utapi.deleteFiles(removedGalleryKeys);
     }
 
     // Bersihkan size chart lama jika diganti
-    if (oldSizeChartKey && oldSizeChartKey !== sizeChartKey) {
-      await utapi.deleteFiles(oldSizeChartKey);
+    if (dbOldSizeChartKey && dbOldSizeChartKey !== sizeChartKey) {
+      await utapi.deleteFiles(dbOldSizeChartKey);
     }
 
     updateTag("catalogs");
@@ -175,29 +194,34 @@ export async function updateCatalogAction(formData: FormData) {
   }
 }
 
-export async function deleteCatalogAction(id: number, allKeys: string[] | string) {
+export async function deleteCatalogAction(id: number, _allKeys?: string[] | string) {
   const session = await getAdminSession();
   if (!session) {
     return { success: false, error: "Akses ditolak." };
   }
 
   try {
+    const existing = await db
+      .select({
+        imageKey: catalogs.imageKey,
+        images: catalogs.images,
+        sizeChartKey: catalogs.sizeChartKey,
+      })
+      .from(catalogs)
+      .where(eq(catalogs.id, id))
+      .limit(1);
+
     // 1. Hapus dari database Neon
     await db.delete(catalogs).where(eq(catalogs.id, id));
 
-    // 2. Hapus semua file fisik dari UploadThing (galeri foto + size chart)
-    const keysToDelete: string[] = [];
-    if (Array.isArray(allKeys)) {
-      keysToDelete.push(...allKeys.filter(Boolean));
-    } else if (typeof allKeys === "string" && allKeys) {
-      try {
-        const parsed = JSON.parse(allKeys);
-        if (Array.isArray(parsed)) keysToDelete.push(...parsed.filter(Boolean));
-        else keysToDelete.push(allKeys);
-      } catch {
-        keysToDelete.push(allKeys);
-      }
+    // 2. Hapus semua file fisik milik produk ini dari UploadThing (galeri foto + size chart)
+    const keysSet = new Set<string>();
+    if (existing[0]?.imageKey) keysSet.add(existing[0].imageKey);
+    if (existing[0]?.sizeChartKey) keysSet.add(existing[0].sizeChartKey);
+    for (const img of sanitizeImageGallery(existing[0]?.images)) {
+      keysSet.add(img.key);
     }
+    const keysToDelete = Array.from(keysSet);
 
     if (keysToDelete.length > 0) {
       await utapi.deleteFiles(keysToDelete);

@@ -79,27 +79,14 @@ export default async function CatalogDetailPage({
     notFound();
   }
 
-  const [settings, item, fabrics] = await Promise.all([
+  const [settings, item] = await Promise.all([
     getSiteSettings(),
     getCatalogById(id),
-    getActiveFabrics(),
   ]);
 
   if (!item) {
     notFound();
   }
-
-  const matchedFabric = fabrics.find(
-    (f) => f.name.trim().toLowerCase() === item.fabric.trim().toLowerCase()
-  );
-
-  const descriptionParagraphs = (
-    matchedFabric?.description ||
-    `Model jersey ini menggunakan bahan ${item.fabric}. Desain, warna, logo, dan nama tim dapat disesuaikan melalui konsultasi WhatsApp.`
-  )
-    .split(/\n+/)
-    .map((p) => p.trim())
-    .filter(Boolean);
 
   const galleryImages = parseCatalogImages(
     item.images,
@@ -108,7 +95,7 @@ export default async function CatalogDetailPage({
   );
 
   const sizeChartUrl = item.sizeChartUrl || settings.sizeChartUrl;
-  const waMessage = `Halo Admin ${settings.storeName}, saya ingin memesan custom jersey model "${item.title}" (${item.category}, bahan ${item.fabric}). Bisa info detail pemesanannya?`;
+  const waMessage = `Halo Admin ${settings.storeName}, saya ingin memesan custom jersey model "${item.title}" (${item.category}). Bisa info detail pemesanannya?`;
   const waHref = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(waMessage)}`;
 
   return (
@@ -132,40 +119,33 @@ export default async function CatalogDetailPage({
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
-          <div className="lg:col-span-5">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          <div className="lg:col-span-6">
             <CatalogGallery title={item.title} images={galleryImages} />
           </div>
 
-          <div data-animate="hero" className="lg:col-span-7 space-y-5 lg:pt-1">
-            <div className="space-y-2">
-              <p className="text-xs font-bold uppercase tracking-wider text-[#4D7C0F] dark:text-[#84CC16]">
+          <div data-animate="hero" className="lg:col-span-6 lg:pt-1 space-y-6">
+            <div className="space-y-3">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-[0.12em] bg-[#65A30D]/10 dark:bg-[#84CC16]/10 border border-[#65A30D]/25 dark:border-[#84CC16]/25 text-[#4D7C0F] dark:text-[#84CC16]">
                 {item.category}
-              </p>
-              <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-[#0F172A] dark:text-[#FAFAFA] leading-tight">
+              </span>
+              <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-[#0F172A] dark:text-[#FAFAFA] leading-[1.12] [text-wrap:balance]">
                 {item.title}
               </h1>
             </div>
 
-            <div className="space-y-3 text-sm sm:text-base text-[#475569] dark:text-[#A1A1AA] leading-relaxed">
-              <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs font-semibold uppercase tracking-wider text-[#0F172A] dark:text-[#E4E4E7]">
-                <span>Bahan: {item.fabric}</span>
-                {item.minOrder && <span>Minimal Order: {item.minOrder}</span>}
-              </div>
-              {descriptionParagraphs.map((paragraph, idx) => (
-                <p key={idx}>{paragraph}</p>
-              ))}
-            </div>
-
             {item.priceInfo?.trim() && item.priceInfo.trim() !== "-" && (
-              <div className="pt-2 border-t border-[#E2E8F0] dark:border-[#27272A]">
-                <p className="text-2xl sm:text-3xl font-bold text-[#0F172A] dark:text-[#FAFAFA] tabular-nums">
-                  {item.priceInfo.trim()}
+              <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#141418] border border-[#E2E8F0] dark:border-[#27272A]">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#64748B] dark:text-[#71717A] mb-1.5">
+                  Keterangan
+                </p>
+                <p className="text-sm sm:text-base font-medium text-[#334155] dark:text-[#D4D4D8] leading-relaxed">
+                  {item.priceInfo.trim().replace(/\s*\/\s*pcs\b/i, "").trim()}
                 </p>
               </div>
             )}
 
-            <div className="space-y-3 pt-1">
+            <div className="space-y-3 pt-2 border-t border-[#E2E8F0] dark:border-[#27272A]">
               {sizeChartUrl && (
                 <SizeChartTrigger
                   title={item.title}
@@ -177,7 +157,7 @@ export default async function CatalogDetailPage({
                 href={waHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full min-h-[48px] inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-[#65A30D] hover:bg-[#4D7C0F] dark:bg-[#84CC16] dark:hover:bg-[#9ee238] active:scale-[0.99] text-white dark:text-[#09090B] font-bold text-sm tracking-wide transition-all"
+                className="w-full min-h-[48px] inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-[#65A30D] hover:bg-[#4D7C0F] dark:bg-[#84CC16] dark:hover:bg-[#9ee238] active:scale-[0.99] text-white dark:text-[#09090B] font-bold text-sm tracking-wide shadow-lg shadow-[#65A30D]/15 dark:shadow-[#84CC16]/10 transition-all"
               >
                 <WhatsAppIcon className="w-4 h-4 shrink-0" />
                 <span>Pesan via WhatsApp</span>

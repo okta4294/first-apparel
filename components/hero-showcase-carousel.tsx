@@ -91,7 +91,7 @@ export function HeroShowcaseCarousel({ items }: HeroShowcaseCarouselProps) {
     >
       {hasAnyImage ? (
         designs.map((design, idx) =>
-          design.imageUrl && (idx === 0 || idx === safeIndex) ? (
+          design.imageUrl ? (
             <div
               key={design.id}
               className={`absolute inset-0 transition-opacity duration-700 ease-out ${

@@ -585,84 +585,15 @@ export function CatalogManager({ initialItems, fabrics }: CatalogManagerProps) {
                 </div>
               </div>
 
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label htmlFor="catalog-fabric" className="text-xs font-medium text-[#D4D4D8]">
-                    Spesifikasi Bahan Kain
-                  </label>
-                  <Link
-                    href="/admin/bahan"
-                    className="text-[10px] text-[#84CC16] hover:underline"
-                  >
-                    Kelola Bahan →
-                  </Link>
-                </div>
-                {fabrics.length > 0 ? (
-                  <>
-                    <select
-                      id="catalog-fabric"
-                      value={fabric}
-                      onChange={(e) => setFabric(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg bg-[#09090B] border border-[#27272A] text-xs text-[#FAFAFA] focus:border-[#84CC16] focus:outline-none"
-                    >
-                      {fabric &&
-                        !fabrics.some(
-                          (f) => f.name.trim().toLowerCase() === fabric.trim().toLowerCase()
-                        ) && (
-                          <option value={fabric}>{fabric} (bahan lama)</option>
-                        )}
-                      {fabrics.map((item) => (
-                        <option key={item.id} value={item.name}>
-                          {item.name}
-                        </option>
-                      ))}
-                    </select>
-                    {(() => {
-                      const selectedFabric = fabrics.find(
-                        (f) => f.name.trim().toLowerCase() === fabric.trim().toLowerCase()
-                      );
-                      return selectedFabric ? (
-                        <p className="text-[11px] text-[#71717A] mt-1.5 line-clamp-2">
-                          {selectedFabric.description}
-                        </p>
-                      ) : null;
-                    })()}
-                  </>
-                ) : (
-                  <input
-                    id="catalog-fabric"
-                    type="text"
-                    placeholder="Tambahkan bahan di menu Manajemen Bahan terlebih dahulu"
-                    value={fabric}
-                    onChange={(e) => setFabric(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-[#09090B] border border-[#27272A] text-xs text-[#FAFAFA] placeholder:text-[#52525B] focus:border-[#84CC16] focus:outline-none"
-                  />
-                )}
-              </div>
-
-              <div>
-                <label className="text-xs font-medium text-[#D4D4D8] block mb-1">
-                  Keterangan Harga Dasar{" "}
-                  <span className="text-[10px] text-[#71717A] font-normal">(Opsional)</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Kosongkan jika tidak menampilkan harga (misal: Mulai Rp 125.000 / pcs)"
-                  value={priceInfo}
-                  onChange={(e) => setPriceInfo(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-[#09090B] border border-[#27272A] text-xs text-[#FAFAFA] placeholder:text-[#52525B] focus:border-[#84CC16] focus:outline-none"
-                />
-              </div>
-
               <div className="sm:col-span-2">
                 <label className="text-xs font-medium text-[#D4D4D8] block mb-1">
-                  Minimal Order
+                  Keterangan
                 </label>
                 <input
                   type="text"
-                  placeholder="Misal: Tanpa Minimum (Bisa Satuan) atau Min. 12 pcs"
-                  value={minOrder}
-                  onChange={(e) => setMinOrder(e.target.value)}
+                  placeholder="Misal: Menggunakan bahan jacquard motif batik (opsional)"
+                  value={priceInfo}
+                  onChange={(e) => setPriceInfo(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg bg-[#09090B] border border-[#27272A] text-xs text-[#FAFAFA] placeholder:text-[#52525B] focus:border-[#84CC16] focus:outline-none"
                 />
               </div>

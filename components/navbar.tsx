@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 
 interface NavbarProps {
@@ -86,9 +85,8 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", companyName, log
           </Link> */}
         </nav>
 
-        {/* Desktop WhatsApp CTA & Theme Switcher */}
+        {/* Desktop WhatsApp CTA */}
         <div className="hidden md:flex items-center gap-3">
-          <ThemeToggle />
           <a
             href={waHref}
             target="_blank"
@@ -102,7 +100,6 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", companyName, log
 
         {/* Mobile Header Actions */}
         <div className="flex md:hidden items-center gap-1.5">
-          <ThemeToggle />
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}

@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { partners } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { getAdminSession } from "@/lib/auth";
-import { utapi } from "@/lib/uploadthing-server";
+import { utapi, sanitizeUploadThingUrl } from "@/lib/uploadthing-server";
 import { revalidatePath, updateTag } from "next/cache";
 
 function sanitizeUrl(urlString: string | null): string | null {
@@ -30,7 +30,7 @@ export async function createPartnerAction(formData: FormData) {
 
   const name = (formData.get("name") as string)?.trim();
   const category = (formData.get("category") as string)?.trim() || null;
-  const logoUrl = (formData.get("logoUrl") as string)?.trim();
+  const logoUrl = sanitizeUploadThingUrl((formData.get("logoUrl") as string)?.trim());
   const logoKey = (formData.get("logoKey") as string)?.trim();
   const rawWebsiteUrl = (formData.get("websiteUrl") as string)?.trim() || null;
   const websiteUrl = sanitizeUrl(rawWebsiteUrl);
@@ -76,9 +76,8 @@ export async function updatePartnerAction(formData: FormData) {
   const id = Number(formData.get("id"));
   const name = (formData.get("name") as string)?.trim();
   const category = (formData.get("category") as string)?.trim() || null;
-  const logoUrl = (formData.get("logoUrl") as string)?.trim();
+  const logoUrl = sanitizeUploadThingUrl((formData.get("logoUrl") as string)?.trim());
   const logoKey = (formData.get("logoKey") as string)?.trim();
-  const oldLogoKey = (formData.get("oldLogoKey") as string)?.trim();
   const rawWebsiteUrl = (formData.get("websiteUrl") as string)?.trim() || null;
   const websiteUrl = sanitizeUrl(rawWebsiteUrl);
   const sortOrder = Number(formData.get("sortOrder")) || 0;
@@ -89,6 +88,13 @@ export async function updatePartnerAction(formData: FormData) {
   }
 
   try {
+    const existing = await db
+      .select({ logoKey: partners.logoKey })
+      .from(partners)
+      .where(eq(partners.id, id))
+      .limit(1);
+    const dbOldLogoKey = existing[0]?.logoKey;
+
     await db
       .update(partners)
       .set({
@@ -102,8 +108,8 @@ export async function updatePartnerAction(formData: FormData) {
       })
       .where(eq(partners.id, id));
 
-    if (oldLogoKey && oldLogoKey !== logoKey) {
-      await utapi.deleteFiles(oldLogoKey);
+    if (dbOldLogoKey && dbOldLogoKey !== logoKey) {
+      await utapi.deleteFiles(dbOldLogoKey);
     }
 
     updateTag("partners");
@@ -118,17 +124,24 @@ export async function updatePartnerAction(formData: FormData) {
   }
 }
 
-export async function deletePartnerAction(id: number, logoKey: string) {
+export async function deletePartnerAction(id: number, _logoKey?: string) {
   const session = await getAdminSession();
   if (!session) {
     return { success: false, error: "Akses ditolak." };
   }
 
   try {
+    const existing = await db
+      .select({ logoKey: partners.logoKey })
+      .from(partners)
+      .where(eq(partners.id, id))
+      .limit(1);
+
     await db.delete(partners).where(eq(partners.id, id));
 
-    if (logoKey) {
-      await utapi.deleteFiles(logoKey);
+    const keyToDelete = existing[0]?.logoKey;
+    if (keyToDelete) {
+      await utapi.deleteFiles(keyToDelete);
     }
 
     updateTag("partners");

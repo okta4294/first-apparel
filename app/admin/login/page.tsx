@@ -59,7 +59,7 @@ export default function AdminLoginPage() {
               type="email"
               required
               autoComplete="email"
-              placeholder="contoh: admin@gmail.com"
+              placeholder="hayo apa"
               className="w-full px-4 py-2.5 rounded-lg bg-[#09090B] border border-[#27272A] text-sm text-[#FAFAFA] placeholder-[#52525B] focus:outline-none focus:border-[#84CC16] focus:ring-1 focus:ring-[#84CC16] transition-colors"
             />
           </div>

@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { fabrics } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { getAdminSession } from "@/lib/auth";
-import { utapi } from "@/lib/uploadthing-server";
+import { utapi, sanitizeUploadThingUrl } from "@/lib/uploadthing-server";
 import { revalidatePath, updateTag } from "next/cache";
 
 export async function createFabricAction(formData: FormData) {
@@ -17,8 +17,8 @@ export async function createFabricAction(formData: FormData) {
   const badge = (formData.get("badge") as string)?.trim() || null;
   const gsm = (formData.get("gsm") as string)?.trim() || null;
   const recommendation = (formData.get("recommendation") as string)?.trim() || null;
-  const imageUrl = (formData.get("imageUrl") as string)?.trim() || null;
-  const imageKey = (formData.get("imageKey") as string)?.trim() || null;
+  const imageUrl = sanitizeUploadThingUrl((formData.get("imageUrl") as string)?.trim() || null);
+  const imageKey = imageUrl ? (formData.get("imageKey") as string)?.trim() || null : null;
   const description = (formData.get("description") as string)?.trim();
   const sortOrder = Number(formData.get("sortOrder")) || 0;
   const isActive = formData.get("isActive") === "on";
@@ -71,9 +71,8 @@ export async function updateFabricAction(formData: FormData) {
   const badge = (formData.get("badge") as string)?.trim() || null;
   const gsm = (formData.get("gsm") as string)?.trim() || null;
   const recommendation = (formData.get("recommendation") as string)?.trim() || null;
-  const imageUrl = (formData.get("imageUrl") as string)?.trim() || null;
-  const imageKey = (formData.get("imageKey") as string)?.trim() || null;
-  const oldImageKey = (formData.get("oldImageKey") as string)?.trim() || null;
+  const imageUrl = sanitizeUploadThingUrl((formData.get("imageUrl") as string)?.trim() || null);
+  const imageKey = imageUrl ? (formData.get("imageKey") as string)?.trim() || null : null;
   const description = (formData.get("description") as string)?.trim();
   const sortOrder = Number(formData.get("sortOrder")) || 0;
   const isActive = formData.get("isActive") === "on";
@@ -83,6 +82,13 @@ export async function updateFabricAction(formData: FormData) {
   }
 
   try {
+    const existing = await db
+      .select({ imageKey: fabrics.imageKey })
+      .from(fabrics)
+      .where(eq(fabrics.id, id))
+      .limit(1);
+    const dbOldImageKey = existing[0]?.imageKey || null;
+
     await db
       .update(fabrics)
       .set({
@@ -99,9 +105,9 @@ export async function updateFabricAction(formData: FormData) {
       })
       .where(eq(fabrics.id, id));
 
-    if (oldImageKey && oldImageKey !== imageKey) {
+    if (dbOldImageKey && dbOldImageKey !== imageKey) {
       try {
-        await utapi.deleteFiles(oldImageKey);
+        await utapi.deleteFiles(dbOldImageKey);
       } catch (e) {
         console.warn("Gagal hapus gambar bahan lama di UploadThing:", e);
       }

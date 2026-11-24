@@ -13,6 +13,7 @@ export interface ActionResponse {
 
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCKOUT_MINUTES = 15;
+const DUMMY_PASSWORD_HASH = "$2b$10$CwTycUXWue0Thq9StjUM0uJ8p4rG5Yh2vN7xK9mQ1zR3tV5wX7yZ.";
 
 export async function loginAdminAction(
   _prevState: ActionResponse | null,
@@ -29,6 +30,7 @@ export async function loginAdminAction(
     const [admin] = await db.select().from(admins).where(eq(admins.email, email)).limit(1);
 
     if (!admin) {
+      await comparePassword(password, DUMMY_PASSWORD_HASH);
       return { error: "Email atau kata sandi tidak sesuai." };
     }
 
@@ -39,9 +41,12 @@ export async function loginAdminAction(
       };
     }
 
+    const baseFailedAttempts =
+      admin.lockedUntil && admin.lockedUntil <= now ? 0 : admin.failedAttempts;
+
     const isValid = await comparePassword(password, admin.passwordHash);
     if (!isValid) {
-      const nextAttempts = admin.failedAttempts + 1;
+      const nextAttempts = baseFailedAttempts + 1;
       if (nextAttempts >= MAX_FAILED_ATTEMPTS) {
         const lockedUntil = new Date(Date.now() + LOCKOUT_MINUTES * 60 * 1000);
         await db

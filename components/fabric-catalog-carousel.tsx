@@ -92,18 +92,20 @@ function getBadgeStyle(badge: string, index: number): string {
 
 function FabricZoomImage({ src, name }: { src: string; name: string }) {
   const [isZoomed, setIsZoomed] = useState(false);
-  const [origin, setOrigin] = useState({ x: 50, y: 50 });
+  const imgRef = useRef<HTMLImageElement>(null);
 
   const updateOriginFromClient = (
     el: HTMLDivElement,
     clientX: number,
     clientY: number
   ) => {
+    const imgEl = imgRef.current;
+    if (!imgEl) return;
     const rect = el.getBoundingClientRect();
     if (rect.width <= 0 || rect.height <= 0) return;
     const x = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
     const y = Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100));
-    setOrigin({ x, y });
+    imgEl.style.transformOrigin = `${x.toFixed(1)}% ${y.toFixed(1)}%`;
   };
 
   return (
@@ -114,17 +116,20 @@ function FabricZoomImage({ src, name }: { src: string; name: string }) {
       }}
       onMouseMove={(e) => {
         updateOriginFromClient(e.currentTarget, e.clientX, e.clientY);
-        if (!isZoomed) setIsZoomed(true);
       }}
       onMouseLeave={() => {
         setIsZoomed(false);
-        setOrigin({ x: 50, y: 50 });
+        if (imgRef.current) {
+          imgRef.current.style.transformOrigin = "50% 50%";
+        }
       }}
       onPointerDown={(e) => {
         if (e.pointerType === "touch") {
           if (isZoomed) {
             setIsZoomed(false);
-            setOrigin({ x: 50, y: 50 });
+            if (imgRef.current) {
+              imgRef.current.style.transformOrigin = "50% 50%";
+            }
           } else {
             updateOriginFromClient(e.currentTarget, e.clientX, e.clientY);
             setIsZoomed(true);
@@ -134,13 +139,16 @@ function FabricZoomImage({ src, name }: { src: string; name: string }) {
       className="relative w-full aspect-[4/3] overflow-hidden bg-[#F1F5F9] dark:bg-[#0B0D12] border-b border-[#E2E8F0] dark:border-[#1E2433] cursor-zoom-in select-none"
     >
       <Image
+        ref={imgRef}
         src={src}
         alt={`Tekstur detail kain ${name}`}
         fill
         sizes="(min-width: 1024px) 32vw, (min-width: 640px) 48vw, 84vw"
-        className="object-cover object-center transition-transform duration-300 ease-out will-change-transform"
+        className={`object-cover object-center transition-transform duration-300 ease-out ${
+          isZoomed ? "will-change-transform" : ""
+        }`}
         style={{
-          transformOrigin: `${origin.x}% ${origin.y}%`,
+          transformOrigin: "50% 50%",
           transform: isZoomed ? "scale(1.65)" : "scale(1)",
         }}
       />
@@ -152,36 +160,46 @@ export function FabricCatalogCarousel({ fabrics }: FabricCatalogCarouselProps) {
   const displayFabrics = fabrics.length > 0 ? fabrics : DEFAULT_FABRICS;
 
   const trackRef = useRef<HTMLDivElement>(null);
+  const scrollRafRef = useRef<number | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(displayFabrics.length > 1);
 
   const syncScrollState = useCallback(() => {
-    const el = trackRef.current;
-    if (!el) return;
+    if (scrollRafRef.current !== null) return;
+    scrollRafRef.current = window.requestAnimationFrame(() => {
+      scrollRafRef.current = null;
+      const el = trackRef.current;
+      if (!el) return;
 
-    const maxScroll = Math.max(0, el.scrollWidth - el.clientWidth);
-    setCanScrollPrev(el.scrollLeft > 4);
-    setCanScrollNext(el.scrollLeft < maxScroll - 4);
+      const maxScroll = Math.max(0, el.scrollWidth - el.clientWidth);
+      setCanScrollPrev(el.scrollLeft > 4);
+      setCanScrollNext(el.scrollLeft < maxScroll - 4);
 
-    const slides = Array.from(el.children) as HTMLElement[];
-    if (slides.length === 0) return;
+      const slides = Array.from(el.children) as HTMLElement[];
+      if (slides.length === 0) return;
 
-    let closestIdx = 0;
-    let minDistance = Infinity;
-    for (let i = 0; i < slides.length; i++) {
-      const distance = Math.abs(slides[i].offsetLeft - el.scrollLeft);
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestIdx = i;
+      let closestIdx = 0;
+      let minDistance = Infinity;
+      for (let i = 0; i < slides.length; i++) {
+        const distance = Math.abs(slides[i].offsetLeft - el.scrollLeft);
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestIdx = i;
+        }
       }
-    }
-    setActiveIndex(closestIdx);
+      setActiveIndex(closestIdx);
+    });
   }, []);
 
   useEffect(() => {
     window.addEventListener("resize", syncScrollState, { passive: true });
-    return () => window.removeEventListener("resize", syncScrollState);
+    return () => {
+      window.removeEventListener("resize", syncScrollState);
+      if (scrollRafRef.current !== null) {
+        window.cancelAnimationFrame(scrollRafRef.current);
+      }
+    };
   }, [syncScrollState, displayFabrics.length]);
 
   const scrollToSlide = useCallback((index: number) => {

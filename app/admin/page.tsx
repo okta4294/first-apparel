@@ -24,25 +24,30 @@ export default async function AdminDashboardPage() {
   let settingsData: typeof siteSettings.$inferSelect | null = null;
 
   try {
-    const [catCount] = await db.select({ value: count() }).from(catalogs);
-    const [proCount] = await db.select({ value: count() }).from(promos);
-    const [blogCount] = await db.select({ value: count() }).from(blogs);
-    const [partCount] = await db.select({ value: count() }).from(partners);
-    const [fabCount] = await db.select({ value: count() }).from(fabrics);
+    const [
+      [catCount],
+      [proCount],
+      [blogCount],
+      [partCount],
+      [fabCount],
+      latestRows,
+      [s],
+    ] = await Promise.all([
+      db.select({ value: count() }).from(catalogs),
+      db.select({ value: count() }).from(promos),
+      db.select({ value: count() }).from(blogs),
+      db.select({ value: count() }).from(partners),
+      db.select({ value: count() }).from(fabrics),
+      db.select().from(catalogs).orderBy(desc(catalogs.createdAt)).limit(5),
+      db.select().from(siteSettings).limit(1),
+    ]);
 
     totalCatalogs = catCount?.value || 0;
     totalPromos = proCount?.value || 0;
     totalBlogs = blogCount?.value || 0;
     totalPartners = partCount?.value || 0;
     totalFabrics = fabCount?.value || 0;
-
-    latestCatalogs = await db
-      .select()
-      .from(catalogs)
-      .orderBy(desc(catalogs.createdAt))
-      .limit(5);
-
-    const [s] = await db.select().from(siteSettings).limit(1);
+    latestCatalogs = latestRows;
     settingsData = s || null;
   } catch {
     // Fallback aman jika query sedang terhambat

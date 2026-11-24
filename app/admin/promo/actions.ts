@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { promos } from "@/lib/db/schema";
 import { eq, desc, or } from "drizzle-orm";
 import { getAdminSession } from "@/lib/auth";
-import { utapi } from "@/lib/uploadthing-server";
+import { utapi, sanitizeUploadThingUrl } from "@/lib/uploadthing-server";
 import { revalidatePath, updateTag } from "next/cache";
 
 export async function createPromoAction(formData: FormData) {
@@ -16,10 +16,10 @@ export async function createPromoAction(formData: FormData) {
   const label = (formData.get("label") as string)?.trim() || "PROMO SPESIAL";
   const title = (formData.get("title") as string)?.trim();
   const badgeText = (formData.get("badgeText") as string)?.trim() || "DISKON";
-  const imageUrl = (formData.get("imageUrl") as string)?.trim() || null;
-  const imageKey = (formData.get("imageKey") as string)?.trim() || null;
-  const popupImageUrl = (formData.get("popupImageUrl") as string)?.trim() || null;
-  const popupImageKey = (formData.get("popupImageKey") as string)?.trim() || null;
+  const imageUrl = sanitizeUploadThingUrl((formData.get("imageUrl") as string)?.trim() || null);
+  const imageKey = imageUrl ? (formData.get("imageKey") as string)?.trim() || null : null;
+  const popupImageUrl = sanitizeUploadThingUrl((formData.get("popupImageUrl") as string)?.trim() || null);
+  const popupImageKey = popupImageUrl ? (formData.get("popupImageKey") as string)?.trim() || null : null;
   const waMessage =
     (formData.get("waMessage") as string)?.trim() ||
     "Halo Admin First Apparel, saya ingin klaim promo di website.";
@@ -78,12 +78,11 @@ export async function updatePromoAction(formData: FormData) {
   const label = (formData.get("label") as string)?.trim() || "PROMO SPESIAL";
   const title = (formData.get("title") as string)?.trim();
   const badgeText = (formData.get("badgeText") as string)?.trim() || "DISKON";
-  const imageUrl = (formData.get("imageUrl") as string)?.trim() || null;
-  const imageKey = (formData.get("imageKey") as string)?.trim() || null;
+  const imageUrl = sanitizeUploadThingUrl((formData.get("imageUrl") as string)?.trim() || null);
+  const imageKey = imageUrl ? (formData.get("imageKey") as string)?.trim() || null : null;
   const oldImageKey = (formData.get("oldImageKey") as string)?.trim();
-  const popupImageUrl = (formData.get("popupImageUrl") as string)?.trim() || null;
-  const popupImageKey = (formData.get("popupImageKey") as string)?.trim() || null;
-  const oldPopupImageKey = (formData.get("oldPopupImageKey") as string)?.trim();
+  const popupImageUrl = sanitizeUploadThingUrl((formData.get("popupImageUrl") as string)?.trim() || null);
+  const popupImageKey = popupImageUrl ? (formData.get("popupImageKey") as string)?.trim() || null : null;
   const waMessage =
     (formData.get("waMessage") as string)?.trim() ||
     "Halo Admin First Apparel, saya ingin klaim promo di website.";
@@ -145,6 +144,14 @@ export async function updatePromoAction(formData: FormData) {
   const endDate = hasDuration && endDateRaw ? new Date(endDateRaw) : null;
 
   try {
+    const existing = await db
+      .select({ imageKey: promos.imageKey, popupImageKey: promos.popupImageKey })
+      .from(promos)
+      .where(eq(promos.id, targetId))
+      .limit(1);
+    const dbOldImageKey = existing[0]?.imageKey || null;
+    const dbOldPopupImageKey = existing[0]?.popupImageKey || null;
+
     await db
       .update(promos)
       .set({
@@ -165,11 +172,11 @@ export async function updatePromoAction(formData: FormData) {
       .where(eq(promos.id, targetId));
 
     // Jika banner atau gambar pop-up lama diganti/dihapus, bersihkan dari UploadThing
-    if (oldImageKey && oldImageKey !== imageKey) {
-      await utapi.deleteFiles(oldImageKey);
+    if (dbOldImageKey && dbOldImageKey !== imageKey) {
+      await utapi.deleteFiles(dbOldImageKey);
     }
-    if (oldPopupImageKey && oldPopupImageKey !== popupImageKey) {
-      await utapi.deleteFiles(oldPopupImageKey);
+    if (dbOldPopupImageKey && dbOldPopupImageKey !== popupImageKey) {
+      await utapi.deleteFiles(dbOldPopupImageKey);
     }
 
     updateTag("promos");
@@ -215,14 +222,14 @@ export async function deletePromoAction(
 
   try {
     const existing = await db
-      .select({ popupImageKey: promos.popupImageKey })
+      .select({ imageKey: promos.imageKey, popupImageKey: promos.popupImageKey })
       .from(promos)
       .where(eq(promos.id, targetId))
       .limit(1);
 
     await db.delete(promos).where(eq(promos.id, targetId));
 
-    const keysToDelete = [imageKey, popupImageKey ?? existing[0]?.popupImageKey].filter(
+    const keysToDelete = [existing[0]?.imageKey, existing[0]?.popupImageKey].filter(
       (k): k is string => Boolean(k)
     );
     if (keysToDelete.length > 0) {

@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { siteSettings } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { getAdminSession } from "@/lib/auth";
+import { sanitizeUploadThingUrl } from "@/lib/uploadthing-server";
 import { revalidatePath, updateTag } from "next/cache";
 
 function sanitizeUrl(urlString: string | null): string | null {
@@ -43,15 +44,15 @@ export async function updateSettingsAction(formData: FormData) {
     (formData.get("defaultWaText") as string)?.trim() ||
     "Halo Admin First Apparel, saya ingin berkonsultasi tentang pemesanan jersey kustom.";
   const instagramUrl = sanitizeUrl((formData.get("instagramUrl") as string)?.trim() || null);
-  const logoUrl = sanitizeUrl((formData.get("logoUrl") as string)?.trim() || null);
-  const logoKey = (formData.get("logoKey") as string)?.trim() || null;
+  const logoUrl = sanitizeUploadThingUrl((formData.get("logoUrl") as string)?.trim() || null);
+  const logoKey = logoUrl ? (formData.get("logoKey") as string)?.trim() || null : null;
   const footerCompanyName = (formData.get("footerCompanyName") as string)?.trim() || null;
-  const footerLogoUrl = sanitizeUrl((formData.get("footerLogoUrl") as string)?.trim() || null);
-  const footerLogoKey = (formData.get("footerLogoKey") as string)?.trim() || null;
-  const footerLogo2Url = sanitizeUrl((formData.get("footerLogo2Url") as string)?.trim() || null);
-  const footerLogo2Key = (formData.get("footerLogo2Key") as string)?.trim() || null;
-  const sizeChartUrl = sanitizeUrl((formData.get("sizeChartUrl") as string)?.trim() || null);
-  const sizeChartKey = (formData.get("sizeChartKey") as string)?.trim() || null;
+  const footerLogoUrl = sanitizeUploadThingUrl((formData.get("footerLogoUrl") as string)?.trim() || null);
+  const footerLogoKey = footerLogoUrl ? (formData.get("footerLogoKey") as string)?.trim() || null : null;
+  const footerLogo2Url = sanitizeUploadThingUrl((formData.get("footerLogo2Url") as string)?.trim() || null);
+  const footerLogo2Key = footerLogo2Url ? (formData.get("footerLogo2Key") as string)?.trim() || null : null;
+  const sizeChartUrl = sanitizeUploadThingUrl((formData.get("sizeChartUrl") as string)?.trim() || null);
+  const sizeChartKey = sizeChartUrl ? (formData.get("sizeChartKey") as string)?.trim() || null : null;
   const storeDescription =
     (formData.get("storeDescription") as string)?.trim() ||
     "Konveksi spesialis jersey olahraga custom & apparel tim profesional di Bandung. Bebas custom desain, bahan dryfit premium, dan melayani kirim ke seluruh Indonesia.";
@@ -110,6 +111,7 @@ export async function updateSettingsAction(formData: FormData) {
 
     updateTag("site-settings");
     revalidatePath("/", "layout");
+    revalidatePath("/api/icon");
     revalidatePath("/katalog");
     revalidatePath("/cara-pesan");
     revalidatePath("/alur-pemesanan");
