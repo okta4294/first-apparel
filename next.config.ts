@@ -9,7 +9,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "**",
+        hostname: "utfs.io",
+      },
+      {
+        protocol: "https",
+        hostname: "*.ufs.sh",
       },
     ],
   },
@@ -22,6 +26,14 @@ const nextConfig: NextConfig = {
         as: "*.css",
       },
     },
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/favicon.ico",
+        destination: "/api/icon",
+      },
+    ];
   },
   async headers() {
     return [

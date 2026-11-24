@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
@@ -35,7 +37,9 @@ export const metadata: Metadata = {
     follow: true,
   },
   icons: {
-    icon: "/api/icon",
+    icon: [{ url: "/api/icon", type: "image/png", sizes: "192x192" }],
+    shortcut: "/api/icon",
+    apple: "/api/icon",
   },
 };
 
@@ -58,6 +62,14 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col bg-[#F8FAFC] text-[#0F172A] dark:bg-[#09090B] dark:text-[#FAFAFA] antialiased font-sans">
         {children}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-KYYVTM0EYJ"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-KYYVTM0EYJ');`}
+        </Script>
+        <Analytics />
       </body>
     </html>
   );

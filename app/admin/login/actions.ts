@@ -64,6 +64,13 @@ export async function loginAdminAction(
       };
     }
 
+    if (admin.failedAttempts > 0 || admin.lockedUntil) {
+      await db
+        .update(admins)
+        .set({ failedAttempts: 0, lockedUntil: null })
+        .where(eq(admins.id, admin.id));
+    }
+
     const token = await signAdminToken({
       id: admin.id,
       name: admin.name,

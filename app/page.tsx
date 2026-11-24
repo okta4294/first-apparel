@@ -132,7 +132,7 @@ export default async function HomePage() {
     },
     areaServed: ["Kendal", "Semarang", "Jawa Tengah", "Indonesia"],
     openingHours: operatingHours,
-    ...(logoUrl ? { image: logoUrl } : {}),
+    ...(logoUrl ? { image: logoUrl, logo: logoUrl } : {}),
     ...(instagramUrl ? { sameAs: [instagramUrl] } : {}),
     ...(averageRating !== null
       ? {
