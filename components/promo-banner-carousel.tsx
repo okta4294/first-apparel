@@ -146,6 +146,7 @@ export function PromoBannerCarousel({
                   width={1920}
                   height={600}
                   sizes="(min-width: 1280px) 1216px, 100vw"
+                  loading={safeIndex === 0 ? "eager" : "lazy"}
                   className="w-full h-auto block transition-opacity duration-500"
                 />
               </a>

@@ -384,7 +384,7 @@ export default async function HomePage() {
 
       {/* 4. Katalog Section (Carousel 3 Berjejer) */}
       <FeaturedCatalogCarousel
-        catalogs={displayCatalogs}
+        catalogs={displayCatalogs.slice(0, 5)}
         hasRealData={featuredCatalogs.length > 0}
       />
 
@@ -679,7 +679,7 @@ export default async function HomePage() {
                         width={96}
                         height={44}
                         sizes="96px"
-                        className="max-h-9 w-auto max-w-[84px] object-contain opacity-90 group-hover:opacity-100 transition-opacity"
+                        className="w-auto h-auto max-h-9 max-w-[84px] object-contain opacity-90 group-hover:opacity-100 transition-opacity"
                       />
                     ) : (
                       <span className="text-sm font-bold text-[#84CC16]">

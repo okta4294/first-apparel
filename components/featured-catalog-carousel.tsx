@@ -94,14 +94,14 @@ export function FeaturedCatalogCarousel({
     <section
       id="katalog"
       className="py-16 sm:py-20 border-b border-[#E2E8F0] dark:border-[#27272A]"
-      aria-label="Pilihan Model Jersey Populer"
+      aria-label="Portofolio"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Seksi & Kontrol Navigasi Carousel */}
         <div className="mb-8 sm:mb-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div data-animate="text-reveal">
             <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-[#0F172A] dark:text-[#FAFAFA]">
-              Pilihan Model Jersey Populer
+              Portofolio
             </h2>
           </div>
 
@@ -201,6 +201,7 @@ export function FeaturedCatalogCarousel({
                       alt={item.title}
                       fill
                       sizes="(min-width: 1024px) 32vw, (min-width: 640px) 48vw, 80vw"
+                      loading={idx < 2 ? "eager" : "lazy"}
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   ) : (
