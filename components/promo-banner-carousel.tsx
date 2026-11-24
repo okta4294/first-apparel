@@ -125,90 +125,90 @@ export function PromoBannerCarousel({
           onMouseLeave={() => setIsPaused(false)}
           onFocusCapture={() => setIsPaused(true)}
           onBlurCapture={() => setIsPaused(false)}
-          className="relative w-full overflow-hidden rounded-xl sm:rounded-2xl bg-[#11131A] border border-[#E2E8F0] dark:border-[#27272A] min-h-[260px] sm:min-h-[320px] lg:min-h-[360px] flex items-center"
+          className="relative w-full overflow-hidden rounded-xl sm:rounded-2xl bg-[#11131A] border border-[#E2E8F0] dark:border-[#27272A]"
         >
-          {/* Latar Gambar Banner Penuh */}
           {activePromo.imageUrl ? (
-            <>
+            /* Banner Penuh Gambar Tanpa Teks Overlay: Klik Langsung ke WhatsApp */
+            <a
+              href={waHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Klaim promo ${activePromo.title} via WhatsApp`}
+              className="block w-full focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#84CC16]"
+            >
               <Image
                 key={activePromo.id}
                 src={activePromo.imageUrl}
                 alt={activePromo.title}
-                fill
+                width={1920}
+                height={600}
                 sizes="(min-width: 1280px) 1216px, 100vw"
-                className="object-cover object-center transition-opacity duration-500"
+                className="w-full h-auto block transition-opacity duration-500"
               />
+            </a>
+          ) : (
+            /* Cadangan Jika Promo Tidak Memakai Gambar */
+            <div className="relative w-full min-h-[260px] sm:min-h-[320px] lg:min-h-[360px] flex items-center">
               <div
-                className="absolute inset-0 bg-gradient-to-r from-[#09090B]/90 via-[#09090B]/65 to-[#09090B]/25"
+                className="absolute inset-0 bg-gradient-to-br from-[#14171F] via-[#11131A] to-[#1A2410]"
                 aria-hidden="true"
               />
-            </>
-          ) : (
-            <div
-              className="absolute inset-0 bg-gradient-to-br from-[#14171F] via-[#11131A] to-[#1A2410]"
-              aria-hidden="true"
-            />
-          )}
 
-          {/* Konten Banner Editorial Kiri */}
-          <div className="relative z-10 w-full px-14 sm:px-16 lg:px-24 pt-8 pb-12 sm:py-12">
-            <div className="max-w-3xl space-y-4 sm:space-y-5">
-              {/* Judul Promo Utama */}
-              <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.14em] text-[#84CC16]">
-                Promo Spesial First Apparel
-              </p>
-
-              {/* Highlight Diskon & Judul dengan Pemisah Vertikal ala Banner Olahraga */}
-              <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
-                <div className="shrink-0">
-                  <p className="text-3xl sm:text-5xl lg:text-[54px] font-black tracking-tight leading-none text-[#FAFAFA] tabular-nums">
-                    {highlightMain}
+              <div className="relative z-10 w-full px-14 sm:px-16 lg:px-24 pt-8 pb-12 sm:py-12">
+                <div className="max-w-3xl space-y-4 sm:space-y-5">
+                  <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.14em] text-[#84CC16]">
+                    Promo Spesial First Apparel
                   </p>
-                  <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.12em] text-[#D4D4D8] mt-1">
-                    {highlightSub}
+
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+                    <div className="shrink-0">
+                      <p className="text-3xl sm:text-5xl lg:text-[54px] font-black tracking-tight leading-none text-[#FAFAFA] tabular-nums">
+                        {highlightMain}
+                      </p>
+                      <p className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.12em] text-[#D4D4D8] mt-1">
+                        {highlightSub}
+                      </p>
+                    </div>
+
+                    <div
+                      className="hidden sm:block w-px self-stretch bg-white/25"
+                      aria-hidden="true"
+                    />
+
+                    <div className="min-w-0">
+                      <h2 className="text-xl sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight text-[#FAFAFA] [text-wrap:balance]">
+                        {activePromo.title}
+                      </h2>
+                      {activePromo.label && (
+                        <p className="text-xs sm:text-sm text-[#D4D4D8] mt-1.5 leading-relaxed line-clamp-2 max-w-[52ch]">
+                          {activePromo.label}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <p className="text-xs sm:text-sm font-medium text-[#E4E4E7]">
+                    {durationLabel}
                   </p>
-                </div>
 
-                <div
-                  className="hidden sm:block w-px self-stretch bg-white/25"
-                  aria-hidden="true"
-                />
-
-                <div className="min-w-0">
-                  <h2 className="text-xl sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight text-[#FAFAFA] [text-wrap:balance]">
-                    {activePromo.title}
-                  </h2>
-                  {activePromo.label && (
-                    <p className="text-xs sm:text-sm text-[#D4D4D8] mt-1.5 leading-relaxed line-clamp-2 max-w-[52ch]">
-                      {activePromo.label}
-                    </p>
-                  )}
+                  <div className="pt-1">
+                    <a
+                      href={waHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center min-h-[44px] px-6 py-2.5 rounded-sm bg-[#FAFAFA] hover:bg-[#84CC16] text-[#09090B] text-xs sm:text-sm font-bold tracking-wide transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#84CC16]"
+                    >
+                      Klaim Promo
+                    </a>
+                  </div>
                 </div>
               </div>
 
-              {/* Periode Tanggal Promo */}
-              <p className="text-xs sm:text-sm font-medium text-[#E4E4E7]">
-                {durationLabel}
-              </p>
-
-              {/* Tombol CTA Kontras Tinggi */}
-              <div className="pt-1">
-                <a
-                  href={waHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center min-h-[44px] px-6 py-2.5 rounded-sm bg-[#FAFAFA] hover:bg-[#84CC16] text-[#09090B] text-xs sm:text-sm font-bold tracking-wide transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#84CC16]"
-                >
-                  Klaim Promo
-                </a>
-              </div>
+              <span className="hidden sm:block absolute bottom-3 right-5 z-10 text-[11px] font-medium text-white/70">
+                *S&amp;K Berlaku
+              </span>
             </div>
-          </div>
-
-          {/* Keterangan Syarat & Ketentuan Pojok Kanan Bawah */}
-          <span className="hidden sm:block absolute bottom-3 right-5 z-10 text-[11px] font-medium text-white/70">
-            *S&amp;K Berlaku
-          </span>
+          )}
 
           {/* Tombol Panah Kiri & Kanan di Sisi Banner */}
           {total > 1 && (

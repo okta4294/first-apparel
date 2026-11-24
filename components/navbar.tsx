@@ -33,9 +33,14 @@ export function Navbar({ waNumber, storeName = "FIRST APPAREL", companyName, log
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-3 group">
           {logoUrl ? (
-            <div className="w-9 h-9 rounded-lg overflow-hidden border border-[#27272A]/80 flex items-center justify-center transition-transform group-hover:scale-105 shrink-0">
-              <Image src={logoUrl} alt={storeName} width={36} height={36} className="w-full h-full object-cover" />
-            </div>
+            <Image
+              src={logoUrl}
+              alt={storeName}
+              width={160}
+              height={40}
+              sizes="(min-width: 640px) 180px, 140px"
+              className="h-9 sm:h-10 w-auto max-w-[140px] sm:max-w-[180px] object-contain shrink-0 transition-transform group-hover:scale-105"
+            />
           ) : (
             <div className="w-8 h-8 rounded-lg bg-[#84CC16] flex items-center justify-center font-black text-[#09090B] text-base transition-transform group-hover:scale-105 shrink-0">
               {storeName.slice(0, 2).toUpperCase()}

@@ -176,6 +176,7 @@ export async function Footer({
                   alt={companyDisplayName}
                   width={220}
                   height={96}
+                  sizes="220px"
                   className="h-20 sm:h-24 w-auto object-contain"
                 />
               )}
@@ -185,6 +186,7 @@ export async function Footer({
                   alt={`${companyDisplayName} logo 2`}
                   width={220}
                   height={96}
+                  sizes="220px"
                   className="h-20 sm:h-24 w-auto object-contain"
                 />
               )}

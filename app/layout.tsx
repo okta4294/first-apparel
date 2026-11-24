@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { getSiteUrl } from "@/lib/site-url";
-import { MotionProvider } from "@/components/motion-provider";
 import "./globals.css";
 
 const inter = Inter({
@@ -58,7 +57,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-[#F8FAFC] text-[#0F172A] dark:bg-[#09090B] dark:text-[#FAFAFA] antialiased font-sans">
-        <MotionProvider>{children}</MotionProvider>
+        {children}
       </body>
     </html>
   );

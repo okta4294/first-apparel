@@ -50,7 +50,6 @@ export function FeaturedCatalogCarousel({
   }, []);
 
   useEffect(() => {
-    syncScrollState();
     window.addEventListener("resize", syncScrollState, { passive: true });
     return () => window.removeEventListener("resize", syncScrollState);
   }, [syncScrollState, catalogs.length]);

@@ -180,7 +180,6 @@ export function FabricCatalogCarousel({ fabrics }: FabricCatalogCarouselProps) {
   }, []);
 
   useEffect(() => {
-    syncScrollState();
     window.addEventListener("resize", syncScrollState, { passive: true });
     return () => window.removeEventListener("resize", syncScrollState);
   }, [syncScrollState, displayFabrics.length]);
