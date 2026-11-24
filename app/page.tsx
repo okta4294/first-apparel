@@ -91,6 +91,8 @@ export default async function HomePage() {
     instagramUrl,
     logoUrl,
     storeDescription,
+    heroTitle,
+    heroTitleHighlight,
   } = settings;
 
   const popupPromos = activePromos.filter((p) => p.isPopup);
@@ -168,7 +170,13 @@ export default async function HomePage() {
           {/* Info Kiri */}
           <div data-animate="hero" className="lg:w-[48%] space-y-6">
             <h1 className="text-3xl sm:text-5xl lg:text-[52px] font-black tracking-[-0.035em] leading-[1.08] [text-wrap:balance] text-[#0F172A] dark:text-[#FAFAFA]">
-              Custom Jersey Olahraga <span className="text-[#4D7C0F] dark:text-[#84CC16]">Sesuai Desain Tim Anda</span>
+              {heroTitle}
+              {heroTitleHighlight ? (
+                <>
+                  {" "}
+                  <span className="text-[#4D7C0F] dark:text-[#84CC16]">{heroTitleHighlight}</span>
+                </>
+              ) : null}
             </h1>
 
             <p className="text-sm sm:text-base lg:text-lg text-[#475569] dark:text-[#A1A1AA] leading-relaxed max-w-[48ch] [text-wrap:pretty]">

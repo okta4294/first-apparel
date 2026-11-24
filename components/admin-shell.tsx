@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { logoutAdminAction } from "@/app/admin/login/actions";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 interface AdminShellProps {
   session: {
@@ -78,7 +77,6 @@ export function AdminShell({ session, active, children }: AdminShellProps) {
         </div>
 
         <div className="flex items-center gap-1 shrink-0">
-          <ThemeToggle className="w-9 h-9 p-2" />
           <Link
             href="/"
             target="_blank"
@@ -126,7 +124,6 @@ export function AdminShell({ session, active, children }: AdminShellProps) {
             </div>
 
             <div className="flex items-center gap-1">
-              <ThemeToggle className="w-7 h-7 p-1 hidden lg:flex" />
               <Link
                 href="/"
                 target="_blank"

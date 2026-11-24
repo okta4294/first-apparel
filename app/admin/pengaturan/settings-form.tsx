@@ -26,6 +26,8 @@ interface SettingsFormProps {
     sizeChartUrl?: string | null;
     sizeChartKey?: string | null;
     storeDescription?: string | null;
+    heroTitle?: string | null;
+    heroTitleHighlight?: string | null;
   } | null;
 }
 
@@ -44,6 +46,13 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
   const [storeDescription, setStoreDescription] = useState(
     initialSettings?.storeDescription ||
       "Konveksi spesialis jersey olahraga custom & apparel tim profesional di Bandung. Bebas custom desain, bahan dryfit premium, dan melayani kirim ke seluruh Indonesia."
+  );
+  const [heroTitle, setHeroTitle] = useState(
+    initialSettings?.heroTitle ||
+      "Mau Tampil Keren di Lapangan? Dapatkan Jersey Printing dengan Harga Miring,"
+  );
+  const [heroTitleHighlight, setHeroTitleHighlight] = useState(
+    initialSettings?.heroTitleHighlight ?? "Kualitas Tetap Terbaik!"
   );
   const [storeAddress, setStoreAddress] = useState(
     initialSettings?.storeAddress || "Jl. Terusan Olahraga No. 8, Bandung, Jawa Barat"
@@ -96,6 +105,8 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
     formData.append("sizeChartUrl", sizeChartUrl);
     formData.append("sizeChartKey", sizeChartKey);
     formData.append("storeDescription", storeDescription);
+    formData.append("heroTitle", heroTitle);
+    formData.append("heroTitleHighlight", heroTitleHighlight);
     formData.append("storeAddress", storeAddress);
     formData.append("googleMapsUrl", googleMapsUrl);
     formData.append("operatingHours", operatingHours);
@@ -529,6 +540,35 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
                 placeholder="Kosongkan jika sama dengan CV Induk di Navbar"
                 value={footerCompanyName}
                 onChange={(e) => setFooterCompanyName(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg bg-[#09090B] border border-[#27272A] text-xs text-[#FAFAFA] focus:border-[#84CC16] focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="text-xs font-medium text-[#D4D4D8] block mb-1">
+                Judul Utama Hero (H1)
+                <span className="text-[10px] text-[#71717A] font-normal ml-1">(Teks utama halaman depan)</span>
+              </label>
+              <input
+                type="text"
+                value={heroTitle}
+                onChange={(e) => setHeroTitle(e.target.value)}
+                placeholder="Contoh: Custom Jersey Olahraga"
+                className="w-full px-3 py-2 rounded-lg bg-[#09090B] border border-[#27272A] text-xs text-[#FAFAFA] focus:border-[#84CC16] focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="text-xs font-medium text-[#D4D4D8] block mb-1">
+                Aksen Hijau Judul Hero <span className="text-[10px] text-[#71717A] font-normal">(Opsional)</span>
+              </label>
+              <input
+                type="text"
+                value={heroTitleHighlight}
+                onChange={(e) => setHeroTitleHighlight(e.target.value)}
+                placeholder="Contoh: Sesuai Desain Tim Anda"
                 className="w-full px-3 py-2 rounded-lg bg-[#09090B] border border-[#27272A] text-xs text-[#FAFAFA] focus:border-[#84CC16] focus:outline-none"
               />
             </div>

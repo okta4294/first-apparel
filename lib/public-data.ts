@@ -18,6 +18,8 @@ export interface PublicSiteSettings {
   footerLogo2Url: string | null;
   sizeChartUrl: string | null;
   storeDescription: string;
+  heroTitle: string;
+  heroTitleHighlight: string | null;
 }
 
 const DEFAULT_SITE_SETTINGS: PublicSiteSettings = {
@@ -37,6 +39,8 @@ const DEFAULT_SITE_SETTINGS: PublicSiteSettings = {
   sizeChartUrl: null,
   storeDescription:
     "Konveksi spesialis jersey olahraga custom & apparel tim profesional di Bandung. Bebas custom desain, bahan dryfit premium, dan melayani kirim ke seluruh Indonesia.",
+  heroTitle: "Mau Tampil Keren di Lapangan? Dapatkan Jersey Printing dengan Harga Miring,",
+  heroTitleHighlight: "Kualitas Tetap Terbaik!",
 };
 
 export async function getSiteSettings(): Promise<PublicSiteSettings> {
@@ -63,6 +67,8 @@ export async function getSiteSettings(): Promise<PublicSiteSettings> {
         footerLogo2Url: s.footerLogo2Url || null,
         sizeChartUrl: s.sizeChartUrl || null,
         storeDescription: s.storeDescription || DEFAULT_SITE_SETTINGS.storeDescription,
+        heroTitle: s.heroTitle || DEFAULT_SITE_SETTINGS.heroTitle,
+        heroTitleHighlight: s.heroTitleHighlight ?? null,
       };
     }
   } catch {

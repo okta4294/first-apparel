@@ -103,6 +103,8 @@ export const siteSettings = pgTable("site_settings", {
   storeDescription: text("store_description").default(
     "Konveksi spesialis jersey olahraga custom & apparel tim profesional di Bandung. Bebas custom desain, bahan dryfit premium, dan melayani kirim ke seluruh Indonesia."
   ),
+  heroTitle: text("hero_title").default("Mau Tampil Keren di Lapangan? Dapatkan Jersey Printing dengan Harga Miring,"),
+  heroTitleHighlight: text("hero_title_highlight").default("Kualitas Tetap Terbaik!"),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 

@@ -56,6 +56,10 @@ export async function updateSettingsAction(formData: FormData) {
   const storeDescription =
     (formData.get("storeDescription") as string)?.trim() ||
     "Konveksi spesialis jersey olahraga custom & apparel tim profesional di Bandung. Bebas custom desain, bahan dryfit premium, dan melayani kirim ke seluruh Indonesia.";
+  const heroTitle =
+    (formData.get("heroTitle") as string)?.trim() ||
+    "Custom Jersey Olahraga";
+  const heroTitleHighlight = (formData.get("heroTitleHighlight") as string)?.trim() || null;
 
   try {
     const existing = await db.select().from(siteSettings).where(eq(siteSettings.id, 1)).limit(1);
@@ -82,6 +86,8 @@ export async function updateSettingsAction(formData: FormData) {
           sizeChartUrl,
           sizeChartKey,
           storeDescription,
+          heroTitle,
+          heroTitleHighlight,
           updatedAt: new Date(),
         })
         .where(eq(siteSettings.id, 1));
@@ -106,6 +112,8 @@ export async function updateSettingsAction(formData: FormData) {
         sizeChartUrl,
         sizeChartKey,
         storeDescription,
+        heroTitle,
+        heroTitleHighlight,
       });
     }
 
