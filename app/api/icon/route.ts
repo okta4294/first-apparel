@@ -1,16 +1,34 @@
 import { NextResponse } from "next/server";
+import { cacheLife, cacheTag } from "next/cache";
 import sharp from "sharp";
 import { getSiteSettings } from "@/lib/public-data";
 import { sanitizeUploadThingUrl } from "@/lib/uploadthing-server";
 
 const MAX_ICON_BYTES = 5 * 1024 * 1024;
+const ICON_CACHE_CONTROL =
+  "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800";
 
-export async function GET() {
-  try {
-    const s = await getSiteSettings();
-    const safeLogoUrl = sanitizeUploadThingUrl(s.logoUrl);
+async function buildFallbackIconPng(storeName: string): Promise<Uint8Array> {
+  const initials =
+    storeName
+      .replace(/[^a-zA-Z0-9]/g, "")
+      .slice(0, 2)
+      .toUpperCase() || "FA";
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192"><rect width="192" height="192" rx="36" fill="#09090B"/><rect x="14" y="14" width="164" height="164" rx="26" fill="#84CC16"/><text x="96" y="118" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="76" font-weight="900" fill="#09090B">${initials}</text></svg>`;
+  const pngBuffer = await sharp(Buffer.from(svg)).png().toBuffer();
+  return new Uint8Array(pngBuffer);
+}
 
-    if (safeLogoUrl) {
+async function getCachedIconPng(): Promise<Uint8Array> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("site-settings");
+
+  const s = await getSiteSettings();
+  const safeLogoUrl = sanitizeUploadThingUrl(s.logoUrl);
+
+  if (safeLogoUrl) {
+    try {
       const res = await fetch(safeLogoUrl, { signal: AbortSignal.timeout(5000) });
       const contentLength = Number(res.headers.get("content-length") || "0");
       if (res.ok && contentLength <= MAX_ICON_BYTES) {
@@ -25,19 +43,25 @@ export async function GET() {
             .png()
             .toBuffer();
 
-          return new NextResponse(new Uint8Array(pngBuffer), {
-            status: 200,
-            headers: {
-              "Content-Type": "image/png",
-              "Cache-Control": "public, max-age=300, s-maxage=300, must-revalidate",
-            },
-          });
+          return new Uint8Array(pngBuffer);
         }
       }
+    } catch {
+      // Lanjut ke ikon cadangan jika gambar sumber gagal diambil
     }
-  } catch {
-    // Kembalikan respons kosong jika DB atau gambar belum tersedia
   }
 
-  return new NextResponse(null, { status: 204 });
+  return buildFallbackIconPng(s.storeName);
+}
+
+export async function GET() {
+  const pngBytes = await getCachedIconPng();
+
+  return new NextResponse(new Uint8Array(pngBytes), {
+    status: 200,
+    headers: {
+      "Content-Type": "image/png",
+      "Cache-Control": ICON_CACHE_CONTROL,
+    },
+  });
 }
