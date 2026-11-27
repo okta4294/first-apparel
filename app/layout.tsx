@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Archivo, Inter } from "next/font/google";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import { getSiteUrl } from "@/lib/site-url";
@@ -9,6 +9,13 @@ import "./globals.css";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
+});
+
+const archivo = Archivo({
+  subsets: ["latin"],
+  weight: ["600", "700", "800", "900"],
+  variable: "--font-display",
   display: "swap",
 });
 
@@ -60,7 +67,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" data-scroll-behavior="smooth" className={`h-full dark ${inter.variable}`}>
+    <html lang="id" data-scroll-behavior="smooth" className={`h-full dark ${inter.variable} ${archivo.variable}`}>
       <head>
         <link rel="preconnect" href="https://utfs.io" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://utfs.io" />

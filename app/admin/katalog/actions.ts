@@ -34,8 +34,7 @@ export async function createCatalogAction(formData: FormData) {
 
   const title = (formData.get("title") as string)?.trim();
   const category = (formData.get("category") as string)?.trim().toUpperCase() || "CUSTOM LAINNYA";
-  const fabric = (formData.get("fabric") as string)?.trim() || "Dryfit Brazil Original";
-  const priceInfo = (formData.get("priceInfo") as string)?.trim() || null;
+  const description = (formData.get("description") as string)?.trim() || null;
   const minOrder = (formData.get("minOrder") as string)?.trim() || null;
   const isFeatured = formData.get("isFeatured") === "on";
 
@@ -67,8 +66,7 @@ export async function createCatalogAction(formData: FormData) {
       .values({
         title,
         category,
-        fabric,
-        priceInfo,
+        description,
         minOrder,
         imageUrl,
         imageKey,
@@ -103,8 +101,7 @@ export async function updateCatalogAction(formData: FormData) {
   const id = Number(formData.get("id"));
   const title = (formData.get("title") as string)?.trim();
   const category = (formData.get("category") as string)?.trim().toUpperCase() || "CUSTOM LAINNYA";
-  const fabric = (formData.get("fabric") as string)?.trim() || "Dryfit Brazil Original";
-  const priceInfo = (formData.get("priceInfo") as string)?.trim() || null;
+  const description = (formData.get("description") as string)?.trim() || null;
   const minOrder = (formData.get("minOrder") as string)?.trim() || null;
   const isFeatured = formData.get("isFeatured") === "on";
   const isActive = formData.get("isActive") === "on";
@@ -156,8 +153,7 @@ export async function updateCatalogAction(formData: FormData) {
       .set({
         title,
         category,
-        fabric,
-        priceInfo,
+        description,
         minOrder,
         imageUrl,
         imageKey,

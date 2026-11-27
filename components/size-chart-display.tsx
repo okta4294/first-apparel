@@ -14,12 +14,12 @@ export function SizeChartDisplay({ imageUrl, waNumber, storeName }: SizeChartDis
   )}`;
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
+    <div className="space-y-6">
       {/* 1. Gambar Panduan Ukuran Resmi dari Pengaturan Toko */}
-      <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-4 sm:p-6 overflow-hidden">
+      <div className="rounded-xl bg-[#141B17] border border-[#26332B] p-4 sm:p-6 overflow-hidden">
         {imageUrl ? (
           <div className="space-y-4">
-            <div className="rounded-xl border border-[#27272A] bg-[#09090B] overflow-hidden flex items-center justify-center p-2 sm:p-4">
+            <div className="rounded-lg border border-[#243129] bg-[#0B100D] overflow-hidden flex items-center justify-center p-2 sm:p-4">
               <Image
                 src={imageUrl}
                 alt={`Panduan Ukuran Resmi ${storeName}`}
@@ -29,7 +29,7 @@ export function SizeChartDisplay({ imageUrl, waNumber, storeName }: SizeChartDis
               />
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[#A1A1AA] px-1">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-sm text-[#A4B0A8] px-1">
               <span>
                 Standar potong jahit konveksi berkisar ±1 cm. Jika menyukai potongan longgar, disarankan naik 1 size.
               </span>
@@ -37,7 +37,7 @@ export function SizeChartDisplay({ imageUrl, waNumber, storeName }: SizeChartDis
                 href={imageUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[#84CC16] hover:underline font-semibold whitespace-nowrap shrink-0"
+                className="text-[#A3E635] hover:text-[#BEF264] hover:underline font-semibold whitespace-nowrap shrink-0"
               >
                 Buka Gambar Ukuran Penuh ↗
               </a>
@@ -45,10 +45,10 @@ export function SizeChartDisplay({ imageUrl, waNumber, storeName }: SizeChartDis
           </div>
         ) : (
           <div className="py-12 text-center space-y-2">
-            <p className="text-sm font-semibold text-[#FAFAFA]">
+            <p className="text-base font-semibold text-[#F4F3EE]">
               Gambar Size Chart Belum Tersedia
             </p>
-            <p className="text-xs text-[#71717A]">
+            <p className="text-sm text-[#95A39A]">
               Admin belum mengunggah gambar panduan ukuran di menu Pengaturan Toko.
             </p>
           </div>
@@ -56,12 +56,12 @@ export function SizeChartDisplay({ imageUrl, waNumber, storeName }: SizeChartDis
       </div>
 
       {/* 2. Banner Bantuan Ukuran via WA */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 rounded-2xl bg-[#09090B] border border-[#27272A] text-center sm:text-left">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 sm:p-6 rounded-xl bg-[#191714] border border-[#2E2A24]">
         <div>
-          <span className="font-semibold text-xs text-[#FAFAFA] block">
+          <span className="font-semibold text-sm sm:text-base text-[#F4F3EE] block">
             Ada pemain dengan ukuran jumbo (4XL ke atas) atau ukuran anak-anak?
           </span>
-          <span className="text-[11px] text-[#71717A] mt-0.5 block">
+          <span className="text-sm text-[#B5AEA4] mt-1 block">
             Kami siap memproduksi ukuran custom sesuai kebutuhan tim Anda tanpa batasan.
           </span>
         </div>
@@ -69,7 +69,7 @@ export function SizeChartDisplay({ imageUrl, waNumber, storeName }: SizeChartDis
           href={waHref}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#181920] hover:bg-[#1F2026] border border-[#27272A] text-xs font-bold text-[#84CC16] hover:border-[#84CC16]/40 transition-all shrink-0"
+          className="inline-flex min-h-[44px] items-center gap-2 px-5 py-2.5 rounded-lg bg-[#221F1B] hover:bg-[#2C2822] border border-[#353029] hover:border-[#E59A3C]/60 text-sm font-semibold text-[#E59A3C] transition-colors shrink-0"
         >
           <span>Konsultasi Ukuran Khusus via WA →</span>
         </a>

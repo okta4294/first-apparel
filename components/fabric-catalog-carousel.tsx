@@ -61,10 +61,10 @@ const DEFAULT_FABRICS: PublicFabricItem[] = [
 ];
 
 const BADGE_PALETTES = [
-  "bg-[#FFF1F2] text-[#BE123C] border-[#FECDD3] dark:bg-[#4C1D1B] dark:text-[#FCA5A5] dark:border-[#7F1D1D]/60",
-  "bg-[#ECFCCB] text-[#3F6212] border-[#D9F99D] dark:bg-[#2E3B14] dark:text-[#BEF264] dark:border-[#4D7C0F]/60",
-  "bg-[#E0F2FE] text-[#0369A1] border-[#BAE6FD] dark:bg-[#11314A] dark:text-[#7DD3FC] dark:border-[#0369A1]/60",
-  "bg-[#F3E8FF] text-[#6B21A8] border-[#E9D5FF] dark:bg-[#2F1B4B] dark:text-[#D8B4FE] dark:border-[#6B21A8]/60",
+  "bg-[#2C1E14] text-[#F2B366] border-[#4A3220]",
+  "bg-[#172B1B] text-[#A3E635] border-[#2B4E31]",
+  "bg-[#12262E] text-[#7DD3E8] border-[#1F424F]",
+  "bg-[#2A2416] text-[#E6C574] border-[#463B22]",
 ];
 
 function formatGsm(raw?: string | null): string | null {
@@ -136,7 +136,7 @@ function FabricZoomImage({ src, name }: { src: string; name: string }) {
           }
         }
       }}
-      className="relative w-full aspect-[4/3] overflow-hidden bg-[#F1F5F9] dark:bg-[#0B0D12] border-b border-[#E2E8F0] dark:border-[#1E2433] cursor-zoom-in select-none"
+      className="relative w-full aspect-[4/3] overflow-hidden bg-[#0D1310] border-b border-[#243129] cursor-zoom-in select-none"
     >
       <Image
         ref={imgRef}
@@ -229,29 +229,29 @@ export function FabricCatalogCarousel({ fabrics }: FabricCatalogCarouselProps) {
   return (
     <section
       id="katalog-bahan"
-      className="py-16 sm:py-24 border-b border-[#E2E8F0] dark:border-[#27272A] bg-[#F8FAFC] dark:bg-[#09090B]"
+      className="py-20 sm:py-28 bg-[#0B100D] scroll-mt-20"
       aria-label="Katalog Material Kain"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header Asimetris: Judul Kiri, Penjelasan & Kontrol Carousel Kanan */}
-        <div className="mb-8 sm:mb-12 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-          <div data-animate="text-reveal" className="max-w-2xl space-y-2.5">
-            <p className="text-xs font-bold uppercase tracking-wider text-[#EA580C] dark:text-[#FB923C]">
+        {/* Header Asimetris */}
+        <div className="mb-10 sm:mb-12 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div className="max-w-2xl space-y-2.5">
+            <p className="text-xs font-bold uppercase tracking-wider text-[#E59A3C]">
               Katalog Material Kain
             </p>
-            <h2 className="text-2xl sm:text-4xl font-black tracking-[-0.03em] leading-[1.12] [text-wrap:balance] text-[#0F172A] dark:text-[#FAFAFA]">
+            <h2 className="font-[family-name:var(--font-display)] text-2xl sm:text-4xl font-extrabold tracking-[-0.03em] leading-[1.12] [text-wrap:balance] text-[#F4F3EE]">
               Pilih Karakter Kain Sesuai Cabang Olahraga Anda
             </h2>
           </div>
 
           <div className="flex flex-col sm:flex-row lg:flex-col lg:items-end justify-between gap-4 max-w-md">
-            <p className="text-sm text-[#475569] dark:text-[#A1A1AA] leading-relaxed lg:text-right">
+            <p className="text-sm text-[#A4B0A8] leading-relaxed lg:text-right">
               Semua kain telah melewati uji penyerapan tinta sublimasi untuk menghasilkan warna paling pekat dan cerah.
             </p>
 
             {displayFabrics.length > 1 && (
               <div className="flex items-center gap-2 shrink-0">
-                <span className="text-xs font-semibold tabular-nums text-[#64748B] dark:text-[#71717A] mr-1">
+                <span className="text-xs font-mono font-semibold tabular-nums text-[#95A39A] mr-1">
                   {activeIndex + 1} / {displayFabrics.length}
                 </span>
                 <button
@@ -259,7 +259,7 @@ export function FabricCatalogCarousel({ fabrics }: FabricCatalogCarouselProps) {
                   onClick={() => handleStep(-1)}
                   disabled={!canScrollPrev}
                   aria-label="Bahan kain sebelumnya"
-                  className="inline-flex items-center justify-center w-11 h-11 rounded-full border border-[#CBD5E1] dark:border-[#27272A] bg-white dark:bg-[#141418] text-[#0F172A] dark:text-[#FAFAFA] hover:border-[#65A30D] dark:hover:border-[#84CC16] hover:text-[#4D7C0F] dark:hover:text-[#84CC16] disabled:opacity-35 disabled:pointer-events-none transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#65A30D] dark:focus-visible:outline-[#84CC16]"
+                  className="inline-flex items-center justify-center w-11 h-11 rounded-lg border border-[#26332B] bg-[#141B17] text-[#F4F3EE] hover:border-[#84CC16] hover:text-[#A3E635] disabled:opacity-35 disabled:pointer-events-none transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#84CC16]"
                 >
                   <svg
                     className="w-5 h-5"
@@ -279,7 +279,7 @@ export function FabricCatalogCarousel({ fabrics }: FabricCatalogCarouselProps) {
                   onClick={() => handleStep(1)}
                   disabled={!canScrollNext}
                   aria-label="Bahan kain berikutnya"
-                  className="inline-flex items-center justify-center w-11 h-11 rounded-full border border-[#CBD5E1] dark:border-[#27272A] bg-white dark:bg-[#141418] text-[#0F172A] dark:text-[#FAFAFA] hover:border-[#65A30D] dark:hover:border-[#84CC16] hover:text-[#4D7C0F] dark:hover:text-[#84CC16] disabled:opacity-35 disabled:pointer-events-none transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#65A30D] dark:focus-visible:outline-[#84CC16]"
+                  className="inline-flex items-center justify-center w-11 h-11 rounded-lg border border-[#26332B] bg-[#141B17] text-[#F4F3EE] hover:border-[#84CC16] hover:text-[#A3E635] disabled:opacity-35 disabled:pointer-events-none transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#84CC16]"
                 >
                   <svg
                     className="w-5 h-5"
@@ -299,55 +299,42 @@ export function FabricCatalogCarousel({ fabrics }: FabricCatalogCarouselProps) {
           </div>
         </div>
 
-        {/* Track Carousel Horizontal: 3 Berjejer di Desktop, 2 di Tablet, 1 Mengintip di Mobile */}
+        {/* Track Horizontal */}
         <div
           ref={trackRef}
           onScroll={syncScrollState}
           role="region"
           aria-roledescription="carousel"
           aria-label="Daftar jenis bahan kain"
-          className="flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="flex gap-5 sm:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {displayFabrics.map((item, idx) => (
             <article
               key={item.id}
-              className="shrink-0 snap-start w-[84%] max-w-[340px] sm:max-w-none sm:w-[calc((100%-24px)/2)] lg:w-[calc((100%-48px)/3)] rounded-2xl bg-white dark:bg-[#11131A] border border-[#E2E8F0] dark:border-[#1E2433] overflow-hidden flex flex-col justify-between transition-colors hover:border-[#CBD5E1] dark:hover:border-[#334155]"
+              className="shrink-0 snap-start w-[84%] max-w-[340px] sm:max-w-none sm:w-[calc((100%-24px)/2)] lg:w-[calc((100%-48px)/3)] rounded-xl bg-[#141B17] border border-[#243129] overflow-hidden flex flex-col justify-between transition-colors hover:border-[#364B3E]"
             >
               <div>
-                {/* Foto Tekstur Kain (Otomatis Zoom Mengikuti Kursor) */}
                 {item.imageUrl ? (
                   <FabricZoomImage src={item.imageUrl} name={item.name} />
                 ) : (
-                  <div className="relative w-full aspect-[4/3] bg-[#F1F5F9] dark:bg-[#0D1017] border-b border-[#E2E8F0] dark:border-[#1E2433] flex flex-col items-center justify-center gap-2 text-center px-6">
-                    <div className="w-10 h-10 rounded-xl bg-[#E2E8F0] dark:bg-[#181D29] flex items-center justify-center text-[#64748B] dark:text-[#71717A]">
-                      <svg
-                        className="w-5 h-5"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.75"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        aria-hidden="true"
-                      >
-                        <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-                        <circle cx="9" cy="9" r="2" />
-                        <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
-                      </svg>
-                    </div>
-                    <span className="text-xs font-medium text-[#64748B] dark:text-[#71717A]">
-                      Foto tekstur {item.name} segera hadir
+                  <div className="relative w-full aspect-[4/3] bg-[#19211C] border-b border-[#243129] flex flex-col items-center justify-center gap-1.5 text-center px-6">
+                    <span className="font-[family-name:var(--font-display)] text-lg font-extrabold text-[#F4F3EE]">
+                      {item.name}
                     </span>
+                    {formatGsm(item.gsm) && (
+                      <span className="text-xs font-mono font-medium text-[#95A39A]">
+                        {formatGsm(item.gsm)}
+                      </span>
+                    )}
                   </div>
                 )}
 
-                {/* Isi Detail Kain */}
-                <div className="p-5 sm:p-6 space-y-4">
+                <div className="p-6 space-y-4">
                   {(item.badge || item.gsm) && (
                     <div className="flex items-center justify-between gap-2 flex-wrap">
                       {item.badge ? (
                         <span
-                          className={`inline-block px-2.5 py-1 rounded-md text-[11px] font-bold tracking-wide border ${getBadgeStyle(
+                          className={`inline-block px-2.5 py-0.5 rounded-md text-xs font-semibold border ${getBadgeStyle(
                             item.badge,
                             idx
                           )}`}
@@ -358,7 +345,7 @@ export function FabricCatalogCarousel({ fabrics }: FabricCatalogCarouselProps) {
                         <span />
                       )}
                       {formatGsm(item.gsm) && (
-                        <span className="text-xs font-mono font-medium tabular-nums text-[#64748B] dark:text-[#94A3B8]">
+                        <span className="text-xs font-mono font-medium tabular-nums text-[#95A39A]">
                           {formatGsm(item.gsm)}
                         </span>
                       )}
@@ -366,23 +353,22 @@ export function FabricCatalogCarousel({ fabrics }: FabricCatalogCarouselProps) {
                   )}
 
                   <div className="space-y-2">
-                    <h3 className="text-lg sm:text-xl font-bold tracking-tight text-[#0F172A] dark:text-[#FAFAFA] leading-snug">
+                    <h3 className="font-[family-name:var(--font-display)] text-xl font-extrabold tracking-[-0.02em] text-[#F4F3EE] leading-snug">
                       {item.name}
                     </h3>
-                    <p className="text-sm text-[#475569] dark:text-[#94A3B8] leading-relaxed">
+                    <p className="text-[15px] text-[#A4B0A8] leading-relaxed">
                       {item.description}
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Footer Rekomendasi Olahraga */}
               {item.recommendation && (
-                <div className="px-5 sm:px-6 pb-5 sm:pb-6 pt-3 border-t border-[#F1F5F9] dark:border-[#1E2433]/80">
-                  <p className="text-xs font-bold text-[#4D7C0F] dark:text-[#84CC16] mb-1">
+                <div className="px-6 pb-6 pt-3.5 border-t border-[#222E26]">
+                  <p className="text-xs font-bold text-[#A3E635] mb-1">
                     Rekomendasi:
                   </p>
-                  <p className="text-xs sm:text-sm text-[#334155] dark:text-[#CBD5E1] leading-relaxed">
+                  <p className="text-sm font-medium text-[#E5E7E3] leading-relaxed">
                     {item.recommendation}
                   </p>
                 </div>
@@ -391,9 +377,9 @@ export function FabricCatalogCarousel({ fabrics }: FabricCatalogCarouselProps) {
           ))}
         </div>
 
-        {/* Indikator Slide di Bawah Carousel */}
+        {/* Indikator Slide di Bawah */}
         {displayFabrics.length > 1 && (
-          <div className="mt-5 flex items-center justify-center gap-1.5">
+          <div className="mt-6 flex items-center justify-center gap-1.5">
             {displayFabrics.map((item, idx) => {
               const isActive = idx === activeIndex;
               return (
@@ -403,13 +389,11 @@ export function FabricCatalogCarousel({ fabrics }: FabricCatalogCarouselProps) {
                   onClick={() => scrollToSlide(idx)}
                   aria-label={`Lihat kain ${idx + 1}: ${item.name}`}
                   aria-current={isActive ? "true" : undefined}
-                  className="inline-flex items-center justify-center min-w-[32px] min-h-[44px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#65A30D] dark:focus-visible:outline-[#84CC16] rounded-full"
+                  className="inline-flex items-center justify-center min-w-[32px] min-h-[44px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#84CC16] rounded-full"
                 >
                   <span
                     className={`block h-1.5 rounded-full transition-all duration-300 ${
-                      isActive
-                        ? "w-7 bg-[#65A30D] dark:bg-[#84CC16]"
-                        : "w-2 bg-[#CBD5E1] dark:bg-[#3F3F46]"
+                      isActive ? "w-7 bg-[#84CC16]" : "w-2 bg-[#2A3830]"
                     }`}
                   />
                 </button>

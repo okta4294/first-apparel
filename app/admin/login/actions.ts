@@ -3,7 +3,7 @@
 import { db } from "@/lib/db";
 import { admins } from "@/lib/db/schema";
 import { comparePassword, setAdminSessionCookie, signAdminToken, removeAdminSessionCookie } from "@/lib/auth";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
 
 export interface ActionResponse {
@@ -41,27 +41,15 @@ export async function loginAdminAction(
       };
     }
 
-    const baseFailedAttempts =
-      admin.lockedUntil && admin.lockedUntil <= now ? 0 : admin.failedAttempts;
-
     const isValid = await comparePassword(password, admin.passwordHash);
     if (!isValid) {
-      const nextAttempts = baseFailedAttempts + 1;
-      if (nextAttempts >= MAX_FAILED_ATTEMPTS) {
-        const lockedUntil = new Date(Date.now() + LOCKOUT_MINUTES * 60 * 1000);
-        await db
-          .update(admins)
-          .set({ failedAttempts: nextAttempts, lockedUntil })
-          .where(eq(admins.id, admin.id));
-
-        return {
-          error: "Email atau kata sandi tidak sesuai.",
-        };
-      }
-
+      const lockedUntil = new Date(Date.now() + LOCKOUT_MINUTES * 60 * 1000);
       await db
         .update(admins)
-        .set({ failedAttempts: nextAttempts, lockedUntil: null })
+        .set({
+          failedAttempts: sql<number>`CASE WHEN ${admins.lockedUntil} IS NOT NULL AND ${admins.lockedUntil} <= NOW() THEN 1 ELSE ${admins.failedAttempts} + 1 END`,
+          lockedUntil: sql<Date | null>`CASE WHEN ${admins.lockedUntil} IS NOT NULL AND ${admins.lockedUntil} > NOW() THEN ${admins.lockedUntil} WHEN (CASE WHEN ${admins.lockedUntil} IS NOT NULL AND ${admins.lockedUntil} <= NOW() THEN 1 ELSE ${admins.failedAttempts} + 1 END) >= ${MAX_FAILED_ATTEMPTS} THEN ${lockedUntil} ELSE NULL END`,
+        })
         .where(eq(admins.id, admin.id));
 
       return {

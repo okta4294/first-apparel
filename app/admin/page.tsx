@@ -157,11 +157,11 @@ export default async function AdminDashboardPage() {
                     <div>
                       <span className="font-medium text-[#FAFAFA] block">{item.title}</span>
                       <span className="text-[10px] text-[#71717A]">
-                        {item.category} • {item.fabric}
+                        {item.category}
                       </span>
                     </div>
                     <div className="text-right">
-                      <span className="text-[#A1A1AA] block">{item.priceInfo || "-"}</span>
+                      <span className="text-[#A1A1AA] block">{item.description || "-"}</span>
                       <span className="inline-flex items-center gap-1.5 text-[10px] text-[#A1A1AA]">
                         <span className={`w-1.5 h-1.5 rounded-full ${item.isActive ? "bg-[#84CC16]" : "bg-[#52525B]"}`} />
                         {item.isActive ? "Aktif" : "Nonaktif"}

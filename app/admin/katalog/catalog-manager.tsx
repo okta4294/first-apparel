@@ -16,8 +16,7 @@ export interface CatalogItem {
   id: number;
   title: string;
   category: string;
-  fabric: string;
-  priceInfo: string | null;
+  description: string | null;
   minOrder: string | null;
   imageUrl: string;
   imageKey: string;
@@ -29,15 +28,8 @@ export interface CatalogItem {
   createdAt: Date;
 }
 
-export interface FabricOption {
-  id: number;
-  name: string;
-  description: string;
-}
-
 interface CatalogManagerProps {
   initialItems: CatalogItem[];
-  fabrics: FabricOption[];
 }
 
 function getCatalogImages(item: CatalogItem): CatalogImageItem[] {
@@ -55,8 +47,7 @@ function getCatalogImages(item: CatalogItem): CatalogImageItem[] {
   return [];
 }
 
-export function CatalogManager({ initialItems, fabrics }: CatalogManagerProps) {
-  const defaultFabric = fabrics[0]?.name || "Dryfit Brazil Original";
+export function CatalogManager({ initialItems }: CatalogManagerProps) {
   const [items, setItems] = useState<CatalogItem[]>(initialItems);
   const [isAdding, setIsAdding] = useState(false);
   const [editingItem, setEditingItem] = useState<CatalogItem | null>(null);
@@ -66,8 +57,7 @@ export function CatalogManager({ initialItems, fabrics }: CatalogManagerProps) {
   // Form states
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("FUTSAL & SEPAK BOLA");
-  const [fabric, setFabric] = useState(defaultFabric);
-  const [priceInfo, setPriceInfo] = useState("");
+  const [description, setDescription] = useState("");
   const [minOrder, setMinOrder] = useState("");
   const [isFeatured, setIsFeatured] = useState(false);
   const [isActive, setIsActive] = useState(true);
@@ -108,8 +98,7 @@ export function CatalogManager({ initialItems, fabrics }: CatalogManagerProps) {
   const resetForm = () => {
     setTitle("");
     setCategory("FUTSAL & SEPAK BOLA");
-    setFabric(defaultFabric);
-    setPriceInfo("");
+    setDescription("");
     setMinOrder("");
     setIsFeatured(false);
     setIsActive(true);
@@ -129,8 +118,7 @@ export function CatalogManager({ initialItems, fabrics }: CatalogManagerProps) {
     setEditingItem(item);
     setTitle(item.title);
     setCategory(item.category);
-    setFabric(item.fabric);
-    setPriceInfo(item.priceInfo || "");
+    setDescription(item.description || "");
     setMinOrder(item.minOrder || "");
     setIsFeatured(item.isFeatured);
     setIsActive(item.isActive);
@@ -187,8 +175,7 @@ export function CatalogManager({ initialItems, fabrics }: CatalogManagerProps) {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("category", category);
-    formData.append("fabric", fabric);
-    formData.append("priceInfo", priceInfo);
+    formData.append("description", description);
     formData.append("minOrder", minOrder);
     formData.append("imageUrl", images[0]?.url || "");
     formData.append("imageKey", images[0]?.key || "");
@@ -215,8 +202,7 @@ export function CatalogManager({ initialItems, fabrics }: CatalogManagerProps) {
                   ...item,
                   title,
                   category,
-                  fabric,
-                  priceInfo: priceInfo.trim() || null,
+                  description: description.trim() || null,
                   minOrder: minOrder.trim() || null,
                   imageUrl: images[0]?.url || "",
                   imageKey: images[0]?.key || "",
@@ -592,8 +578,8 @@ export function CatalogManager({ initialItems, fabrics }: CatalogManagerProps) {
                 <input
                   type="text"
                   placeholder="Misal: Menggunakan bahan jacquard motif batik (opsional)"
-                  value={priceInfo}
-                  onChange={(e) => setPriceInfo(e.target.value)}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg bg-[#09090B] border border-[#27272A] text-xs text-[#FAFAFA] placeholder:text-[#52525B] focus:border-[#84CC16] focus:outline-none"
                 />
               </div>
@@ -720,8 +706,7 @@ export function CatalogManager({ initialItems, fabrics }: CatalogManagerProps) {
                   <th className="py-3 px-4">Foto & Galeri</th>
                   <th className="py-3 px-4">Nama Model</th>
                   <th className="py-3 px-4">Kategori</th>
-                  <th className="py-3 px-4">Bahan Kain</th>
-                  <th className="py-3 px-4">Harga Dasar</th>
+                  <th className="py-3 px-4">Keterangan</th>
                   <th className="py-3 px-4">Size Chart</th>
                   <th className="py-3 px-4">Status</th>
                   <th className="py-3 px-4 text-right">Aksi</th>
@@ -779,9 +764,8 @@ export function CatalogManager({ initialItems, fabrics }: CatalogManagerProps) {
                           {item.category}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-[#A1A1AA]">{item.fabric}</td>
-                      <td className="py-3 px-4 font-medium text-[#FAFAFA]">
-                        <span className="block">{item.priceInfo || "-"}</span>
+                      <td className="py-3 px-4 font-medium text-[#FAFAFA] max-w-xs">
+                        <span className="block line-clamp-2">{item.description || "-"}</span>
                         {item.minOrder && (
                           <span className="text-[10px] text-[#71717A] font-normal">
                             Min. order: {item.minOrder}

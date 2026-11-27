@@ -32,7 +32,56 @@ const FAQ_ITEMS = [
   },
 ];
 
-export function FaqSection() {
+interface FaqSectionProps {
+  variant?: "dark" | "editorial";
+  waHref?: string;
+}
+
+export function FaqSection({ variant = "dark", waHref }: FaqSectionProps) {
+  if (variant === "editorial") {
+    return (
+      <section
+        id="faq"
+        className="py-20 sm:py-28 bg-[#121815] scroll-mt-24"
+        aria-label="Pertanyaan yang sering ditanyakan"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+            <div className="lg:col-span-4 space-y-4">
+              <h2 className="font-[family-name:var(--font-display)] text-2xl sm:text-4xl font-extrabold tracking-[-0.03em] leading-[1.1] text-[#F4F3EE]">
+                Pertanyaan yang sering ditanyakan
+              </h2>
+              {waHref && (
+                <a
+                  href={waHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#A3E635] underline decoration-[#84CC16]/60 underline-offset-4 hover:text-[#BEF264] transition-colors pt-1"
+                >
+                  <span>Tanya admin lewat WhatsApp</span>
+                  <span aria-hidden="true">→</span>
+                </a>
+              )}
+            </div>
+
+            <div className="lg:col-span-8 divide-y divide-[#222E26] border-t border-b border-[#222E26]">
+              {FAQ_ITEMS.map((item) => (
+                <div key={item.question} className="py-6 sm:py-7">
+                  <h3 className="text-base sm:text-lg font-bold tracking-[-0.015em] text-[#F4F3EE] leading-snug">
+                    {item.question}
+                  </h3>
+                  <p className="mt-2.5 text-[15px] sm:text-base text-[#A4B0A8] leading-relaxed max-w-[64ch]">
+                    {item.answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section
       id="faq"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { WhatsAppIcon } from "@/components/whatsapp-icon";
 
 interface OrderTemplateCardProps {
   waNumber: string;
@@ -95,22 +96,27 @@ Format: No | Nama Punggung | Nomor | Size | Kain
   const waHref = `https://wa.me/${waNumber}?text=${encodeURIComponent(active.text)}`;
 
   return (
-    <div className="rounded-2xl bg-[#141418] border border-[#27272A] p-5 sm:p-7">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-5 border-b border-[#27272A]">
+    <div className="rounded-xl bg-[#0F1F15] border border-[#234530] p-6 sm:p-8">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-5 border-b border-[#234530]">
         <div>
-          <h3 className="text-lg sm:text-xl font-bold text-[#FAFAFA]">{active.title}</h3>
-          <p className="text-xs sm:text-sm text-[#A1A1AA] mt-1">{active.description}</p>
+          <p className="text-xs font-semibold text-[#A3E635] mb-1">
+            Template chat siap kirim
+          </p>
+          <h3 className="font-[family-name:var(--font-display)] text-xl sm:text-2xl font-extrabold tracking-[-0.02em] text-[#F4F3EE]">
+            {active.title}
+          </h3>
+          <p className="text-sm text-[#C4D3C8] mt-1">{active.description}</p>
         </div>
 
         <button
           type="button"
           onClick={handleCopy}
-          className={`inline-flex min-h-11 items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-colors shrink-0 ${
+          className={`inline-flex min-h-[44px] items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors shrink-0 ${
             copyState === "copied"
-              ? "bg-[#22C55E] text-white"
+              ? "bg-[#22C55E] text-[#0B100D]"
               : copyState === "error"
                 ? "bg-[#EF4444] text-white"
-                : "bg-[#18181B] hover:bg-[#27272A] text-[#FAFAFA] border border-[#27272A]"
+                : "bg-[#193323] hover:bg-[#224430] text-[#F4F3EE] border border-[#2C553B]"
           }`}
           aria-label={`Salin ${active.label.toLowerCase()} ke clipboard`}
         >
@@ -153,7 +159,7 @@ Format: No | Nama Punggung | Nomor | Size | Kain
       <div
         role="group"
         aria-label="Pilih template pesan WhatsApp"
-        className="mt-5 inline-flex gap-1 rounded-xl border border-[#27272A] bg-[#09090B] p-1"
+        className="mt-5 inline-flex gap-1 rounded-lg border border-[#234530] bg-[#0B100D] p-1"
       >
         {templateOptions.map((option) => {
           const isActive = option.id === activeTemplate;
@@ -166,10 +172,10 @@ Format: No | Nama Punggung | Nomor | Size | Kain
                 setActiveTemplate(option.id);
                 setCopyState("idle");
               }}
-              className={`rounded-lg px-3.5 py-2 text-xs font-semibold transition-colors ${
+              className={`min-h-[40px] rounded-md px-4 py-2 text-sm font-semibold transition-colors ${
                 isActive
-                  ? "bg-[#84CC16] text-[#09090B]"
-                  : "text-[#A1A1AA] hover:bg-[#141418] hover:text-[#FAFAFA]"
+                  ? "bg-[#84CC16] text-[#0B100D] font-bold"
+                  : "text-[#C4D3C8] hover:bg-[#14291C] hover:text-[#F4F3EE]"
               }`}
             >
               {option.label}
@@ -179,12 +185,12 @@ Format: No | Nama Punggung | Nomor | Size | Kain
       </div>
 
       {/* Preview Snippet Box */}
-      <div className="mt-3 p-4 rounded-xl bg-[#09090B] border border-[#27272A] font-mono text-xs text-[#D4D4D8] leading-relaxed whitespace-pre-wrap select-all">
+      <div className="mt-3 p-4 sm:p-5 rounded-lg bg-[#0B100D] border border-[#234530] font-mono text-xs sm:text-sm text-[#E5E7E3] leading-relaxed whitespace-pre-wrap select-all">
         {active.text}
       </div>
 
       <div className="mt-5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1">
-        <span className="text-xs text-[#A1A1AA]">
+        <span className="text-sm text-[#C4D3C8]">
           Bisa langsung ditempel ke grup tim sebelum dikirim ke admin.
         </span>
 
@@ -192,8 +198,9 @@ Format: No | Nama Punggung | Nomor | Size | Kain
           href={waHref}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex min-h-11 items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#84CC16] hover:bg-[#9ee238] active:scale-[0.98] text-[#09090B] text-xs font-bold transition-colors"
+          className="inline-flex min-h-[48px] items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[#84CC16] hover:bg-[#9AE02C] active:scale-[0.98] text-[#0B100D] text-sm font-bold transition-colors"
         >
+          <WhatsAppIcon className="w-4 h-4 fill-current shrink-0" />
           <span>Kirim ke WhatsApp →</span>
         </a>
       </div>

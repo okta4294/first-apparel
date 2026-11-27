@@ -7,8 +7,7 @@ export interface ShowcaseDesign {
   id: number;
   title: string;
   category: string;
-  fabric: string;
-  priceInfo?: string | null;
+  description?: string | null;
   badge?: string;
   imageUrl?: string | null;
 }
@@ -18,8 +17,7 @@ const DEFAULT_DESIGNS: ShowcaseDesign[] = [
     id: 1,
     title: "SERI JERSEY ESPORT & FUTSAL",
     category: "ESPORTS & FUTSAL",
-    fabric: "Sublimasi Full Print HD • Dryfit Brazil Original",
-    priceInfo: "Mulai Rp 125.000 / pcs",
+    description: "Sublimasi Full Print HD • Dryfit Brazil Original",
     badge: "PORTOFOLIO TERBARU",
   },
 ];
@@ -82,7 +80,7 @@ export function HeroShowcaseCarousel({ items }: HeroShowcaseCarouselProps) {
 
   return (
     <div
-      className="relative w-full h-72 sm:h-96 lg:h-auto lg:absolute lg:inset-y-0 lg:right-0 lg:w-[56%] overflow-hidden bg-[#E2E8F0] dark:bg-[#0E0F13]"
+      className="relative w-full h-80 sm:h-[420px] lg:h-auto lg:absolute lg:inset-y-0 lg:right-0 lg:w-[56%] overflow-hidden bg-[#121815]"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={onTouchStart}
@@ -107,27 +105,27 @@ export function HeroShowcaseCarousel({ items }: HeroShowcaseCarouselProps) {
                 fetchPriority={idx === 0 ? "high" : "auto"}
                 loading={idx === 0 ? "eager" : "lazy"}
                 sizes="(min-width: 1024px) 58vw, 100vw"
-                className="object-cover object-center"
+                className="object-cover object-top"
               />
             </div>
           ) : null
         )
       ) : (
-        <div className="absolute inset-0 bg-gradient-to-br from-[#F1F5F9] via-[#E2E8F0] to-[#CBD5E1] dark:from-[#181A22] dark:via-[#111218] dark:to-[#09090B]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#14291C] via-[#101813] to-[#0B100D]" />
       )}
 
       {/* Gradasi halus menyambungkan area teks kiri ke gambar penuh di kanan */}
       <div
         aria-hidden="true"
-        className="hidden lg:block absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-[#F8FAFC] via-[#F8FAFC]/90 via-30% to-transparent dark:from-[#09090B] dark:via-[#09090B]/80 dark:via-30% dark:to-transparent"
+        className="hidden lg:block absolute inset-0 z-10 pointer-events-none bg-gradient-to-r from-[#0B100D] via-[#0B100D]/85 via-28% to-transparent"
       />
       <div
         aria-hidden="true"
-        className="hidden lg:block absolute inset-x-0 bottom-0 h-24 z-10 pointer-events-none bg-gradient-to-t from-[#F8FAFC]/80 to-transparent dark:from-[#09090B]/75 dark:to-transparent"
+        className="hidden lg:block absolute inset-x-0 bottom-0 h-24 z-10 pointer-events-none bg-gradient-to-t from-[#0B100D]/80 to-transparent"
       />
       <div
         aria-hidden="true"
-        className="lg:hidden absolute inset-x-0 bottom-0 h-28 z-10 pointer-events-none bg-gradient-to-t from-[#F8FAFC] via-[#F8FAFC]/65 to-transparent dark:from-[#09090B] dark:via-[#09090B]/55 dark:to-transparent"
+        className="lg:hidden absolute inset-x-0 bottom-0 h-28 z-10 pointer-events-none bg-gradient-to-t from-[#0B100D] via-[#0B100D]/60 to-transparent"
       />
 
       {designs.length > 1 && (
@@ -146,7 +144,7 @@ export function HeroShowcaseCarousel({ items }: HeroShowcaseCarouselProps) {
               aria-current={idx === safeIndex ? "true" : undefined}
             >
               <span
-                className={`h-1.5 rounded-full transition-colors block ${
+                className={`h-1.5 rounded-full transition-all block ${
                   idx === safeIndex
                     ? "w-6 bg-[#84CC16]"
                     : "w-1.5 bg-white/40 group-hover/dot:bg-white/75"

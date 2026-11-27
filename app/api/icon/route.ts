@@ -29,7 +29,12 @@ async function getCachedIconPng(): Promise<Uint8Array> {
 
   if (safeLogoUrl) {
     try {
-      const res = await fetch(safeLogoUrl, { signal: AbortSignal.timeout(5000) });
+      let res = await fetch(safeLogoUrl, { signal: AbortSignal.timeout(5000), redirect: "manual" });
+      if (res.status >= 300 && res.status < 400) {
+        const redirectTarget = sanitizeUploadThingUrl(res.headers.get("location"));
+        if (!redirectTarget) throw new Error("Redirect logo tidak diizinkan");
+        res = await fetch(redirectTarget, { signal: AbortSignal.timeout(5000), redirect: "error" });
+      }
       const contentLength = Number(res.headers.get("content-length") || "0");
       if (res.ok && contentLength <= MAX_ICON_BYTES) {
         const arrayBuf = await res.arrayBuffer();

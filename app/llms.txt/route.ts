@@ -49,7 +49,7 @@ export async function GET() {
     lines.push("## Model Jersey Unggulan");
     for (const item of featuredCatalogs) {
       lines.push(
-        `- ${item.title} (${item.category}) — Bahan: ${item.fabric}${item.priceInfo ? `, ${item.priceInfo}` : ""}`
+        `- ${item.title} (${item.category})${item.description ? ` — ${item.description}` : ""}`
       );
     }
     lines.push("");
