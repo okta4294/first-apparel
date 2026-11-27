@@ -80,7 +80,7 @@ export function HeroShowcaseCarousel({ items }: HeroShowcaseCarouselProps) {
 
   return (
     <div
-      className="relative w-full h-80 sm:h-[420px] lg:h-auto lg:absolute lg:inset-y-0 lg:right-0 lg:w-[56%] overflow-hidden bg-[#121815]"
+      className="relative w-full aspect-[3/4] max-h-[78vh] lg:aspect-auto lg:max-h-none lg:h-auto lg:absolute lg:inset-y-0 lg:right-0 lg:w-[56%] overflow-hidden bg-[#121815]"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={onTouchStart}
@@ -125,7 +125,7 @@ export function HeroShowcaseCarousel({ items }: HeroShowcaseCarouselProps) {
       />
       <div
         aria-hidden="true"
-        className="lg:hidden absolute inset-x-0 bottom-0 h-28 z-10 pointer-events-none bg-gradient-to-t from-[#0B100D] via-[#0B100D]/60 to-transparent"
+        className="lg:hidden absolute inset-x-0 bottom-0 h-20 z-10 pointer-events-none bg-gradient-to-t from-[#0B100D] via-[#0B100D]/55 to-transparent"
       />
 
       {designs.length > 1 && (
