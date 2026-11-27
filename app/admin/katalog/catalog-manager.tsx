@@ -460,7 +460,7 @@ export function CatalogManager({ initialItems }: CatalogManagerProps) {
                       if (files[0]) setUploadFileName(files[0].name);
                       try {
                         const compressed = await Promise.all(
-                          files.slice(0, 4 - images.length).map((f) => compressImageToWebP(f, 1200, 1200, 0.82))
+                          files.slice(0, 4 - images.length).map((f) => compressImageToWebP(f, 1800, 1800, 0.92))
                         );
                         return compressed;
                       } catch {

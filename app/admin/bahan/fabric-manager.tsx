@@ -359,7 +359,7 @@ export function FabricManager({ initialItems }: FabricManagerProps) {
                   onBeforeUploadBegin={async (files) => {
                     setUploadStatus("compressing");
                     const compressed = await Promise.all(
-                      files.map((file) => compressImageToWebP(file))
+                      files.map((file) => compressImageToWebP(file, 1800, 1800, 0.92))
                     );
                     setUploadStatus("uploading");
                     return compressed;

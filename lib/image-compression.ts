@@ -51,7 +51,9 @@ export async function compressImageToWebP(
           return;
         }
 
-        // Render gambar ke canvas
+        // Render gambar ke canvas dengan kualitas downscale tinggi
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = "high";
         ctx.drawImage(img, 0, 0, width, height);
 
         // Ekspor ke WebP
