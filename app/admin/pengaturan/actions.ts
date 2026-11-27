@@ -5,6 +5,7 @@ import { siteSettings } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { getAdminSession } from "@/lib/auth";
 import { sanitizeUploadThingUrl } from "@/lib/uploadthing-server";
+import { normalizeWhatsappNumber } from "@/lib/public-data";
 import { revalidatePath, updateTag } from "next/cache";
 
 function sanitizeUrl(urlString: string | null): string | null {
@@ -38,8 +39,8 @@ export async function updateSettingsAction(formData: FormData) {
     (formData.get("operatingHours") as string)?.trim() ||
     "Senin - Sabtu, 09.00 - 17.00 WIB";
   const rawWa = (formData.get("whatsappNumber") as string)?.trim() || "6281234567890";
-  // Sanitasi nomor WhatsApp agar formatnya angka bersih (contoh: 628...)
-  const whatsappNumber = rawWa.replace(/[^\d]/g, "");
+  // Sanitasi nomor WhatsApp agar formatnya angka internasional bersih (contoh: 628...)
+  const whatsappNumber = normalizeWhatsappNumber(rawWa);
   const defaultWaText =
     (formData.get("defaultWaText") as string)?.trim() ||
     "Halo Admin First Apparel, saya ingin berkonsultasi tentang pemesanan jersey kustom.";

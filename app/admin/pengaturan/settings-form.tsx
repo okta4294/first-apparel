@@ -127,7 +127,15 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
     }
   };
 
-  const previewWaUrl = `https://wa.me/${whatsappNumber.replace(/[^\d]/g, "")}?text=${encodeURIComponent(defaultWaText)}`;
+  const previewWaDigits = whatsappNumber.replace(/[^\d]/g, "");
+  const normalizedPreviewWa = previewWaDigits.startsWith("620")
+    ? `62${previewWaDigits.slice(3)}`
+    : previewWaDigits.startsWith("0")
+      ? `62${previewWaDigits.slice(1)}`
+      : previewWaDigits.startsWith("8")
+        ? `62${previewWaDigits}`
+        : previewWaDigits;
+  const previewWaUrl = `https://wa.me/${normalizedPreviewWa}?text=${encodeURIComponent(defaultWaText)}`;
 
   return (
     <div className="space-y-6">

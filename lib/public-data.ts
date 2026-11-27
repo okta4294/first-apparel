@@ -43,6 +43,15 @@ const DEFAULT_SITE_SETTINGS: PublicSiteSettings = {
   heroTitleHighlight: "Kualitas Tetap Terbaik!",
 };
 
+export function normalizeWhatsappNumber(raw: string | null | undefined, fallback = "6281234567890"): string {
+  const digits = (raw || "").replace(/[^\d]/g, "");
+  if (!digits) return fallback;
+  if (digits.startsWith("620")) return `62${digits.slice(3)}`;
+  if (digits.startsWith("0")) return `62${digits.slice(1)}`;
+  if (digits.startsWith("8")) return `62${digits}`;
+  return digits;
+}
+
 export async function getSiteSettings(): Promise<PublicSiteSettings> {
   "use cache";
   cacheLife("hours");
@@ -58,7 +67,7 @@ export async function getSiteSettings(): Promise<PublicSiteSettings> {
         storeAddress: s.storeAddress || DEFAULT_SITE_SETTINGS.storeAddress,
         googleMapsUrl: s.googleMapsUrl,
         operatingHours: s.operatingHours || DEFAULT_SITE_SETTINGS.operatingHours,
-        whatsappNumber: s.whatsappNumber || DEFAULT_SITE_SETTINGS.whatsappNumber,
+        whatsappNumber: normalizeWhatsappNumber(s.whatsappNumber, DEFAULT_SITE_SETTINGS.whatsappNumber),
         defaultWaText: s.defaultWaText || DEFAULT_SITE_SETTINGS.defaultWaText,
         instagramUrl: s.instagramUrl,
         logoUrl: s.logoUrl || null,
